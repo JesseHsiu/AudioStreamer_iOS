@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-
+#import "AudioStreamerViewController.h"
 @interface ViewController ()
 
 @end
@@ -15,15 +15,18 @@
 @implementation ViewController
 
 - (void)viewDidLoad {
-    
     ServerManager = [[DiscoverServerManager alloc]init];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateTableView:) name:@"ServerChanged" object:nil];
-
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
 }
+-(void)viewWillAppear:(BOOL)animated
+{
+    [ServerManager startSearching];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateTableView:) name:@"ServerChanged" object:nil];
+}
 -(void)viewWillDisappear:(BOOL)animated
 {
+    [ServerManager stopSearching];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 - (void)didReceiveMemoryWarning {
@@ -35,7 +38,7 @@
 {
     [tableview reloadData];
 }
-
+#pragma mark tableViewDelegate
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return [ServerManager.DiscoveredServers count];
@@ -55,6 +58,12 @@
     cell.detailTextLabel.text = [tmp objectForKey:@"ip"];
 
     return cell;
+}
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UIStoryboard *sb = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    AudioStreamerViewController * vc = (AudioStreamerViewController *)[sb instantiateViewControllerWithIdentifier:@"AudioStreamerVC"];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 

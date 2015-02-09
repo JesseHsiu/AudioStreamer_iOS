@@ -13,63 +13,73 @@
 
 - (id)init {
     if (self = [super init]) {
-
-        //init servers
-        NSString *type = @"TestingProtocol";
         //init array
         self.DiscoveredServers = [[NSMutableArray alloc]init];
         
         self->Browser =[[NSNetServiceBrowser alloc] init];
         self->Browser.delegate = self;
-        [self->Browser searchForServicesOfType:[NSString stringWithFormat:@"_%@._tcp.", type] inDomain:@"local"];
+        //[self->Browser searchForServicesOfType:[NSString stringWithFormat:@"_%@._tcp.", type] inDomain:@"local"];
     }
     return self;
 }
-
+-(void)startSearching
+{
+    NSString *type = @"TestingProtocol";
+    [Browser searchForServicesOfType:[NSString stringWithFormat:@"_%@._tcp.", type] inDomain:@"local"];
+}
+-(void)stopSearching
+{
+    [self.DiscoveredServers removeAllObjects];
+    [Browser stop];
+}
 
 #pragma mark NSNetServiceDelegate
 - (void)netServiceDidResolveAddress:(NSNetService *)service {
     
     char addressBuffer[INET6_ADDRSTRLEN];
-    
-    NSData *data = [service.addresses objectAtIndex:0];
-    memset(addressBuffer, 0, INET6_ADDRSTRLEN);
-    
-    typedef union {
-        struct sockaddr sa;
-        struct sockaddr_in ipv4;
-        struct sockaddr_in6 ipv6;
-    } ip_socket_address;
-    
-    ip_socket_address *socketAddress = (ip_socket_address *)[data bytes];
-    
-    if (socketAddress && (socketAddress->sa.sa_family == AF_INET || socketAddress->sa.sa_family == AF_INET6))
-    {
-        const char *addressStr = inet_ntop(
-                                           socketAddress->sa.sa_family,
-                                           (socketAddress->sa.sa_family == AF_INET ? (void *)&(socketAddress->ipv4.sin_addr) : (void *)&(socketAddress->ipv6.sin6_addr)),
-                                           addressBuffer,
-                                           sizeof(addressBuffer));
+    @try {
+        NSData *data = [service.addresses objectAtIndex:0];
+        memset(addressBuffer, 0, INET6_ADDRSTRLEN);
         
-        int port = ntohs(socketAddress->sa.sa_family == AF_INET ? socketAddress->ipv4.sin_port : socketAddress->ipv6.sin6_port);
+        typedef union {
+            struct sockaddr sa;
+            struct sockaddr_in ipv4;
+            struct sockaddr_in6 ipv6;
+        } ip_socket_address;
         
-        if (addressStr && port)
+        ip_socket_address *socketAddress = (ip_socket_address *)[data bytes];
+        
+        if (socketAddress && (socketAddress->sa.sa_family == AF_INET || socketAddress->sa.sa_family == AF_INET6))
         {
-            NSLog(@"Found service at %s:%d", addressStr, port);
-            NSMutableDictionary *tmp = [[NSMutableDictionary alloc]initWithObjectsAndKeys:[service name],@"name",[NSString stringWithFormat:@"%s",addressStr],@"ip", nil];
-            [self.DiscoveredServers addObject:tmp];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"ServerChanged" object:self];
+            const char *addressStr = inet_ntop(
+                                               socketAddress->sa.sa_family,
+                                               (socketAddress->sa.sa_family == AF_INET ? (void *)&(socketAddress->ipv4.sin_addr) : (void *)&(socketAddress->ipv6.sin6_addr)),
+                                               addressBuffer,
+                                               sizeof(addressBuffer));
+            
+            int port = ntohs(socketAddress->sa.sa_family == AF_INET ? socketAddress->ipv4.sin_port : socketAddress->ipv6.sin6_port);
+            
+            if (addressStr && port)
+            {
+                NSLog(@"Found service at %s:%d", addressStr, port);
+                NSMutableDictionary *tmp = [[NSMutableDictionary alloc]initWithObjectsAndKeys:[service name],@"name",[NSString stringWithFormat:@"%s",addressStr],@"ip", nil];
+                [self.DiscoveredServers addObject:tmp];
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"ServerChanged" object:self];
+            }
         }
+        //    }
+        
+        assert(service == NetReslover);
+        
+
     }
-    //    }
-    
-    assert(service == NetReslover);
-    
-    
-    
-    
-    [NetReslover stop];
-    NetReslover = nil;
+    @catch (NSException *exception) {
+        NSLog(@"error");
+    }
+    @finally {
+        [NetReslover stop];
+        NetReslover = nil;
+    }
 }
 
 -(void)netServiceBrowser:(NSNetServiceBrowser *)aNetServiceBrowser didFindService:(NSNetService *)aNetService moreComing:(BOOL)moreComing

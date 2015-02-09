@@ -15,6 +15,7 @@
 		E76D0CC21A884FB200F8FDAB /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = E76D0CC01A884FB200F8FDAB /* LaunchScreen.xib */; };
 		E76D0CCE1A884FB200F8FDAB /* AudioStreamer_iOSTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E76D0CCD1A884FB200F8FDAB /* AudioStreamer_iOSTests.m */; };
 		E76D0CDC1A88595E00F8FDAB /* DiscoverServerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E76D0CDB1A88595E00F8FDAB /* DiscoverServerManager.m */; };
+		E76D0CE21A8887CF00F8FDAB /* AudioStreamerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E76D0CE11A8887CF00F8FDAB /* AudioStreamerViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,6 +44,8 @@
 		E76D0CCD1A884FB200F8FDAB /* AudioStreamer_iOSTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioStreamer_iOSTests.m; sourceTree = "<group>"; };
 		E76D0CDA1A88595E00F8FDAB /* DiscoverServerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DiscoverServerManager.h; sourceTree = "<group>"; };
 		E76D0CDB1A88595E00F8FDAB /* DiscoverServerManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DiscoverServerManager.m; sourceTree = "<group>"; };
+		E76D0CE01A8887CF00F8FDAB /* AudioStreamerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioStreamerViewController.h; sourceTree = "<group>"; };
+		E76D0CE11A8887CF00F8FDAB /* AudioStreamerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioStreamerViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -142,6 +145,8 @@
 		E76D0CD91A8858F200F8FDAB /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				E76D0CE01A8887CF00F8FDAB /* AudioStreamerViewController.h */,
+				E76D0CE11A8887CF00F8FDAB /* AudioStreamerViewController.m */,
 				E76D0CB81A884FB200F8FDAB /* ViewController.h */,
 				E76D0CB91A884FB200F8FDAB /* ViewController.m */,
 			);
@@ -251,6 +256,7 @@
 				E76D0CBA1A884FB200F8FDAB /* ViewController.m in Sources */,
 				E76D0CB71A884FB200F8FDAB /* AppDelegate.m in Sources */,
 				E76D0CB41A884FB200F8FDAB /* main.m in Sources */,
+				E76D0CE21A8887CF00F8FDAB /* AudioStreamerViewController.m in Sources */,
 				E76D0CDC1A88595E00F8FDAB /* DiscoverServerManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

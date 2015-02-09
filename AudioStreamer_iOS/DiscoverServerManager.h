@@ -15,5 +15,6 @@
     
 }
 @property (strong,nonatomic)NSMutableArray *DiscoveredServers;
-
+-(void)startSearching;
+-(void)stopSearching;
 @end

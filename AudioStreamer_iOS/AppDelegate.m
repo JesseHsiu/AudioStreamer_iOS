@@ -7,7 +7,8 @@
 //
 
 #import "AppDelegate.h"
-
+#import "ViewController.h"
+#import "ViewController.h"
 @interface AppDelegate ()
 
 @end
@@ -16,6 +17,9 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+
+    self.navController = (UINavigationController *)self.window.rootViewController;
+    self.navController.navigationBar.topItem.title = @"AudioStreamer";
     // Override point for customization after application launch.
     return YES;
 }
