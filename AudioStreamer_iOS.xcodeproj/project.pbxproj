@@ -15,7 +15,6 @@
 		E76D0CC21A884FB200F8FDAB /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = E76D0CC01A884FB200F8FDAB /* LaunchScreen.xib */; };
 		E76D0CCE1A884FB200F8FDAB /* AudioStreamer_iOSTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E76D0CCD1A884FB200F8FDAB /* AudioStreamer_iOSTests.m */; };
 		E76D0CDC1A88595E00F8FDAB /* DiscoverServerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E76D0CDB1A88595E00F8FDAB /* DiscoverServerManager.m */; };
-		E76D0CDF1A88597A00F8FDAB /* Server.m in Sources */ = {isa = PBXBuildFile; fileRef = E76D0CDE1A88597A00F8FDAB /* Server.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,8 +43,6 @@
 		E76D0CCD1A884FB200F8FDAB /* AudioStreamer_iOSTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioStreamer_iOSTests.m; sourceTree = "<group>"; };
 		E76D0CDA1A88595E00F8FDAB /* DiscoverServerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DiscoverServerManager.h; sourceTree = "<group>"; };
 		E76D0CDB1A88595E00F8FDAB /* DiscoverServerManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DiscoverServerManager.m; sourceTree = "<group>"; };
-		E76D0CDD1A88597A00F8FDAB /* Server.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Server.h; sourceTree = "<group>"; };
-		E76D0CDE1A88597A00F8FDAB /* Server.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Server.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,8 +126,6 @@
 		E76D0CD71A8858E700F8FDAB /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				E76D0CDD1A88597A00F8FDAB /* Server.h */,
-				E76D0CDE1A88597A00F8FDAB /* Server.m */,
 				E76D0CDA1A88595E00F8FDAB /* DiscoverServerManager.h */,
 				E76D0CDB1A88595E00F8FDAB /* DiscoverServerManager.m */,
 			);
@@ -257,7 +252,6 @@
 				E76D0CB71A884FB200F8FDAB /* AppDelegate.m in Sources */,
 				E76D0CB41A884FB200F8FDAB /* main.m in Sources */,
 				E76D0CDC1A88595E00F8FDAB /* DiscoverServerManager.m in Sources */,
-				E76D0CDF1A88597A00F8FDAB /* Server.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

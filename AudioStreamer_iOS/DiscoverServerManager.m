@@ -16,73 +16,16 @@
 
         //init servers
         NSString *type = @"TestingProtocol";
-        self->Discover = [[Server alloc]initWithProtocol:type];
-        self->Discover.delegate= self;
-        
-        NSError *error = nil;
-        if(![self->Discover start:&error]) {
-            NSLog(@"error = %@", error);
-        }
-        else
-        {
-            NSLog(@"success");
-        }
-        
         //init array
         self.DiscoveredServers = [[NSMutableArray alloc]init];
+        
+        self->Browser =[[NSNetServiceBrowser alloc] init];
+        self->Browser.delegate = self;
+        [self->Browser searchForServicesOfType:[NSString stringWithFormat:@"_%@._tcp.", type] inDomain:@"local"];
     }
     return self;
 }
 
-// sent when both sides of the connection are ready to go
-- (void)serverRemoteConnectionComplete:(Server *)server
-{
-    
-}
-// called when the server is finished stopping
-- (void)serverStopped:(Server *)server
-{
-
-}
-// called when something goes wrong in the starup
-- (void)server:(Server *)server didNotStart:(NSDictionary *)errorDict
-{
-
-}
-// called when data gets here from the remote side of the server
-- (void)server:(Server *)server didAcceptData:(NSData *)data
-{
-
-}
-// called when the connection to the remote side is lost
-- (void)server:(Server *)server lostConnection:(NSDictionary *)errorDict
-{
-
-}
-// called when a new service comes on line
-- (void)serviceAdded:(NSNetService *)service moreComing:(BOOL)more
-{
-    //[DiscoveredServers addObject:service];
-    
-    //reslove ip address
-    NetReslover = service;
-    NetReslover.delegate = self;
-    [NetReslover resolveWithTimeout:0.1];
-}
-// called when a service goes off line
-- (void)serviceRemoved:(NSNetService *)service moreComing:(BOOL)more
-{
-    NSMutableArray *tmp = [self.DiscoveredServers copy];
-    
-    for (int i =  0 ; i< [tmp count];i++) {
-        if ([[[tmp objectAtIndex:i] objectForKey:@"name"] isEqualToString:[service name]]) {
-            [self.DiscoveredServers removeObject:[tmp objectAtIndex:i]];
-        }
-    }
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"ServerChanged" object:self];
-    //[DiscoveredServers removeObject:service];
-}
 
 #pragma mark NSNetServiceDelegate
 - (void)netServiceDidResolveAddress:(NSNetService *)service {
@@ -129,6 +72,24 @@
     NetReslover = nil;
 }
 
+-(void)netServiceBrowser:(NSNetServiceBrowser *)aNetServiceBrowser didFindService:(NSNetService *)aNetService moreComing:(BOOL)moreComing
+{
+    NetReslover = aNetService;
+    NetReslover.delegate = self;
+    [NetReslover resolveWithTimeout:0.0];
 
+}
+-(void)netServiceBrowser:(NSNetServiceBrowser *)aNetServiceBrowser didRemoveService:(NSNetService *)aNetService moreComing:(BOOL)moreComing
+{
+    NSMutableArray *tmp = [self.DiscoveredServers copy];
+    
+    for (int i =  0 ; i< [tmp count];i++) {
+        if ([[[tmp objectAtIndex:i] objectForKey:@"name"] isEqualToString:[aNetService name]]) {
+            [self.DiscoveredServers removeObject:[tmp objectAtIndex:i]];
+        }
+    }
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ServerChanged" object:self];
+}
 
 @end

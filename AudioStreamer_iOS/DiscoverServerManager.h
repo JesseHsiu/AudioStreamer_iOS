@@ -7,12 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "Server.h"
 
-@interface DiscoverServerManager : NSObject <ServerDelegate,NSNetServiceDelegate>
+@interface DiscoverServerManager : NSObject <NSNetServiceDelegate, NSNetServiceBrowserDelegate>
 {
-    Server *Discover;
     NSNetService *NetReslover;
+    NSNetServiceBrowser *Browser;
     
 }
 @property (strong,nonatomic)NSMutableArray *DiscoveredServers;
