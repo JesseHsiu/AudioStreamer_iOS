@@ -14,7 +14,6 @@
     Server *Discover;
     NSNetService *NetReslover;
     
-    
 }
 @property (strong,nonatomic)NSMutableArray *DiscoveredServers;
 

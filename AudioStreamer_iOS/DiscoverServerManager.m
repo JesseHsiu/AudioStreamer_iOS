@@ -72,9 +72,11 @@
 // called when a service goes off line
 - (void)serviceRemoved:(NSNetService *)service moreComing:(BOOL)more
 {
-    for (NSDictionary *dict in self.DiscoveredServers) {
-        if ([[dict objectForKey:@"name"] isEqualToString:[service name]]) {
-            [self.DiscoveredServers removeObject:dict];
+    NSMutableArray *tmp = [self.DiscoveredServers copy];
+    
+    for (int i =  0 ; i< [tmp count];i++) {
+        if ([[[tmp objectAtIndex:i] objectForKey:@"name"] isEqualToString:[service name]]) {
+            [self.DiscoveredServers removeObject:[tmp objectAtIndex:i]];
         }
     }
     
