@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E717C5AB1A8C8F67000C7C87 /* InstrumentsListTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E717C5AA1A8C8F67000C7C87 /* InstrumentsListTableViewCell.m */; };
 		E76D0CB41A884FB200F8FDAB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E76D0CB31A884FB200F8FDAB /* main.m */; };
 		E76D0CB71A884FB200F8FDAB /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E76D0CB61A884FB200F8FDAB /* AppDelegate.m */; };
 		E76D0CBA1A884FB200F8FDAB /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E76D0CB91A884FB200F8FDAB /* ViewController.m */; };
@@ -16,6 +17,8 @@
 		E76D0CCE1A884FB200F8FDAB /* AudioStreamer_iOSTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E76D0CCD1A884FB200F8FDAB /* AudioStreamer_iOSTests.m */; };
 		E76D0CDC1A88595E00F8FDAB /* DiscoverServerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = E76D0CDB1A88595E00F8FDAB /* DiscoverServerManager.m */; };
 		E76D0CE21A8887CF00F8FDAB /* AudioStreamerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E76D0CE11A8887CF00F8FDAB /* AudioStreamerViewController.m */; };
+		E76D0D231A889FE400F8FDAB /* InstrumentsListTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = E76D0D221A889FE400F8FDAB /* InstrumentsListTableView.m */; };
+		E7AB4E661A8DABEF00456A0A /* InstrumentsSettingTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E7AB4E651A8DABEF00456A0A /* InstrumentsSettingTableViewCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,6 +32,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		E717C5A91A8C8F67000C7C87 /* InstrumentsListTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InstrumentsListTableViewCell.h; sourceTree = "<group>"; };
+		E717C5AA1A8C8F67000C7C87 /* InstrumentsListTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InstrumentsListTableViewCell.m; sourceTree = "<group>"; };
 		E76D0CAE1A884FB200F8FDAB /* AudioStreamer_iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AudioStreamer_iOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E76D0CB21A884FB200F8FDAB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E76D0CB31A884FB200F8FDAB /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -46,6 +51,10 @@
 		E76D0CDB1A88595E00F8FDAB /* DiscoverServerManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DiscoverServerManager.m; sourceTree = "<group>"; };
 		E76D0CE01A8887CF00F8FDAB /* AudioStreamerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioStreamerViewController.h; sourceTree = "<group>"; };
 		E76D0CE11A8887CF00F8FDAB /* AudioStreamerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioStreamerViewController.m; sourceTree = "<group>"; };
+		E76D0D211A889FE400F8FDAB /* InstrumentsListTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InstrumentsListTableView.h; sourceTree = "<group>"; };
+		E76D0D221A889FE400F8FDAB /* InstrumentsListTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InstrumentsListTableView.m; sourceTree = "<group>"; };
+		E7AB4E641A8DABEF00456A0A /* InstrumentsSettingTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InstrumentsSettingTableViewCell.h; sourceTree = "<group>"; };
+		E7AB4E651A8DABEF00456A0A /* InstrumentsSettingTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InstrumentsSettingTableViewCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -138,6 +147,12 @@
 		E76D0CD81A8858EC00F8FDAB /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				E7AB4E641A8DABEF00456A0A /* InstrumentsSettingTableViewCell.h */,
+				E7AB4E651A8DABEF00456A0A /* InstrumentsSettingTableViewCell.m */,
+				E717C5A91A8C8F67000C7C87 /* InstrumentsListTableViewCell.h */,
+				E717C5AA1A8C8F67000C7C87 /* InstrumentsListTableViewCell.m */,
+				E76D0D211A889FE400F8FDAB /* InstrumentsListTableView.h */,
+				E76D0D221A889FE400F8FDAB /* InstrumentsListTableView.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -255,8 +270,11 @@
 			files = (
 				E76D0CBA1A884FB200F8FDAB /* ViewController.m in Sources */,
 				E76D0CB71A884FB200F8FDAB /* AppDelegate.m in Sources */,
+				E717C5AB1A8C8F67000C7C87 /* InstrumentsListTableViewCell.m in Sources */,
+				E7AB4E661A8DABEF00456A0A /* InstrumentsSettingTableViewCell.m in Sources */,
 				E76D0CB41A884FB200F8FDAB /* main.m in Sources */,
 				E76D0CE21A8887CF00F8FDAB /* AudioStreamerViewController.m in Sources */,
+				E76D0D231A889FE400F8FDAB /* InstrumentsListTableView.m in Sources */,
 				E76D0CDC1A88595E00F8FDAB /* DiscoverServerManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -450,6 +468,7 @@
 				E76D0CD31A884FB200F8FDAB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		E76D0CD41A884FB200F8FDAB /* Build configuration list for PBXNativeTarget "AudioStreamer_iOSTests" */ = {
 			isa = XCConfigurationList;
@@ -458,6 +477,7 @@
 				E76D0CD61A884FB200F8FDAB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

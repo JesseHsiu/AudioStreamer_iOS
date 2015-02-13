@@ -7,7 +7,14 @@
 //
 
 #import "ViewController.h"
+#import "InstrumentsListTableView.h"
 
-@interface AudioStreamerViewController : ViewController
+@interface AudioStreamerViewController : ViewController<UITableViewDelegate,UITableViewDataSource>
+{
+    IBOutlet InstrumentsListTableView *instrumentsTableView;
+}
+
+@property (nonatomic,assign) NSString *IpAddress;
+@property (nonatomic,assign) NSString *ServerName;
 
 @end

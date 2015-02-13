@@ -63,6 +63,9 @@
 {
     UIStoryboard *sb = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     AudioStreamerViewController * vc = (AudioStreamerViewController *)[sb instantiateViewControllerWithIdentifier:@"AudioStreamerVC"];
+    NSDictionary *tmp = [ServerManager.DiscoveredServers objectAtIndex:indexPath.row];
+    vc.IpAddress =[tmp objectForKey:@"ip"];
+    vc.ServerName = [tmp objectForKey:@"name"];
     [self.navigationController pushViewController:vc animated:YES];
 }
 
