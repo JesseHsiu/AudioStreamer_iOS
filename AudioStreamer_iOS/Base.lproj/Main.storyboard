@@ -117,21 +117,11 @@
                                                 <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="lGs-Vr-BAU">
                                                     <rect key="frame" x="113" y="46" width="481" height="31"/>
                                                 </slider>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fYZ-iM-L7M">
-                                                    <rect key="frame" x="288" y="81" width="61" height="30"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="61" id="6mQ-kg-kjt"/>
-                                                        <constraint firstAttribute="height" constant="30" id="GAI-XX-azf"/>
-                                                    </constraints>
-                                                    <state key="normal" title="Mute">
-                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </state>
-                                                </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RVG-2U-9iC">
-                                                    <rect key="frame" x="357" y="81" width="61" height="30"/>
+                                                    <rect key="frame" x="531" y="81" width="61" height="30"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="30" id="PF0-Eo-rpv"/>
-                                                        <constraint firstAttribute="width" constant="61" id="vWf-7k-ak4"/>
+                                                        <constraint firstAttribute="height" constant="30" id="57y-Ne-upN"/>
+                                                        <constraint firstAttribute="width" constant="61" id="wvj-wh-xNA"/>
                                                     </constraints>
                                                     <state key="normal" title="MoreInfo">
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -141,20 +131,30 @@
                                                     <rect key="frame" x="203" y="79" width="300" height="40"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </view>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fYZ-iM-L7M">
+                                                    <rect key="frame" x="462" y="81" width="61" height="30"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="61" id="QO4-Ai-MNp"/>
+                                                        <constraint firstAttribute="height" constant="30" id="hTq-GJ-DOm"/>
+                                                    </constraints>
+                                                    <state key="normal" title="Mute">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                </button>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="m82-Ee-h0Y" firstAttribute="top" secondItem="wZW-SQ-kar" secondAttribute="topMargin" constant="2" id="712-SD-jkJ"/>
+                                                <constraint firstItem="fYZ-iM-L7M" firstAttribute="top" secondItem="lGs-Vr-BAU" secondAttribute="bottom" constant="5" id="AW8-4G-FLa"/>
+                                                <constraint firstItem="RVG-2U-9iC" firstAttribute="trailing" secondItem="wZW-SQ-kar" secondAttribute="trailingMargin" id="CqH-HC-VQt"/>
+                                                <constraint firstItem="RVG-2U-9iC" firstAttribute="leading" secondItem="fYZ-iM-L7M" secondAttribute="trailing" constant="8" id="Dcs-Bb-vC9"/>
+                                                <constraint firstItem="RVG-2U-9iC" firstAttribute="top" secondItem="lGs-Vr-BAU" secondAttribute="bottom" constant="5" id="FwE-FQ-Yht"/>
                                                 <constraint firstItem="lGs-Vr-BAU" firstAttribute="leading" secondItem="m82-Ee-h0Y" secondAttribute="trailing" constant="8" id="J3p-ji-vHc"/>
-                                                <constraint firstItem="fYZ-iM-L7M" firstAttribute="top" secondItem="lGs-Vr-BAU" secondAttribute="bottom" constant="5" id="UQl-7D-6lG"/>
                                                 <constraint firstItem="Omg-fB-RrH" firstAttribute="trailing" secondItem="wZW-SQ-kar" secondAttribute="trailingMargin" id="ZOG-yM-31f"/>
-                                                <constraint firstItem="RVG-2U-9iC" firstAttribute="top" secondItem="lGs-Vr-BAU" secondAttribute="bottom" constant="5" id="bxL-o0-f4j"/>
                                                 <constraint firstItem="lGs-Vr-BAU" firstAttribute="trailing" secondItem="wZW-SQ-kar" secondAttribute="trailingMargin" id="jta-bm-prK"/>
                                                 <constraint firstItem="Omg-fB-RrH" firstAttribute="top" secondItem="wZW-SQ-kar" secondAttribute="topMargin" constant="3" id="lCs-5u-mfB"/>
                                                 <constraint firstItem="Omg-fB-RrH" firstAttribute="leading" secondItem="m82-Ee-h0Y" secondAttribute="trailing" constant="8" id="pMO-1E-UcX"/>
-                                                <constraint firstAttribute="centerX" secondItem="fYZ-iM-L7M" secondAttribute="centerX" constant="-18.5" id="pwM-7S-C8V"/>
                                                 <constraint firstItem="m82-Ee-h0Y" firstAttribute="leading" secondItem="wZW-SQ-kar" secondAttribute="leadingMargin" id="t89-j6-lY5"/>
                                                 <constraint firstItem="lGs-Vr-BAU" firstAttribute="top" secondItem="Omg-fB-RrH" secondAttribute="bottom" constant="14" id="toY-1p-l9b"/>
-                                                <constraint firstAttribute="centerX" secondItem="RVG-2U-9iC" secondAttribute="centerX" constant="-87.5" id="wUu-WY-l4c"/>
                                             </constraints>
                                             <variation key="default">
                                                 <mask key="subviews">
