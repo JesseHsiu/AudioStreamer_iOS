@@ -27,6 +27,8 @@
     self.navigationItem.title = self.ServerName;
     
     instrumentsTableView = [[InstrumentsListTableView alloc]init];
+    instrumentsTableView.dataSource = self;
+    instrumentsTableView.delegate = self;
     monitorChannels = [[NSMutableArray alloc] init];
     
     //??
@@ -35,6 +37,7 @@
     //localtag???
     
     
+    bufferQueue = dispatch_queue_create("com.BufferQueue",DISPATCH_QUEUE_SERIAL);
     
     [self setupTCPSocket];
     [self setupUDPSocket];
@@ -68,7 +71,7 @@
     aeAudioController = [[AEAudioController alloc] initWithAudioDescription:[AEAudioController nonInterleavedFloatStereoAudioDescription] inputEnabled:NO];
     //    _audioController.preferredBufferDuration = 0.005;
     aeAudioController.preferredBufferDuration = 0.0029;
-    //    _audioController.preferredBufferDuration = 0.00145;
+//        aeAudioController.preferredBufferDuration = 0.00145;
     
     NSError *error = [NSError alloc];
     if(![aeAudioController start:&error]){
@@ -86,7 +89,7 @@
         [monitorChannels addObject:channelToProcess];
     }
 
-    [[UIDevice currentDevice] setProximityMonitoringEnabled:YES];
+//    [[UIDevice currentDevice] setProximityMonitoringEnabled:YES];
     NSLog(@"Proximity Monitoring Enabled? %@ ",    [UIDevice currentDevice].proximityMonitoringEnabled ? @"YES" : @"NO");
     
     initialized = true;
@@ -96,7 +99,7 @@
 #pragma mark TableView DataSources Thing
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 10;
+    return numOfChannel;
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -104,23 +107,24 @@
     static NSString *CellIdentifier_Setting = @"InstrumentsSettings";
     
     
-    if (indexPath.row>5) {
-        InstrumentsSettingTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier_Setting];
-        if (cell == nil) {
-            cell = [[InstrumentsSettingTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        }
-        
-        return cell;
-    }
-    else
-    {
+//    if (indexPath.row>5) {
+//        InstrumentsSettingTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier_Setting];
+//        if (cell == nil) {
+//            cell = [[InstrumentsSettingTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+//        }
+//    
+//        
+//        return cell;
+//    }
+//    else
+//    {
         InstrumentsListTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
         if (cell == nil) {
             cell = [[InstrumentsListTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         }
-        
+        cell.nameLabel.text = ((MonitorChannel*)[monitorChannels objectAtIndex:indexPath.row]).name;
         return cell;
-    }
+//    }
     
     
 }
@@ -142,7 +146,7 @@
 
 #pragma mark TCP_Socket
 -(void)setupTCPSocket{
-    tcpSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_main_queue()];
+    tcpSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:bufferQueue];
     
     NSString *host = self.IpAddress;
 
@@ -159,7 +163,7 @@
 #pragma mark UDP_Socket
 -(void)setupUDPSocket{
 //    localTag = 0;
-    udpSocket = [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_main_queue()];
+    udpSocket = [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:bufferQueue];
     
     NSError *error = nil;
     
@@ -186,11 +190,13 @@ withFilterContext:(id)filterContext{
         NSArray *array = [msg componentsSeparatedByString:@":"];
         if ((int)array.count == numOfChannel){
             [self updateChannelNames:array];
+            [instrumentsTableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
         } else if ([[array objectAtIndex:0] isEqual:@"image"]){
             //Initialize standard image already on the phone
             long index = [[array objectAtIndex:1] integerValue];
             NSString *path = [[NSBundle mainBundle] pathForResource:[array objectAtIndex:2] ofType:[array objectAtIndex:3]];
             ((MonitorChannel*)[monitorChannels objectAtIndex:index]).PathToImg = path;
+            [instrumentsTableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
         }
     }
 }
@@ -203,14 +209,20 @@ withFilterContext:(id)filterContext{
 }
 
 -(void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag{
-    NSLog(@"socket:%p didReadData:withTag:%ld", sock, tag);
+//    NSLog(@"socket:%p didReadData:withTag:%ld", sock, tag);
     
     //    NSString *ack = [[NSString alloc] initWithFormat:@"received %li",tag];
     //    NSData *d = [ack dataUsingEncoding:NSUTF8StringEncoding];
     //    [sock writeData:d withTimeout:-1 tag:0];
-    
+
     if(data.length == DATA_SIZE * numOfChannel){
         [self decodeAudioBufferListMultiChannel:data];
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [instrumentsTableView reloadData];
+//        });
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            [instrumentsTableView reloadData];
+        });
     } else {
         NSString *msg = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
         if (msg)
@@ -220,7 +232,6 @@ withFilterContext:(id)filterContext{
             NSArray *array = [msg componentsSeparatedByString:@":"];
             if(!initialized){
                 numOfChannel = [array count];
-                
                 [self initializeAll];
             } else if ([array count] == numOfChannel){
                 [self updateChannelNames:array];
@@ -249,8 +260,8 @@ withFilterContext:(id)filterContext{
 -(void)updateChannelNames:(NSArray *)names{
     for (int i = 0; i < numOfChannel; i++) {
         ((MonitorChannel*)[monitorChannels objectAtIndex:i]).name = [names objectAtIndex:i];
+        NSLog(@"%@",[names objectAtIndex:i]);
     }
-    [self.view reloadInputViews];
 }
 
 
@@ -284,18 +295,18 @@ withFilterContext:(id)filterContext{
             memcpy(&self.byteDataArray[DATA_SIZE*i], [subdata bytes], rLen);
             //            self.abl->mBuffers[i].mData = &self.byteDataArray[dataSize*i];
 
-            AudioBufferManager *ablManager = ((MonitorChannel*)[monitorChannels objectAtIndex:i]).audioBufferManager;
-            
-            ablManager.buffer->mNumberBuffers = 2;
-            ablManager.buffer->mBuffers[0].mDataByteSize = rLen;
-            ablManager.buffer->mBuffers[0].mNumberChannels = 1;
-            ablManager.buffer->mBuffers[0].mData = &self.byteDataArray[DATA_SIZE*i];
+            AudioBufferList *ablManagerBufferList = ((MonitorChannel*)[monitorChannels objectAtIndex:i]).audioBufferManager.buffer;
+            ablManagerBufferList->mBuffers[0].mData = nil;
+            ablManagerBufferList->mNumberBuffers = 2;
+            ablManagerBufferList->mBuffers[0].mDataByteSize = rLen;
+            ablManagerBufferList->mBuffers[0].mNumberChannels = 1;
+            ablManagerBufferList->mBuffers[0].mData = &self.byteDataArray[DATA_SIZE*i];
             //            self.ablArray[16*i].mBuffers[1].mDataByteSize = rLen;
             //            self.ablArray[16*i].mBuffers[1].mNumberChannels = 1;
             //            self.ablArray[16*i].mBuffers[1].mData = &self.byteDataArray[dataSize*i];
-            ablManager.buffer->mBuffers[1] = ablManager.buffer->mBuffers[0];
+            ablManagerBufferList->mBuffers[1] = ablManagerBufferList->mBuffers[0];
             
-            [[[monitorChannels objectAtIndex:i] getChannelPlayer] addToBufferWithoutTimeStampAudioBufferList:ablManager.buffer];
+            [[monitorChannels objectAtIndex:i] addToBufferToList];
             
             startPos += rangeLen;
         }

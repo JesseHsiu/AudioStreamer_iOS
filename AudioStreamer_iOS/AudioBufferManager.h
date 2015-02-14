@@ -10,5 +10,5 @@
 #import "TPCircularBuffer+AudioBufferList.h"
 @interface AudioBufferManager : NSObject
 
-@property (nonatomic,assign) AudioBufferList *buffer;
+@property (nonatomic) AudioBufferList *buffer;
 @end

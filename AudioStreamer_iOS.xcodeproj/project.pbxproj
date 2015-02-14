@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		52658D1945E95E449926D897 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3EF2DE4DD3D878A64542B532 /* libPods.a */; };
 		E717C5AB1A8C8F67000C7C87 /* InstrumentsListTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E717C5AA1A8C8F67000C7C87 /* InstrumentsListTableViewCell.m */; };
+		E732FEE01A8F186300FA4C94 /* NetworkStreamer.m in Sources */ = {isa = PBXBuildFile; fileRef = E732FEDF1A8F186300FA4C94 /* NetworkStreamer.m */; };
 		E76D0CB41A884FB200F8FDAB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E76D0CB31A884FB200F8FDAB /* main.m */; };
 		E76D0CB71A884FB200F8FDAB /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E76D0CB61A884FB200F8FDAB /* AppDelegate.m */; };
 		E76D0CBA1A884FB200F8FDAB /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E76D0CB91A884FB200F8FDAB /* ViewController.m */; };
@@ -43,6 +44,8 @@
 		3EF2DE4DD3D878A64542B532 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E717C5A91A8C8F67000C7C87 /* InstrumentsListTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InstrumentsListTableViewCell.h; sourceTree = "<group>"; };
 		E717C5AA1A8C8F67000C7C87 /* InstrumentsListTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InstrumentsListTableViewCell.m; sourceTree = "<group>"; };
+		E732FEDE1A8F186300FA4C94 /* NetworkStreamer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkStreamer.h; sourceTree = "<group>"; };
+		E732FEDF1A8F186300FA4C94 /* NetworkStreamer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkStreamer.m; sourceTree = "<group>"; };
 		E76D0CAE1A884FB200F8FDAB /* AudioStreamer_iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AudioStreamer_iOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E76D0CB21A884FB200F8FDAB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E76D0CB31A884FB200F8FDAB /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -186,6 +189,8 @@
 				E7AB4E721A8DC4A300456A0A /* MonitorChannel.mm */,
 				E7AB4E741A8DC75F00456A0A /* AudioBufferManager.h */,
 				E7AB4E751A8DC75F00456A0A /* AudioBufferManager.m */,
+				E732FEDE1A8F186300FA4C94 /* NetworkStreamer.h */,
+				E732FEDF1A8F186300FA4C94 /* NetworkStreamer.m */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -361,6 +366,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E76D0CBA1A884FB200F8FDAB /* ViewController.m in Sources */,
+				E732FEE01A8F186300FA4C94 /* NetworkStreamer.m in Sources */,
 				E76D0CB71A884FB200F8FDAB /* AppDelegate.m in Sources */,
 				E717C5AB1A8C8F67000C7C87 /* InstrumentsListTableViewCell.m in Sources */,
 				E7AB4E701A8DC49800456A0A /* ChannelPlayer.mm in Sources */,

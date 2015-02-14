@@ -38,4 +38,5 @@
 -(void)setVolume:(float)volume;
 -(void)setPan:(float)pan;
 -(void)setMuted:(BOOL)muted;
+-(void)addToBufferToList;
 @end

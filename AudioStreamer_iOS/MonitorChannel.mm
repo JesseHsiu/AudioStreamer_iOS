@@ -81,5 +81,9 @@
 -(void)setPan:(float)pan{
     [self.audioController setPan:pan forChannelGroup:self.channelGroup];
 }
+-(void)addToBufferToList
+{
+    [self.channelPlayer addToBufferWithoutTimeStampAudioBufferList:self.audioBufferManager.buffer];
+}
 
 @end

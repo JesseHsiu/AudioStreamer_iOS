@@ -23,11 +23,13 @@
 {
     [ServerManager startSearching];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateTableView:) name:@"ServerChanged" object:nil];
+    [super viewWillAppear:YES];
 }
 -(void)viewWillDisappear:(BOOL)animated
 {
     [ServerManager stopSearching];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [super viewWillDisappear:YES];
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

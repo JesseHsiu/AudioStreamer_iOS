@@ -6,7 +6,6 @@
 //  Copyright (c) 2015 MobileHCILab. All rights reserved.
 //
 
-#import "ViewController.h"
 #import "InstrumentsListTableView.h"
 
 //socket
@@ -16,7 +15,7 @@
 //
 #import "MonitorChannel.h"
 
-@interface AudioStreamerViewController : ViewController<UITableViewDelegate,UITableViewDataSource,GCDAsyncUdpSocketDelegate,GCDAsyncSocketDelegate>
+@interface AudioStreamerViewController : UIViewController<UITableViewDelegate,UITableViewDataSource,GCDAsyncUdpSocketDelegate,GCDAsyncSocketDelegate>
 {
     IBOutlet InstrumentsListTableView *instrumentsTableView;
     GCDAsyncUdpSocket *udpSocket;
@@ -28,6 +27,9 @@
     
     NSUInteger numOfChannel;
     BOOL initialized;
+    
+    
+    dispatch_queue_t bufferQueue;
     
 }
 
