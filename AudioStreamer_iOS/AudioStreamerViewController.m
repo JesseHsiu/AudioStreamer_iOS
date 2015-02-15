@@ -20,19 +20,16 @@
 @end
 
 @implementation AudioStreamerViewController
+@synthesize numOfChannel;
 
 - (void)viewDidLoad {
     
     self.navigationItem.title = self.ServerName;
-    
-    instrumentsTableView = [[InstrumentsListTableView alloc]init];
-    instrumentsTableView.dataSource = self;
-    instrumentsTableView.delegate = self;
     monitorChannels = [[NSMutableArray alloc] init];
     
     //??
     initialized = false;
-    numOfChannel= 0;
+    self.numOfChannel= 0;
     //localtag???
     
     networkStreamer = [[NetworkStreamer alloc]initWithIpAddress:self.IpAddress portNumber:PortNumber];
@@ -63,7 +60,7 @@
     [monitorChannels removeAllObjects];
     aeAudioController = nil;
     
-    self.byteDataArray = (Byte *) malloc(DATA_SIZE*numOfChannel);
+    self.byteDataArray = (Byte *) malloc(DATA_SIZE*self.numOfChannel);
     aeAudioController = [[AEAudioController alloc] initWithAudioDescription:[AEAudioController nonInterleavedFloatStereoAudioDescription] inputEnabled:NO];
     //    _audioController.preferredBufferDuration = 0.005;
     aeAudioController.preferredBufferDuration = 0.0029;
@@ -75,7 +72,7 @@
     }
     
     
-    for(int i = 0; i < numOfChannel; i++){
+    for(int i = 0; i < self.numOfChannel; i++){
         
         MonitorChannel* channelToProcess = [[MonitorChannel alloc]initWithAudioController:aeAudioController];
         AudioBufferManager *ablManager = [[AudioBufferManager alloc]init];
@@ -85,8 +82,8 @@
         [monitorChannels addObject:channelToProcess];
     }
 
-    [[UIDevice currentDevice] setProximityMonitoringEnabled:YES];
-    NSLog(@"Proximity Monitoring Enabled? %@ ",    [UIDevice currentDevice].proximityMonitoringEnabled ? @"YES" : @"NO");
+//    [[UIDevice currentDevice] setProximityMonitoringEnabled:YES];
+//    NSLog(@"Proximity Monitoring Enabled? %@ ",    [UIDevice currentDevice].proximityMonitoringEnabled ? @"YES" : @"NO");
     
     initialized = true;
 }
@@ -95,7 +92,7 @@
 #pragma mark TableView DataSources Thing
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return numOfChannel;
+    return [monitorChannels count];
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -118,7 +115,8 @@
         if (cell == nil) {
             cell = [[InstrumentsListTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         }
-        cell.nameLabel.text = ((MonitorChannel*)[monitorChannels objectAtIndex:indexPath.row]).name;
+    
+        //cell.nameLabel.text = ((MonitorChannel*)[monitorChannels objectAtIndex:indexPath.row]).name;
         return cell;
 //    }
     
@@ -151,7 +149,7 @@
         //Take the start position of the first subrange
         NSUInteger startPos = 0;
         //Calculate the length of the subranges
-        NSUInteger rangeLen = dataLen / numOfChannel;
+        NSUInteger rangeLen = dataLen / self.numOfChannel;
         //        NSLog(@"%lu,%d ->rangelen :  %lu %lu",(unsigned long)dataLen,numChannels,(unsigned long)rangeLen, sizeof(_ablArray));
         //Create a uint32 version of the rangelength
         UInt32 rLen = (UInt32) rangeLen;
@@ -159,7 +157,7 @@
         
         
         
-        for(int i = 0; i < numOfChannel; i++){
+        for(int i = 0; i < [monitorChannels count]; i++){
             NSRange range = NSMakeRange(startPos, rangeLen);
             NSData *subdata = [data subdataWithRange:range];
             
@@ -191,19 +189,27 @@
     //    return nil;
 
 }
--(void)NetworkStreamerUpdateName:(NSArray *)nameArray
+-(void)NetworkStreamerUpdateName:(NSArray *)nameArray NumberOfChannel:(NSUInteger)num
 {
-    for (int i = 0; i < numOfChannel; i++) {
+    self.numOfChannel = num;
+    if (!initialized) {
+        [self initializeAll];
+    }
+    
+    for (int i = 0; i < self.numOfChannel; i++) {
         ((MonitorChannel*)[monitorChannels objectAtIndex:i]).name = [nameArray objectAtIndex:i];
         NSLog(@"%@",[nameArray objectAtIndex:i]);
     }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [instrumentsTableView reloadData];
+    });
 }
 -(void)NetworkStreamerUpdateNumberOfChannel:(NSUInteger)num
 {
-    numOfChannel = num;
+    self.numOfChannel = num;
     [self initializeAll];
-    NSLog(@"NumberOfChannel changed %lu",(unsigned long)numOfChannel);
-    [instrumentsTableView reloadData];
+    NSLog(@"NumberOfChannel changed %ld",(long)self.numOfChannel);
 }
 
 

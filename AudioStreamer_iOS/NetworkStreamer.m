@@ -22,8 +22,10 @@
         [self setupTCPSocket];
         [self setupUDPSocket];
         
-        bufferQueue = dispatch_queue_create("com.BufferQueue",DISPATCH_QUEUE_SERIAL);
+        self.bufferQueue = dispatch_queue_create("com.mydomain.app.newimagesinbackground", NULL); // create my serial queue
         
+        numOfChannel = 0;
+        initialized =false;
         
         NSData *data = [@"hey" dataUsingEncoding:NSUTF8StringEncoding];
         [udpSocket sendData:data toHost:ipAddress port:portNumber withTimeout:-1 tag:0];
@@ -33,22 +35,9 @@
 }
 
 
-#pragma mark Init Functions
--(void)initializeAll{
-    
-    self.byteDataArray = (Byte *) malloc(DATA_SIZE*numOfChannel);
-
-    //    [[UIDevice currentDevice] setProximityMonitoringEnabled:YES];
-//    NSLog(@"Proximity Monitoring Enabled? %@ ",    [UIDevice currentDevice].proximityMonitoringEnabled ? @"YES" : @"NO");
-    
-    initialized = true;
-}
-
-
-
 #pragma mark TCP_Socket
 -(void)setupTCPSocket{
-    tcpSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_main_queue()];
+    tcpSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
     
     NSString *host = ipAddress;
     
@@ -65,7 +54,7 @@
 #pragma mark UDP_Socket
 -(void)setupUDPSocket{
     //    localTag = 0;
-    udpSocket = [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_main_queue()];
+    udpSocket = [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
     
     NSError *error = nil;
     
@@ -101,7 +90,8 @@ withFilterContext:(id)filterContext{
 //        else
         if ([array count] == numOfChannel || !initialized){
             numOfChannel = [array count];
-            [self.delegate NetworkStreamerUpdateName:array];
+//            [self.delegate NetworkStreamerUpdateNumberOfChannel:[array count]];
+            [self.delegate NetworkStreamerUpdateName:array NumberOfChannel:[array count]];
         } else if ([[array objectAtIndex:0] isEqual:@"image"]){
 //            ignore now
             
@@ -135,10 +125,12 @@ withFilterContext:(id)filterContext{
         //            [instrumentsTableView reloadData];
         //        });
     } else {
-        NSString *msg = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-        NSArray *array = [msg componentsSeparatedByString:@":"];
-        numOfChannel = [array count];
-        [self.delegate NetworkStreamerUpdateNumberOfChannel:[array count]];
+//        NSString *msg = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+//        NSArray *array = [msg componentsSeparatedByString:@":"];
+//        numOfChannel = [array count];
+////        [self.delegate NetworkStreamerUpdateNumberOfChannel:[array count]];
+////        [self.delegate NetworkStreamerUpdateName:array];
+//        [self.delegate NetworkStreamerUpdateName:array NumberOfChannel:[array count]];
 //        NSLog(@"NetworkStreamer: error dataSize");
 //        NSString *msg = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 //        if (msg)

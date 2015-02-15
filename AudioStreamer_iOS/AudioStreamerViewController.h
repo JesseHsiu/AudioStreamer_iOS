@@ -19,19 +19,18 @@
 
 @interface AudioStreamerViewController : UIViewController<UITableViewDelegate,UITableViewDataSource,NetworkStreamerDelegate>
 {
-    IBOutlet InstrumentsListTableView *instrumentsTableView;
     
+    IBOutlet InstrumentsListTableView *instrumentsTableView;
     NSMutableArray *monitorChannels;
     
     AEAudioController *aeAudioController;
     
-    NSUInteger numOfChannel;
+    
     BOOL initialized;
-
     NetworkStreamer *networkStreamer;
     
 }
-
+@property (nonatomic,assign) NSInteger numOfChannel;
 @property (nonatomic,assign) NSString *IpAddress;
 @property (nonatomic,assign) NSString *ServerName;
 

@@ -275,8 +275,8 @@
                                     </tableViewCell>
                                 </prototypes>
                                 <connections>
-                                    <outlet property="dataSource" destination="XLn-jQ-Z5p" id="lYd-Mm-eOL"/>
-                                    <outlet property="delegate" destination="XLn-jQ-Z5p" id="s68-V9-iea"/>
+                                    <outlet property="dataSource" destination="XLn-jQ-Z5p" id="0cm-NP-LQR"/>
+                                    <outlet property="delegate" destination="XLn-jQ-Z5p" id="Oav-Kd-mgT"/>
                                 </connections>
                             </tableView>
                         </subviews>
@@ -290,7 +290,7 @@
                     </view>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
                     <connections>
-                        <outlet property="instrumentsTableView" destination="r2y-kO-dhc" id="BKG-CE-myK"/>
+                        <outlet property="instrumentsTableView" destination="r2y-kO-dhc" id="Y3j-2q-QTu"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eux-ho-VMV" userLabel="First Responder" sceneMemberID="firstResponder"/>
