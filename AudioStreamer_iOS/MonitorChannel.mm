@@ -21,7 +21,7 @@
         self.channelGroup = [self.audioController createChannelGroup];
         [self.audioController addChannels:[[NSArray alloc] initWithObjects:self.channelPlayer, nil] toChannelGroup:self.channelGroup];
         
-        self.reverbValue= 0;
+        self.reverbValue = 0;
         self.volumeValue = 0.5;
         self.panValue = 0;
         self.mutedValue = false;
@@ -54,19 +54,19 @@
                           kReverb2Param_DryWetMix,
                           kAudioUnitScope_Global,
                           0,
-                          100.f,
+                          0.f,
                           0);
-//    self.reverbValue = 100.f;
+
     [self.audioController addFilter:self.reverb toChannelGroup:self.channelGroup];
 }
 
 -(void)setReverbValue:(float)reverbValue{
-    assert(0.f <= reverbValue && reverbValue <= 100.f);
+    //assert(0.f <= reverbValue && reverbValue <= 100.f);
     
     if (!self.reverb) {
         [self addReverb];
+        return;
     }
-//    self.reverbValue = reverbValue;
     AudioUnitSetParameter(self.reverb.audioUnit,
                           kReverb2Param_DryWetMix,
                           kAudioUnitScope_Global,
@@ -82,7 +82,7 @@
 
 -(void)setVolume:(float)volume
 {
-    assert(0.f <= volume && volume <= 1.f);
+    //assert(0.f <= volume && volume <= 1.f);
     self.volumeValue = volume;
     [self.audioController setVolume:volume forChannelGroup:self.channelGroup];
 }

@@ -20,7 +20,7 @@
 #import "InstrumentsListTableViewCell.h"
 #import "InstrumentsSettingTableViewCell.h"
 
-@interface AudioStreamerViewController : UIViewController<UITableViewDelegate,UITableViewDataSource,NetworkStreamerDelegate,InstrumentsListCellDelegate>
+@interface AudioStreamerViewController : UIViewController<UITableViewDelegate,UITableViewDataSource,NetworkStreamerDelegate,InstrumentsListCellDelegate,InstrumentsSettingCellDelegate>
 {
     
     IBOutlet InstrumentsListTableView *instrumentsTableView;

@@ -8,8 +8,17 @@
 
 #import <UIKit/UIKit.h>
 
-@interface InstrumentsSettingTableViewCell : UITableViewCell
+@protocol InstrumentsSettingCellDelegate
+- (void)volumeAddBtnPressed:(id)sender;
+- (void)volumeSubBtnPressed:(id)sender;
+- (void)panSliderSliderChanged:(float)value Sender:(id)sender;
+- (void)reverbSliderSliderChanged:(float)value Sender:(id)sender;
+@end
 
+
+
+@interface InstrumentsSettingTableViewCell : UITableViewCell
+@property (retain) id delegate;
 @property (nonatomic,assign)IBOutlet UILabel *volumLabel;
 @property (nonatomic,assign)IBOutlet UISlider *reverbSlider;
 @property (nonatomic,assign)IBOutlet UISlider *panSlider;

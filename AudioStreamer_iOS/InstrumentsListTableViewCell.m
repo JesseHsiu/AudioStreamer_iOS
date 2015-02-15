@@ -13,7 +13,6 @@
 - (void)awakeFromNib {
     // Initialization code
     [self.muteButton addTarget:self action:@selector(MuteBtn) forControlEvents:UIControlEventTouchUpInside];
-    
     [self.volumeSlider addTarget:self action:@selector(VolumeChanged) forControlEvents:UIControlEventValueChanged];
     [self.displaySettingButton addTarget:self action:@selector(SettingBtn) forControlEvents:UIControlEventTouchUpInside];
 }

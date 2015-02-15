@@ -105,10 +105,11 @@
 
     if ([ShowingSettingIndex containsObject:indexPath]) {
         InstrumentsSettingTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier_Setting];
+        cell.delegate = self;
         if (cell == nil) {
             cell = [[InstrumentsSettingTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         }
-        cell.volumLabel.text = [NSString stringWithFormat:@"%f",((MonitorChannel*)[monitorChannels objectAtIndex:indexPath.row-1]).volumeValue];
+        cell.volumLabel.text = [NSString stringWithFormat:@"%1.2f",((MonitorChannel*)[monitorChannels objectAtIndex:indexPath.row-1]).volumeValue];
         
         cell.reverbSlider.value =((MonitorChannel*)[monitorChannels objectAtIndex:indexPath.row-1]).reverbValue;
         cell.panSlider.value = ((MonitorChannel*)[monitorChannels objectAtIndex:indexPath.row-1]).panValue;
@@ -246,7 +247,7 @@
     
     if ([instrumentsTableView cellForRowAtIndexPath:NewIndexPath] != nil) {
         if ([[instrumentsTableView cellForRowAtIndexPath:NewIndexPath] isKindOfClass:[InstrumentsSettingTableViewCell class]]) {
-            ((InstrumentsSettingTableViewCell*)[instrumentsTableView cellForRowAtIndexPath:NewIndexPath]).volumLabel.text = [NSString stringWithFormat:@"%f",value];
+            ((InstrumentsSettingTableViewCell*)[instrumentsTableView cellForRowAtIndexPath:NewIndexPath]).volumLabel.text = [NSString stringWithFormat:@"%1.2f",value];
         }
     }
 }
@@ -259,21 +260,50 @@
     NSIndexPath *NewIndexPath = [NSIndexPath indexPathForRow:indexPath.row+1 inSection:indexPath.section];
     [indexPaths addObject:NewIndexPath];
     
-    if ([instrumentsTableView cellForRowAtIndexPath:NewIndexPath] != nil) {
-        if ([[instrumentsTableView cellForRowAtIndexPath:NewIndexPath] isKindOfClass:[InstrumentsSettingTableViewCell class]]) {
-            [ShowingSettingIndex removeObject:NewIndexPath];
-            NumberOfSettingCell--;
-            [instrumentsTableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
-        }
-        else
-        {
-            //do stuff
-            [ShowingSettingIndex addObject:NewIndexPath];
-            NumberOfSettingCell++;
-            
-            [instrumentsTableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
-        }
+
+    if ([[instrumentsTableView cellForRowAtIndexPath:NewIndexPath] isKindOfClass:[InstrumentsSettingTableViewCell class]]) {
+        [ShowingSettingIndex removeObject:NewIndexPath];
+        NumberOfSettingCell--;
+        [instrumentsTableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
     }
+    else
+    {
+        //do stuff
+        [ShowingSettingIndex addObject:NewIndexPath];
+        NumberOfSettingCell++;
+        
+        [instrumentsTableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
+    }
+
+}
+#pragma mark InstrumentsSettingCellDelegate Delegate
+- (void)volumeAddBtnPressed:(id)sender
+{
+    NSIndexPath *indexPath = [instrumentsTableView indexPathForCell:sender];
+    NSIndexPath *NewIndexPath = [NSIndexPath indexPathForRow:indexPath.row-1 inSection:indexPath.section];
+    
+    [((MonitorChannel*)[monitorChannels objectAtIndex:NewIndexPath.row]) setVolume:((MonitorChannel*)[monitorChannels objectAtIndex:NewIndexPath.row]).volumeValue+0.01];
+}
+- (void)volumeSubBtnPressed:(id)sender
+{
+    NSIndexPath *indexPath = [instrumentsTableView indexPathForCell:sender];
+    NSIndexPath *NewIndexPath = [NSIndexPath indexPathForRow:indexPath.row-1 inSection:indexPath.section];
+    
+    [((MonitorChannel*)[monitorChannels objectAtIndex:NewIndexPath.row]) setVolume:((MonitorChannel*)[monitorChannels objectAtIndex:NewIndexPath.row]).volumeValue-0.01];
+}
+- (void)panSliderSliderChanged:(float)value Sender:(id)sender
+{
+    NSIndexPath *indexPath = [instrumentsTableView indexPathForCell:sender];
+    NSIndexPath *NewIndexPath = [NSIndexPath indexPathForRow:indexPath.row-1 inSection:indexPath.section];
+    ((MonitorChannel*)[monitorChannels objectAtIndex:NewIndexPath.row]).reverbValue = value;
+    [((MonitorChannel*)[monitorChannels objectAtIndex:NewIndexPath.row]) setPan:value];
+}
+- (void)reverbSliderSliderChanged:(float)value Sender:(id)sender
+{
+    NSIndexPath *indexPath = [instrumentsTableView indexPathForCell:sender];
+    NSIndexPath *NewIndexPath = [NSIndexPath indexPathForRow:indexPath.row-1 inSection:indexPath.section];
+    
+    [((MonitorChannel*)[monitorChannels objectAtIndex:NewIndexPath.row]) setReverbValue:value];
 }
 
 @end
