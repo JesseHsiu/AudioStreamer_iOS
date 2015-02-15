@@ -56,7 +56,7 @@
                           0,
                           100.f,
                           0);
-    
+//    self.reverbValue = 100.f;
     [self.audioController addFilter:self.reverb toChannelGroup:self.channelGroup];
 }
 
@@ -66,7 +66,7 @@
     if (!self.reverb) {
         [self addReverb];
     }
-    
+//    self.reverbValue = reverbValue;
     AudioUnitSetParameter(self.reverb.audioUnit,
                           kReverb2Param_DryWetMix,
                           kAudioUnitScope_Global,
@@ -76,16 +76,19 @@
 }
 
 -(void)setMuted:(BOOL)muted{
+    self.mutedValue = muted;
     [self.audioController setMuted:muted forChannelGroup:self.channelGroup];
 }
 
 -(void)setVolume:(float)volume
 {
     assert(0.f <= volume && volume <= 1.f);
+    self.volumeValue = volume;
     [self.audioController setVolume:volume forChannelGroup:self.channelGroup];
 }
 
 -(void)setPan:(float)pan{
+    self.panValue = pan;
     [self.audioController setPan:pan forChannelGroup:self.channelGroup];
 }
 -(void)addToBufferToList

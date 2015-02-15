@@ -269,6 +269,7 @@
                                         <connections>
                                             <outlet property="panSlider" destination="Z3a-oV-kCz" id="ZVR-V0-VD5"/>
                                             <outlet property="reverbSlider" destination="0fK-C2-HrU" id="9oX-kU-92F"/>
+                                            <outlet property="volumLabel" destination="Dxf-5e-k0J" id="WO1-lo-Yon"/>
                                             <outlet property="volumeAddBtn" destination="7Z8-jX-Z4s" id="PVP-Zh-zsy"/>
                                             <outlet property="volumeSubBtn" destination="53J-Bu-WiV" id="Y1t-KH-1Ie"/>
                                         </connections>

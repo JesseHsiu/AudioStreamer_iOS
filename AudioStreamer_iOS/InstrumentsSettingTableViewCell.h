@@ -10,7 +10,7 @@
 
 @interface InstrumentsSettingTableViewCell : UITableViewCell
 
-
+@property (nonatomic,assign)IBOutlet UILabel *volumLabel;
 @property (nonatomic,assign)IBOutlet UISlider *reverbSlider;
 @property (nonatomic,assign)IBOutlet UISlider *panSlider;
 

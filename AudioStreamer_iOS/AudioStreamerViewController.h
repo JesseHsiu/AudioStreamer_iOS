@@ -32,6 +32,9 @@
     BOOL initialized;
     NetworkStreamer *networkStreamer;
     
+    int NumberOfSettingCell;
+    NSMutableArray *ShowingSettingIndex;
+    
 }
 @property (nonatomic,assign) NSInteger numOfChannel;
 @property (nonatomic,assign) NSString *IpAddress;

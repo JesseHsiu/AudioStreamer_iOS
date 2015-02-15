@@ -30,10 +30,14 @@
     //??
     initialized = false;
     self.numOfChannel= 0;
+    NumberOfSettingCell = 0;
     //localtag???
     
     networkStreamer = [[NetworkStreamer alloc]initWithIpAddress:self.IpAddress portNumber:PortNumber];
     networkStreamer.delegate = self;
+    
+    
+    ShowingSettingIndex = [[NSMutableArray alloc]init];
     
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -92,13 +96,40 @@
 #pragma mark TableView DataSources Thing
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [monitorChannels count];
+    return [monitorChannels count] + NumberOfSettingCell;
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Instruments";
     static NSString *CellIdentifier_Setting = @"InstrumentsSettings";
-    
+
+    if ([ShowingSettingIndex containsObject:indexPath]) {
+        InstrumentsSettingTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier_Setting];
+        if (cell == nil) {
+            cell = [[InstrumentsSettingTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        }
+        cell.volumLabel.text = [NSString stringWithFormat:@"%f",((MonitorChannel*)[monitorChannels objectAtIndex:indexPath.row-1]).volumeValue];
+        
+        cell.reverbSlider.value =((MonitorChannel*)[monitorChannels objectAtIndex:indexPath.row-1]).reverbValue;
+        cell.panSlider.value = ((MonitorChannel*)[monitorChannels objectAtIndex:indexPath.row-1]).panValue;
+
+        return cell;
+    }
+    else
+    {
+        InstrumentsListTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        cell.delegate=self;
+        if (cell == nil) {
+            cell = [[InstrumentsListTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+
+            
+        }
+        
+        cell.nameLabel.text = ((MonitorChannel*)[monitorChannels objectAtIndex:indexPath.row]).name;
+        cell.volumeSlider.value = ((MonitorChannel*)[monitorChannels objectAtIndex:indexPath.row]).volumeValue;
+        return cell;
+
+    }
     
 //    if (indexPath.row>5) {
 //        InstrumentsSettingTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier_Setting];
@@ -111,17 +142,7 @@
 //    }
 //    else
 //    {
-        InstrumentsListTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-        cell.delegate=self;
-        if (cell == nil) {
-            cell = [[InstrumentsListTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-
-        }
-    
-        cell.nameLabel.text = ((MonitorChannel*)[monitorChannels objectAtIndex:indexPath.row]).name;
-        cell.volumeSlider.value = ((MonitorChannel*)[monitorChannels objectAtIndex:indexPath.row]).volumeValue;
-        return cell;
-//    }
+        //    }
     
     
 }
@@ -137,6 +158,14 @@
 //    }
 }
 
+-(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+}
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+
+}
 #pragma mark TableView Delegate Thing
 //not implement
 
@@ -219,7 +248,14 @@
 - (void)MuteBtnPressed:(id)sender
 {
     NSIndexPath *indexPath = [instrumentsTableView indexPathForCell:sender];
-    [((MonitorChannel*)[monitorChannels objectAtIndex:indexPath.row]) setMuted:YES];
+    if (((MonitorChannel*)[monitorChannels objectAtIndex:indexPath.row]).mutedValue) {
+        [((MonitorChannel*)[monitorChannels objectAtIndex:indexPath.row]) setMuted:NO];
+    }
+    else
+    {
+        [((MonitorChannel*)[monitorChannels objectAtIndex:indexPath.row]) setMuted:YES];
+    }
+    
 }
 - (void)VolumeSliderChanged:(float)value Sender:(id)sender
 {
@@ -228,6 +264,20 @@
 }
 - (void)displaySettingBtnPressed:(id)sender
 {
+    NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
+    NSIndexPath *indexPath = [instrumentsTableView indexPathForCell:sender];
+    NSIndexPath *NewIndexPath = [NSIndexPath indexPathForRow:indexPath.row+1 inSection:indexPath.section];
+    if ([[instrumentsTableView cellForRowAtIndexPath:NewIndexPath] isKindOfClass:[InstrumentsSettingTableViewCell class]]) {
+        return;
+    }
+    
+    [indexPaths addObject:NewIndexPath];
+    //do stuff
+    [ShowingSettingIndex addObject:NewIndexPath];
+    NumberOfSettingCell++;
+    
+    [instrumentsTableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
+    
     NSLog(@"displaySettingBtnPressed");
 }
 
