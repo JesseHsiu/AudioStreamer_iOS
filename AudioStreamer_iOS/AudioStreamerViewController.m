@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 MobileHCILab. All rights reserved.
 //
 
-#define DATA_SIZE 512
+//#define DATA_SIZE 512
 #define PortNumber 21369
 
 #import "AudioStreamerViewController.h"
@@ -17,7 +17,6 @@
 #import "InstrumentsSettingTableViewCell.h"
 
 @interface AudioStreamerViewController ()
--(void)updateChannelNames:(NSArray *)names;
 @end
 
 @implementation AudioStreamerViewController
@@ -36,14 +35,8 @@
     numOfChannel= 0;
     //localtag???
     
-    
-    bufferQueue = dispatch_queue_create("com.BufferQueue",DISPATCH_QUEUE_SERIAL);
-    
-    [self setupTCPSocket];
-    [self setupUDPSocket];
-    
-    NSData *data = [@"hey" dataUsingEncoding:NSUTF8StringEncoding];
-    [udpSocket sendData:data toHost:self.IpAddress port:PortNumber withTimeout:-1 tag:0];
+    networkStreamer = [[NetworkStreamer alloc]initWithIpAddress:self.IpAddress portNumber:PortNumber];
+    networkStreamer.delegate = self;
     
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -67,6 +60,9 @@
 #pragma mark Init Functions
 -(void)initializeAll{
     
+    [monitorChannels removeAllObjects];
+    aeAudioController = nil;
+    
     self.byteDataArray = (Byte *) malloc(DATA_SIZE*numOfChannel);
     aeAudioController = [[AEAudioController alloc] initWithAudioDescription:[AEAudioController nonInterleavedFloatStereoAudioDescription] inputEnabled:NO];
     //    _audioController.preferredBufferDuration = 0.005;
@@ -89,7 +85,7 @@
         [monitorChannels addObject:channelToProcess];
     }
 
-//    [[UIDevice currentDevice] setProximityMonitoringEnabled:YES];
+    [[UIDevice currentDevice] setProximityMonitoringEnabled:YES];
     NSLog(@"Proximity Monitoring Enabled? %@ ",    [UIDevice currentDevice].proximityMonitoringEnabled ? @"YES" : @"NO");
     
     initialized = true;
@@ -144,131 +140,10 @@
 //not implement
 
 
-#pragma mark TCP_Socket
--(void)setupTCPSocket{
-    tcpSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:bufferQueue];
-    
-    NSString *host = self.IpAddress;
 
-    //fixed port number
-    uint16_t port = PortNumber;
-    
-    NSError *error = nil;
-    if (![tcpSocket connectToHost:host onPort:port error:&error])
-    {
-        NSLog(@"Error connecting: %@", error);
-    }
-}
-
-#pragma mark UDP_Socket
--(void)setupUDPSocket{
-//    localTag = 0;
-    udpSocket = [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:bufferQueue];
-    
-    NSError *error = nil;
-    
-    if (![udpSocket bindToPort:0 error:&error])
-    {
-        NSLog(@"Error binding: %@", error);
-        return;
-    }
-    if (![udpSocket beginReceiving:&error])
-    {
-        NSLog(@"Error receiving: %@", error);
-        return;
-    }
-    
-    NSLog(@"Socket Ready");
-}
--(void)udpSocket:(GCDAsyncUdpSocket *)sock didReceiveData:(NSData *)data fromAddress:(NSData *)address
-withFilterContext:(id)filterContext{
-    NSString *msg = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    if (msg)
-    {
-        NSLog(@"RECV: %@", msg);
-        
-        NSArray *array = [msg componentsSeparatedByString:@":"];
-        if ((int)array.count == numOfChannel){
-            [self updateChannelNames:array];
-            [instrumentsTableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
-        } else if ([[array objectAtIndex:0] isEqual:@"image"]){
-            //Initialize standard image already on the phone
-            long index = [[array objectAtIndex:1] integerValue];
-            NSString *path = [[NSBundle mainBundle] pathForResource:[array objectAtIndex:2] ofType:[array objectAtIndex:3]];
-            ((MonitorChannel*)[monitorChannels objectAtIndex:index]).PathToImg = path;
-            [instrumentsTableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
-        }
-    }
-}
-
-
-#pragma mark TCP_delegate
-- (void)socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(uint16_t)port{
-    NSLog(@"socket:%p didConnectToHost:%@ port:%hu", sock, host, port);
-    [sock readDataWithTimeout:-1 tag:0];
-}
-
--(void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag{
-//    NSLog(@"socket:%p didReadData:withTag:%ld", sock, tag);
-    
-    //    NSString *ack = [[NSString alloc] initWithFormat:@"received %li",tag];
-    //    NSData *d = [ack dataUsingEncoding:NSUTF8StringEncoding];
-    //    [sock writeData:d withTimeout:-1 tag:0];
-
-    if(data.length == DATA_SIZE * numOfChannel){
-        [self decodeAudioBufferListMultiChannel:data];
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            [instrumentsTableView reloadData];
-//        });
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-            [instrumentsTableView reloadData];
-        });
-    } else {
-        NSString *msg = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-        if (msg)
-        {
-            NSLog(@"RECV: %@", msg);
-            
-            NSArray *array = [msg componentsSeparatedByString:@":"];
-            if(!initialized){
-                numOfChannel = [array count];
-                [self initializeAll];
-            } else if ([array count] == numOfChannel){
-                [self updateChannelNames:array];
-            } else if ([[array objectAtIndex:0] isEqual:@"image"]){
-                //Initialize standard image already on the phone
-                long index = [[array objectAtIndex:1] integerValue];
-                NSString *path = [[NSBundle mainBundle] pathForResource:[array objectAtIndex:2] ofType:[array objectAtIndex:3]];
-                ((MonitorChannel*)[monitorChannels objectAtIndex:index]).PathToImg = path;
-            }
-        }
-    }
-    
-    NSUInteger datalength = DATA_SIZE * numOfChannel;
-    [sock readDataToLength:datalength withTimeout:-1 tag:0];
-}
-
--(void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)err{
-    NSLog(@"Disconnected with error: %@", err.localizedDescription);
-}
-
--(void)socket:(GCDAsyncSocket *)sock didWriteDataWithTag:(long)tag{
-    NSLog(@"Did write data with tag: %li",tag);
-    // [sock readDataWithTimeout:-1 tag:0];
-}
-
--(void)updateChannelNames:(NSArray *)names{
-    for (int i = 0; i < numOfChannel; i++) {
-        ((MonitorChannel*)[monitorChannels objectAtIndex:i]).name = [names objectAtIndex:i];
-        NSLog(@"%@",[names objectAtIndex:i]);
-    }
-}
-
-
-#pragma mark Decode
--(void)decodeAudioBufferListMultiChannel:(NSData *)data {
-    //We should do the initialization part at a different place:
-    
+#pragma mark NetworkStreamer Delegate
+- (void)NetworkStreamerReceivedData:(NSData *)data
+{
     NSUInteger dataLen = [data length];
     if(dataLen > 0){
         //Empty the byteDataArray
@@ -294,7 +169,7 @@ withFilterContext:(id)filterContext{
             //            self.abl->mBuffers[i].mNumberChannels = 1;
             memcpy(&self.byteDataArray[DATA_SIZE*i], [subdata bytes], rLen);
             //            self.abl->mBuffers[i].mData = &self.byteDataArray[dataSize*i];
-
+            
             AudioBufferList *ablManagerBufferList = ((MonitorChannel*)[monitorChannels objectAtIndex:i]).audioBufferManager.buffer;
             ablManagerBufferList->mBuffers[0].mData = nil;
             ablManagerBufferList->mNumberBuffers = 2;
@@ -314,6 +189,22 @@ withFilterContext:(id)filterContext{
         //        return self.ablArray;
     }
     //    return nil;
+
 }
+-(void)NetworkStreamerUpdateName:(NSArray *)nameArray
+{
+    for (int i = 0; i < numOfChannel; i++) {
+        ((MonitorChannel*)[monitorChannels objectAtIndex:i]).name = [nameArray objectAtIndex:i];
+        NSLog(@"%@",[nameArray objectAtIndex:i]);
+    }
+}
+-(void)NetworkStreamerUpdateNumberOfChannel:(NSUInteger)num
+{
+    numOfChannel = num;
+    [self initializeAll];
+    NSLog(@"NumberOfChannel changed %lu",(unsigned long)numOfChannel);
+    [instrumentsTableView reloadData];
+}
+
 
 @end

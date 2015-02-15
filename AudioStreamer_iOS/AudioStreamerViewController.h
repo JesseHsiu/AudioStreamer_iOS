@@ -15,11 +15,11 @@
 //
 #import "MonitorChannel.h"
 
-@interface AudioStreamerViewController : UIViewController<UITableViewDelegate,UITableViewDataSource,GCDAsyncUdpSocketDelegate,GCDAsyncSocketDelegate>
+#import "NetworkStreamer.h"
+
+@interface AudioStreamerViewController : UIViewController<UITableViewDelegate,UITableViewDataSource,NetworkStreamerDelegate>
 {
     IBOutlet InstrumentsListTableView *instrumentsTableView;
-    GCDAsyncUdpSocket *udpSocket;
-    GCDAsyncSocket *tcpSocket;
     
     NSMutableArray *monitorChannels;
     
@@ -27,9 +27,8 @@
     
     NSUInteger numOfChannel;
     BOOL initialized;
-    
-    
-    dispatch_queue_t bufferQueue;
+
+    NetworkStreamer *networkStreamer;
     
 }
 
