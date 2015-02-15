@@ -112,11 +112,14 @@
 //    else
 //    {
         InstrumentsListTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        cell.delegate=self;
         if (cell == nil) {
             cell = [[InstrumentsListTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+
         }
     
         cell.nameLabel.text = ((MonitorChannel*)[monitorChannels objectAtIndex:indexPath.row]).name;
+        cell.volumeSlider.value = ((MonitorChannel*)[monitorChannels objectAtIndex:indexPath.row]).volumeValue;
         return cell;
 //    }
     
@@ -211,6 +214,21 @@
     [self initializeAll];
     NSLog(@"NumberOfChannel changed %ld",(long)self.numOfChannel);
 }
+#pragma mark InstrumentsListTableViewCell Delegate
 
+- (void)MuteBtnPressed:(id)sender
+{
+    NSIndexPath *indexPath = [instrumentsTableView indexPathForCell:sender];
+    [((MonitorChannel*)[monitorChannels objectAtIndex:indexPath.row]) setMuted:YES];
+}
+- (void)VolumeSliderChanged:(float)value Sender:(id)sender
+{
+    NSIndexPath *indexPath = [instrumentsTableView indexPathForCell:sender];
+    [((MonitorChannel*)[monitorChannels objectAtIndex:indexPath.row]) setVolume:value];
+}
+- (void)displaySettingBtnPressed:(id)sender
+{
+    NSLog(@"displaySettingBtnPressed");
+}
 
 @end

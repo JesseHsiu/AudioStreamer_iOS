@@ -14,10 +14,13 @@
 
 //
 #import "MonitorChannel.h"
-
 #import "NetworkStreamer.h"
 
-@interface AudioStreamerViewController : UIViewController<UITableViewDelegate,UITableViewDataSource,NetworkStreamerDelegate>
+//cell
+#import "InstrumentsListTableViewCell.h"
+#import "InstrumentsSettingTableViewCell.h"
+
+@interface AudioStreamerViewController : UIViewController<UITableViewDelegate,UITableViewDataSource,NetworkStreamerDelegate,InstrumentsListCellDelegate>
 {
     
     IBOutlet InstrumentsListTableView *instrumentsTableView;

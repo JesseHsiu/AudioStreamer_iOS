@@ -20,6 +20,13 @@
         self.channelPlayer = [[ChannelPlayer alloc] init];
         self.channelGroup = [self.audioController createChannelGroup];
         [self.audioController addChannels:[[NSArray alloc] initWithObjects:self.channelPlayer, nil] toChannelGroup:self.channelGroup];
+        
+        self.reverbValue= 0;
+        self.volumeValue = 0.5;
+        self.panValue = 0;
+        self.mutedValue = false;
+        
+        
     }
     return self;
 }

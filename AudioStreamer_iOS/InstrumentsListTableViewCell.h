@@ -8,9 +8,17 @@
 
 #import <UIKit/UIKit.h>
 
+
+@protocol InstrumentsListCellDelegate
+- (void)MuteBtnPressed:(id)sender;
+- (void)VolumeSliderChanged:(float)value Sender:(id)sender;
+- (void)displaySettingBtnPressed:(id)sender;
+@end
+
+
 @interface InstrumentsListTableViewCell : UITableViewCell
 
-
+@property (retain) id delegate;
 @property (nonatomic,assign)IBOutlet UIImageView *imageOfInstruments;
 @property (nonatomic,assign)IBOutlet UILabel *nameLabel;
 @property (nonatomic,assign)IBOutlet UISlider *volumeSlider;
