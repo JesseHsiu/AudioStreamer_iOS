@@ -130,32 +130,11 @@
         return cell;
 
     }
-    
-//    if (indexPath.row>5) {
-//        InstrumentsSettingTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier_Setting];
-//        if (cell == nil) {
-//            cell = [[InstrumentsSettingTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-//        }
-//    
-//        
-//        return cell;
-//    }
-//    else
-//    {
-        //    }
-    
-    
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-//    if ([[tableView cellForRowAtIndexPath:indexPath] isMemberOfClass:[InstrumentsListTableViewCell class]]) {
         return 120;
-//    }
-//    else
-//    {
-//        return 120;
-//    }
 }
 
 -(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -261,24 +240,40 @@
 {
     NSIndexPath *indexPath = [instrumentsTableView indexPathForCell:sender];
     [((MonitorChannel*)[monitorChannels objectAtIndex:indexPath.row]) setVolume:value];
+    
+    
+    NSIndexPath *NewIndexPath = [NSIndexPath indexPathForRow:indexPath.row+1 inSection:indexPath.section];
+    
+    if ([instrumentsTableView cellForRowAtIndexPath:NewIndexPath] != nil) {
+        if ([[instrumentsTableView cellForRowAtIndexPath:NewIndexPath] isKindOfClass:[InstrumentsSettingTableViewCell class]]) {
+            ((InstrumentsSettingTableViewCell*)[instrumentsTableView cellForRowAtIndexPath:NewIndexPath]).volumLabel.text = [NSString stringWithFormat:@"%f",value];
+        }
+    }
 }
+
 - (void)displaySettingBtnPressed:(id)sender
 {
+    
     NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
     NSIndexPath *indexPath = [instrumentsTableView indexPathForCell:sender];
     NSIndexPath *NewIndexPath = [NSIndexPath indexPathForRow:indexPath.row+1 inSection:indexPath.section];
-    if ([[instrumentsTableView cellForRowAtIndexPath:NewIndexPath] isKindOfClass:[InstrumentsSettingTableViewCell class]]) {
-        return;
-    }
-    
     [indexPaths addObject:NewIndexPath];
-    //do stuff
-    [ShowingSettingIndex addObject:NewIndexPath];
-    NumberOfSettingCell++;
     
-    [instrumentsTableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
-    
-    NSLog(@"displaySettingBtnPressed");
+    if ([instrumentsTableView cellForRowAtIndexPath:NewIndexPath] != nil) {
+        if ([[instrumentsTableView cellForRowAtIndexPath:NewIndexPath] isKindOfClass:[InstrumentsSettingTableViewCell class]]) {
+            [ShowingSettingIndex removeObject:NewIndexPath];
+            NumberOfSettingCell--;
+            [instrumentsTableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
+        }
+        else
+        {
+            //do stuff
+            [ShowingSettingIndex addObject:NewIndexPath];
+            NumberOfSettingCell++;
+            
+            [instrumentsTableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
+        }
+    }
 }
 
 @end

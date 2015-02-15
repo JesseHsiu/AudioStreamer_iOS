@@ -33,7 +33,7 @@
 
 -(MonitorChannel*)initWithAudioController:(AEAudioController*)audioController;
 -(ChannelPlayer*)getChannelPlayer;
--(void)addReverb;
+//-(void)addReverb;
 -(void)setReverbValue:(float)reverbValue;
 -(void)setVolume:(float)volume;
 -(void)setPan:(float)pan;
