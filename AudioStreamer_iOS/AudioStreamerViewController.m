@@ -138,13 +138,24 @@
         return 120;
 }
 
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // Return YES - we will be able to delete all rows
+    return NO;
+}
+
+-(BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return YES;
+}
+-(BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return NO;
+}
+
 -(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-}
--(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-
 }
 #pragma mark TableView Delegate Thing
 //not implement
@@ -273,37 +284,46 @@
         NumberOfSettingCell++;
         
         [instrumentsTableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
+        [instrumentsTableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
     }
 
 }
 #pragma mark InstrumentsSettingCellDelegate Delegate
 - (void)volumeAddBtnPressed:(id)sender
 {
+    NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
     NSIndexPath *indexPath = [instrumentsTableView indexPathForCell:sender];
     NSIndexPath *NewIndexPath = [NSIndexPath indexPathForRow:indexPath.row-1 inSection:indexPath.section];
+    [indexPaths addObject:NewIndexPath];
+    float tmp =((MonitorChannel*)[monitorChannels objectAtIndex:NewIndexPath.row]).volumeValue+0.01;
     
-    [((MonitorChannel*)[monitorChannels objectAtIndex:NewIndexPath.row]) setVolume:((MonitorChannel*)[monitorChannels objectAtIndex:NewIndexPath.row]).volumeValue+0.01];
+    [((MonitorChannel*)[monitorChannels objectAtIndex:NewIndexPath.row]) setVolume:tmp];
+    ((InstrumentsSettingTableViewCell*)[instrumentsTableView cellForRowAtIndexPath:indexPath]).volumLabel.text =[NSString stringWithFormat:@"%1.2f",tmp];
+    [instrumentsTableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
 }
 - (void)volumeSubBtnPressed:(id)sender
 {
+    NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
     NSIndexPath *indexPath = [instrumentsTableView indexPathForCell:sender];
     NSIndexPath *NewIndexPath = [NSIndexPath indexPathForRow:indexPath.row-1 inSection:indexPath.section];
+    [indexPaths addObject:NewIndexPath];
+    float tmp =((MonitorChannel*)[monitorChannels objectAtIndex:NewIndexPath.row]).volumeValue-0.01;
     
-    [((MonitorChannel*)[monitorChannels objectAtIndex:NewIndexPath.row]) setVolume:((MonitorChannel*)[monitorChannels objectAtIndex:NewIndexPath.row]).volumeValue-0.01];
+    [((MonitorChannel*)[monitorChannels objectAtIndex:NewIndexPath.row]) setVolume:tmp];
+    ((InstrumentsSettingTableViewCell*)[instrumentsTableView cellForRowAtIndexPath:indexPath]).volumLabel.text =[NSString stringWithFormat:@"%1.2f",tmp];
+    [instrumentsTableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
 }
 - (void)panSliderSliderChanged:(float)value Sender:(id)sender
 {
     NSIndexPath *indexPath = [instrumentsTableView indexPathForCell:sender];
     NSIndexPath *NewIndexPath = [NSIndexPath indexPathForRow:indexPath.row-1 inSection:indexPath.section];
-    ((MonitorChannel*)[monitorChannels objectAtIndex:NewIndexPath.row]).reverbValue = value;
     [((MonitorChannel*)[monitorChannels objectAtIndex:NewIndexPath.row]) setPan:value];
 }
 - (void)reverbSliderSliderChanged:(float)value Sender:(id)sender
 {
     NSIndexPath *indexPath = [instrumentsTableView indexPathForCell:sender];
     NSIndexPath *NewIndexPath = [NSIndexPath indexPathForRow:indexPath.row-1 inSection:indexPath.section];
-    
-    [((MonitorChannel*)[monitorChannels objectAtIndex:NewIndexPath.row]) setReverbValue:value];
+    [((MonitorChannel*)[monitorChannels objectAtIndex:NewIndexPath.row]) changeReverb:value];
 }
 
 @end

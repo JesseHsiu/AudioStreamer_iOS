@@ -60,8 +60,8 @@
     [self.audioController addFilter:self.reverb toChannelGroup:self.channelGroup];
 }
 
--(void)setReverbValue:(float)reverbValue{
-    //assert(0.f <= reverbValue && reverbValue <= 100.f);
+-(void)changeReverb:(float)reverbValue{
+    assert(0.f <= reverbValue && reverbValue <= 100.f);
     
     if (!self.reverb) {
         [self addReverb];
@@ -73,6 +73,7 @@
                           0,
                           reverbValue,
                           0);
+    self.reverbValue = reverbValue;
 }
 
 -(void)setMuted:(BOOL)muted{
@@ -82,7 +83,7 @@
 
 -(void)setVolume:(float)volume
 {
-    //assert(0.f <= volume && volume <= 1.f);
+    assert(0.f <= volume && volume <= 1.f);
     self.volumeValue = volume;
     [self.audioController setVolume:volume forChannelGroup:self.channelGroup];
 }
