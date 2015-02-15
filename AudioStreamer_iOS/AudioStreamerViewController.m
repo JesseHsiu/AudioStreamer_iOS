@@ -116,7 +116,7 @@
             cell = [[InstrumentsListTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         }
     
-        //cell.nameLabel.text = ((MonitorChannel*)[monitorChannels objectAtIndex:indexPath.row]).name;
+        cell.nameLabel.text = ((MonitorChannel*)[monitorChannels objectAtIndex:indexPath.row]).name;
         return cell;
 //    }
     
