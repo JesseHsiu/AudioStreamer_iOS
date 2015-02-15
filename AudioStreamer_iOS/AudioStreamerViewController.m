@@ -165,52 +165,56 @@
 #pragma mark NetworkStreamer Delegate
 - (void)NetworkStreamerReceivedData:(NSData *)data
 {
-    NSUInteger dataLen = [data length];
-    if(dataLen > 0){
-        //Empty the byteDataArray
-        //        self.byteDataArray = [self.byteDataArray initWithCapacity:numChannels];
-        //Take the start position of the first subrange
-        NSUInteger startPos = 0;
-        //Calculate the length of the subranges
-        NSUInteger rangeLen = dataLen / self.numOfChannel;
-        //        NSLog(@"%lu,%d ->rangelen :  %lu %lu",(unsigned long)dataLen,numChannels,(unsigned long)rangeLen, sizeof(_ablArray));
-        //Create a uint32 version of the rangelength
-        UInt32 rLen = (UInt32) rangeLen;
-        
-        
-        
-        
-        for(int i = 0; i < [monitorChannels count]; i++){
-            NSRange range = NSMakeRange(startPos, rangeLen);
-            NSData *subdata = [data subdataWithRange:range];
+    @autoreleasepool {
+        NSData *copiedData = [data copy];
+        NSUInteger dataLen = [copiedData length];
+        if(dataLen > 0){
+            //Empty the byteDataArray
+            //        self.byteDataArray = [self.byteDataArray initWithCapacity:numChannels];
+            //Take the start position of the first subrange
+            NSUInteger startPos = 0;
+            //Calculate the length of the subranges
+            NSUInteger rangeLen = dataLen / [monitorChannels count];
+            //        NSLog(@"%lu,%d ->rangelen :  %lu %lu",(unsigned long)dataLen,numChannels,(unsigned long)rangeLen, sizeof(_ablArray));
+            //Create a uint32 version of the rangelength
+            UInt32 rLen = (UInt32) rangeLen;
             
-            //Get the i'th audio buffer list and fill it with data
             
-            //            self.abl->mBuffers[i].mDataByteSize = rLen;
-            //            self.abl->mBuffers[i].mNumberChannels = 1;
-            memcpy(&self.byteDataArray[DATA_SIZE*i], [subdata bytes], rLen);
-            //            self.abl->mBuffers[i].mData = &self.byteDataArray[dataSize*i];
             
-            AudioBufferList *ablManagerBufferList = ((MonitorChannel*)[monitorChannels objectAtIndex:i]).audioBufferManager.buffer;
-            ablManagerBufferList->mBuffers[0].mData = nil;
-            ablManagerBufferList->mNumberBuffers = 2;
-            ablManagerBufferList->mBuffers[0].mDataByteSize = rLen;
-            ablManagerBufferList->mBuffers[0].mNumberChannels = 1;
-            ablManagerBufferList->mBuffers[0].mData = &self.byteDataArray[DATA_SIZE*i];
-            //            self.ablArray[16*i].mBuffers[1].mDataByteSize = rLen;
-            //            self.ablArray[16*i].mBuffers[1].mNumberChannels = 1;
-            //            self.ablArray[16*i].mBuffers[1].mData = &self.byteDataArray[dataSize*i];
-            ablManagerBufferList->mBuffers[1] = ablManagerBufferList->mBuffers[0];
             
-            [[monitorChannels objectAtIndex:i] addToBufferToList];
-            
-            startPos += rangeLen;
+            for(int i = 0; i < [monitorChannels count]; i++){
+                NSRange range = NSMakeRange(startPos, rangeLen);
+                NSData *subdata = [[copiedData subdataWithRange:range] copy];
+                
+                //Get the i'th audio buffer list and fill it with data
+                
+                //            self.abl->mBuffers[i].mDataByteSize = rLen;
+                //            self.abl->mBuffers[i].mNumberChannels = 1;
+                memcpy(&self.byteDataArray[DATA_SIZE*i], [subdata bytes], rLen);
+                //            self.abl->mBuffers[i].mData = &self.byteDataArray[dataSize*i];
+                
+                AudioBufferList *ablManagerBufferList = ((MonitorChannel*)[monitorChannels objectAtIndex:i]).audioBufferManager.buffer;
+                ablManagerBufferList->mBuffers[0].mData = nil;
+                ablManagerBufferList->mNumberBuffers = 2;
+                ablManagerBufferList->mBuffers[0].mDataByteSize = rLen;
+                ablManagerBufferList->mBuffers[0].mNumberChannels = 1;
+                ablManagerBufferList->mBuffers[0].mData = &self.byteDataArray[DATA_SIZE*i];
+                //            self.ablArray[16*i].mBuffers[1].mDataByteSize = rLen;
+                //            self.ablArray[16*i].mBuffers[1].mNumberChannels = 1;
+                //            self.ablArray[16*i].mBuffers[1].mData = &self.byteDataArray[dataSize*i];
+                ablManagerBufferList->mBuffers[1] = ablManagerBufferList->mBuffers[0];
+                
+                [[monitorChannels objectAtIndex:i] addToBufferToList];
+                
+                startPos += rangeLen;
+            }
+            //return self.abl;
+            //        return self.ablArray;
         }
-        //return self.abl;
-        //        return self.ablArray;
-    }
-    //    return nil;
+        //    return nil;
 
+    }
+    
 }
 -(void)NetworkStreamerUpdateName:(NSArray *)nameArray NumberOfChannel:(NSUInteger)num
 {

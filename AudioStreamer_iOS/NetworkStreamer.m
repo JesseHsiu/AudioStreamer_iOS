@@ -120,7 +120,7 @@ withFilterContext:(id)filterContext{
     //    [sock writeData:d withTimeout:-1 tag:0];
     
     if(data.length == DATA_SIZE * numOfChannel){
-        [self.delegate NetworkStreamerReceivedData:data];
+        [self.delegate NetworkStreamerReceivedData:[data copy]];
         //        dispatch_async(dispatch_get_main_queue(), ^{
         //            [instrumentsTableView reloadData];
         //        });
