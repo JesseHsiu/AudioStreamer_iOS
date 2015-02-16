@@ -109,7 +109,7 @@
         if (cell == nil) {
             cell = [[InstrumentsSettingTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         }
-        cell.volumLabel.text = [NSString stringWithFormat:@"%1.2f",((MonitorChannel*)[monitorChannels objectAtIndex:indexPath.row-1]).volumeValue];
+        cell.volumLabel.text = [NSString stringWithFormat:@"%1.0f",((MonitorChannel*)[monitorChannels objectAtIndex:indexPath.row-1]).volumeValue * 100];
         
         cell.reverbSlider.value =((MonitorChannel*)[monitorChannels objectAtIndex:indexPath.row-1]).reverbValue;
         cell.panSlider.value = ((MonitorChannel*)[monitorChannels objectAtIndex:indexPath.row-1]).panValue;
@@ -262,7 +262,7 @@
     
     if ([instrumentsTableView cellForRowAtIndexPath:NewIndexPath] != nil) {
         if ([[instrumentsTableView cellForRowAtIndexPath:NewIndexPath] isKindOfClass:[InstrumentsSettingTableViewCell class]]) {
-            ((InstrumentsSettingTableViewCell*)[instrumentsTableView cellForRowAtIndexPath:NewIndexPath]).volumLabel.text = [NSString stringWithFormat:@"%1.2f",value];
+            ((InstrumentsSettingTableViewCell*)[instrumentsTableView cellForRowAtIndexPath:NewIndexPath]).volumLabel.text = [NSString stringWithFormat:@"%1.0f",value * 100];
         }
     }
 }
@@ -302,7 +302,7 @@
     float tmp =((MonitorChannel*)[monitorChannels objectAtIndex:NewIndexPath.row]).volumeValue+0.01;
     
     [((MonitorChannel*)[monitorChannels objectAtIndex:NewIndexPath.row]) setVolume:tmp];
-    ((InstrumentsSettingTableViewCell*)[instrumentsTableView cellForRowAtIndexPath:indexPath]).volumLabel.text =[NSString stringWithFormat:@"%1.2f",tmp];
+    ((InstrumentsSettingTableViewCell*)[instrumentsTableView cellForRowAtIndexPath:indexPath]).volumLabel.text =[NSString stringWithFormat:@"%1.0f",tmp*100];
     [instrumentsTableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
 }
 - (void)volumeSubBtnPressed:(id)sender
@@ -314,7 +314,7 @@
     float tmp =((MonitorChannel*)[monitorChannels objectAtIndex:NewIndexPath.row]).volumeValue-0.01;
     
     [((MonitorChannel*)[monitorChannels objectAtIndex:NewIndexPath.row]) setVolume:tmp];
-    ((InstrumentsSettingTableViewCell*)[instrumentsTableView cellForRowAtIndexPath:indexPath]).volumLabel.text =[NSString stringWithFormat:@"%1.2f",tmp];
+    ((InstrumentsSettingTableViewCell*)[instrumentsTableView cellForRowAtIndexPath:indexPath]).volumLabel.text =[NSString stringWithFormat:@"%1.0f",tmp*100];
     [instrumentsTableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
 }
 - (void)panSliderSliderChanged:(float)value Sender:(id)sender
