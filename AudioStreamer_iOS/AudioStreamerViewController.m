@@ -297,9 +297,15 @@
 #pragma mark InstrumentsSettingCellDelegate Delegate
 - (void)volumeAddBtnPressed:(id)sender
 {
+    
     NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
     NSIndexPath *indexPath = [instrumentsTableView indexPathForCell:sender];
     NSIndexPath *NewIndexPath = [NSIndexPath indexPathForRow:indexPath.row-1 inSection:indexPath.section];
+    
+    if (((MonitorChannel*)[monitorChannels objectAtIndex:NewIndexPath.row]).volumeValue == 1) {
+        return;
+    }
+    
     [indexPaths addObject:NewIndexPath];
     float tmp =((MonitorChannel*)[monitorChannels objectAtIndex:NewIndexPath.row]).volumeValue+0.01;
     
@@ -312,6 +318,11 @@
     NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
     NSIndexPath *indexPath = [instrumentsTableView indexPathForCell:sender];
     NSIndexPath *NewIndexPath = [NSIndexPath indexPathForRow:indexPath.row-1 inSection:indexPath.section];
+    
+    if (((MonitorChannel*)[monitorChannels objectAtIndex:NewIndexPath.row]).volumeValue == 0) {
+        return;
+    }
+    
     [indexPaths addObject:NewIndexPath];
     float tmp =((MonitorChannel*)[monitorChannels objectAtIndex:NewIndexPath.row]).volumeValue-0.01;
     
