@@ -37,7 +37,7 @@
     networkStreamer.delegate = self;
     
     
-    ShowingSettingIndex = [[NSMutableArray alloc]init];
+    ViewIndex = [[NSMutableArray alloc]init];
     
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -60,7 +60,7 @@
 
 #pragma mark Init Functions
 -(void)initializeAll{
-    
+    [ViewIndex removeAllObjects];
     [monitorChannels removeAllObjects];
     aeAudioController = nil;
     
@@ -83,6 +83,7 @@
         ablManager.buffer = AEAllocateAndInitAudioBufferList([AEAudioController nonInterleavedFloatStereoAudioDescription], DATA_SIZE);
         channelToProcess.audioBufferManager =ablManager;
         
+        [ViewIndex addObject:channelToProcess];
         [monitorChannels addObject:channelToProcess];
     }
 
@@ -96,23 +97,25 @@
 #pragma mark TableView DataSources Thing
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [monitorChannels count] + NumberOfSettingCell;
+    //return [monitorChannels count] + NumberOfSettingCell;
+    return [ViewIndex count];
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Instruments";
     static NSString *CellIdentifier_Setting = @"InstrumentsSettings";
 
-    if ([ShowingSettingIndex containsObject:indexPath]) {
+//    if ([ShowingSettingIndex containsObject:indexPath]) {
+    if ([[ViewIndex objectAtIndex:indexPath.row] isKindOfClass:[NSIndexPath class]]) {
         InstrumentsSettingTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier_Setting];
         cell.delegate = self;
         if (cell == nil) {
             cell = [[InstrumentsSettingTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         }
-        cell.volumLabel.text = [NSString stringWithFormat:@"%1.0f",((MonitorChannel*)[monitorChannels objectAtIndex:indexPath.row-1]).volumeValue * 100];
+        cell.volumLabel.text = [NSString stringWithFormat:@"%1.0f",((MonitorChannel*)[ViewIndex objectAtIndex:indexPath.row-1]).volumeValue * 100];
         
-        cell.reverbSlider.value =((MonitorChannel*)[monitorChannels objectAtIndex:indexPath.row-1]).reverbValue;
-        cell.panSlider.value = ((MonitorChannel*)[monitorChannels objectAtIndex:indexPath.row-1]).panValue;
+        cell.reverbSlider.value =((MonitorChannel*)[ViewIndex objectAtIndex:indexPath.row-1]).reverbValue;
+        cell.panSlider.value = ((MonitorChannel*)[ViewIndex objectAtIndex:indexPath.row-1]).panValue;
 
         return cell;
     }
@@ -126,8 +129,8 @@
             
         }
         
-        cell.nameLabel.text = ((MonitorChannel*)[monitorChannels objectAtIndex:indexPath.row]).name;
-        cell.volumeSlider.value = ((MonitorChannel*)[monitorChannels objectAtIndex:indexPath.row]).volumeValue;
+        cell.nameLabel.text = ((MonitorChannel*)[ViewIndex objectAtIndex:indexPath.row]).name;
+        cell.volumeSlider.value = ((MonitorChannel*)[ViewIndex objectAtIndex:indexPath.row]).volumeValue;
         return cell;
 
     }
@@ -166,6 +169,16 @@
 - (void)NetworkStreamerReceivedData:(NSData *)data
 {
     @autoreleasepool {
+        
+//        int countChannels = 0;
+//        for (int i = 0; i < [monitorChannels count]; i++) {
+//            if ([[monitorChannels objectAtIndex:i] isKindOfClass:[MonitorChannel class]]) {
+//                countChannels++;
+//            }
+//        }
+//        NSLog(@"countChannels: %d",countChannels);
+        
+        
         NSData *copiedData = [data copy];
         NSUInteger dataLen = [copiedData length];
         if(dataLen > 0){
@@ -179,10 +192,8 @@
             //Create a uint32 version of the rangelength
             UInt32 rLen = (UInt32) rangeLen;
             
-            
-            
-            
             for(int i = 0; i < [monitorChannels count]; i++){
+                
                 NSRange range = NSMakeRange(startPos, rangeLen);
                 NSData *subdata = [[copiedData subdataWithRange:range] copy];
                 
@@ -222,10 +233,9 @@
     if (!initialized) {
         [self initializeAll];
     }
-    
-    for (int i = 0; i < self.numOfChannel; i++) {
-        ((MonitorChannel*)[monitorChannels objectAtIndex:i]).name = [nameArray objectAtIndex:i];
-        NSLog(@"%@",[nameArray objectAtIndex:i]);
+    for (int i = 0; i < [monitorChannels count]; i++) {
+            ((MonitorChannel*)[monitorChannels objectAtIndex:i]).name = [nameArray objectAtIndex:i];
+            NSLog(@"%@",[nameArray objectAtIndex:i]);
     }
     
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -243,13 +253,13 @@
 - (void)MuteBtnPressed:(id)sender
 {
     NSIndexPath *indexPath = [instrumentsTableView indexPathForCell:sender];
-    if (((MonitorChannel*)[monitorChannels objectAtIndex:indexPath.row]).mutedValue) {
-        [((MonitorChannel*)[monitorChannels objectAtIndex:indexPath.row]) setMuted:NO];
+    if (((MonitorChannel*)[ViewIndex objectAtIndex:indexPath.row]).mutedValue) {
+        [((MonitorChannel*)[ViewIndex objectAtIndex:indexPath.row]) setMuted:NO];
         [((InstrumentsListTableViewCell*)sender).muteButton setTitle:@"Mute" forState:UIControlStateNormal];
     }
     else
     {
-        [((MonitorChannel*)[monitorChannels objectAtIndex:indexPath.row]) setMuted:YES];
+        [((MonitorChannel*)[ViewIndex objectAtIndex:indexPath.row]) setMuted:YES];
         [((InstrumentsListTableViewCell*)sender).muteButton setTitle:@"Unmute" forState:UIControlStateNormal];
     }
     
@@ -257,7 +267,7 @@
 - (void)VolumeSliderChanged:(float)value Sender:(id)sender
 {
     NSIndexPath *indexPath = [instrumentsTableView indexPathForCell:sender];
-    [((MonitorChannel*)[monitorChannels objectAtIndex:indexPath.row]) setVolume:value];
+    [((MonitorChannel*)[ViewIndex objectAtIndex:indexPath.row]) setVolume:value];
     
     
     NSIndexPath *NewIndexPath = [NSIndexPath indexPathForRow:indexPath.row+1 inSection:indexPath.section];
@@ -279,18 +289,19 @@
     
 
     if ([[instrumentsTableView cellForRowAtIndexPath:NewIndexPath] isKindOfClass:[InstrumentsSettingTableViewCell class]]) {
-        [ShowingSettingIndex removeObject:NewIndexPath];
-        NumberOfSettingCell--;
+//        [ShowingSettingIndex removeObject:NewIndexPath];
+        [ViewIndex removeObject:NewIndexPath];
+//        NumberOfSettingCell--;
         [instrumentsTableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
     }
     else
     {
         //do stuff
-        [ShowingSettingIndex addObject:NewIndexPath];
-        NumberOfSettingCell++;
+        [ViewIndex insertObject:NewIndexPath atIndex:NewIndexPath.row];
+//        [ShowingSettingIndex addObject:NewIndexPath];
+//        NumberOfSettingCell++;
         
         [instrumentsTableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
-        [instrumentsTableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
     }
 
 }
@@ -302,14 +313,14 @@
     NSIndexPath *indexPath = [instrumentsTableView indexPathForCell:sender];
     NSIndexPath *NewIndexPath = [NSIndexPath indexPathForRow:indexPath.row-1 inSection:indexPath.section];
     
-    if (((MonitorChannel*)[monitorChannels objectAtIndex:NewIndexPath.row]).volumeValue == 1) {
+    if (((MonitorChannel*)[ViewIndex objectAtIndex:NewIndexPath.row]).volumeValue == 1) {
         return;
     }
     
     [indexPaths addObject:NewIndexPath];
-    float tmp =((MonitorChannel*)[monitorChannels objectAtIndex:NewIndexPath.row]).volumeValue+0.01;
+    float tmp =((MonitorChannel*)[ViewIndex objectAtIndex:NewIndexPath.row]).volumeValue+0.01;
     
-    [((MonitorChannel*)[monitorChannels objectAtIndex:NewIndexPath.row]) setVolume:tmp];
+    [((MonitorChannel*)[ViewIndex objectAtIndex:NewIndexPath.row]) setVolume:tmp];
     ((InstrumentsSettingTableViewCell*)[instrumentsTableView cellForRowAtIndexPath:indexPath]).volumLabel.text =[NSString stringWithFormat:@"%1.0f",tmp*100];
     [instrumentsTableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
 }
@@ -319,14 +330,14 @@
     NSIndexPath *indexPath = [instrumentsTableView indexPathForCell:sender];
     NSIndexPath *NewIndexPath = [NSIndexPath indexPathForRow:indexPath.row-1 inSection:indexPath.section];
     
-    if (((MonitorChannel*)[monitorChannels objectAtIndex:NewIndexPath.row]).volumeValue == 0) {
+    if (((MonitorChannel*)[ViewIndex objectAtIndex:NewIndexPath.row]).volumeValue == 0) {
         return;
     }
     
     [indexPaths addObject:NewIndexPath];
-    float tmp =((MonitorChannel*)[monitorChannels objectAtIndex:NewIndexPath.row]).volumeValue-0.01;
+    float tmp =((MonitorChannel*)[ViewIndex objectAtIndex:NewIndexPath.row]).volumeValue-0.01;
     
-    [((MonitorChannel*)[monitorChannels objectAtIndex:NewIndexPath.row]) setVolume:tmp];
+    [((MonitorChannel*)[ViewIndex objectAtIndex:NewIndexPath.row]) setVolume:tmp];
     ((InstrumentsSettingTableViewCell*)[instrumentsTableView cellForRowAtIndexPath:indexPath]).volumLabel.text =[NSString stringWithFormat:@"%1.0f",tmp*100];
     [instrumentsTableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
 }
@@ -334,13 +345,13 @@
 {
     NSIndexPath *indexPath = [instrumentsTableView indexPathForCell:sender];
     NSIndexPath *NewIndexPath = [NSIndexPath indexPathForRow:indexPath.row-1 inSection:indexPath.section];
-    [((MonitorChannel*)[monitorChannels objectAtIndex:NewIndexPath.row]) setPan:value];
+    [((MonitorChannel*)[ViewIndex objectAtIndex:NewIndexPath.row]) setPan:value];
 }
 - (void)reverbSliderSliderChanged:(float)value Sender:(id)sender
 {
     NSIndexPath *indexPath = [instrumentsTableView indexPathForCell:sender];
     NSIndexPath *NewIndexPath = [NSIndexPath indexPathForRow:indexPath.row-1 inSection:indexPath.section];
-    [((MonitorChannel*)[monitorChannels objectAtIndex:NewIndexPath.row]) changeReverb:value];
+    [((MonitorChannel*)[ViewIndex objectAtIndex:NewIndexPath.row]) changeReverb:value];
 }
 
 @end

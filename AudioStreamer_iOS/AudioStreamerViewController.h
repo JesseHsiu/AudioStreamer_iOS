@@ -33,7 +33,7 @@
     NetworkStreamer *networkStreamer;
     
     int NumberOfSettingCell;
-    NSMutableArray *ShowingSettingIndex;
+    NSMutableArray *ViewIndex;
     
 }
 @property (nonatomic,assign) NSInteger numOfChannel;
