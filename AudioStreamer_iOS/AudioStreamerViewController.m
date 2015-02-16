@@ -245,10 +245,12 @@
     NSIndexPath *indexPath = [instrumentsTableView indexPathForCell:sender];
     if (((MonitorChannel*)[monitorChannels objectAtIndex:indexPath.row]).mutedValue) {
         [((MonitorChannel*)[monitorChannels objectAtIndex:indexPath.row]) setMuted:NO];
+        [((InstrumentsListTableViewCell*)sender).muteButton setTitle:@"Mute" forState:UIControlStateNormal];
     }
     else
     {
         [((MonitorChannel*)[monitorChannels objectAtIndex:indexPath.row]) setMuted:YES];
+        [((InstrumentsListTableViewCell*)sender).muteButton setTitle:@"Unmute" forState:UIControlStateNormal];
     }
     
 }
