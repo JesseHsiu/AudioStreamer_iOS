@@ -45,6 +45,7 @@
 {
     return [ServerManager.DiscoveredServers count];
 }
+
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
@@ -70,6 +71,4 @@
     vc.ServerName = [tmp objectForKey:@"name"];
     [self.navigationController pushViewController:vc animated:YES];
 }
-
-
 @end

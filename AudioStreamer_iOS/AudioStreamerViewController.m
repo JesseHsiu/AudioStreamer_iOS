@@ -23,14 +23,13 @@
 @synthesize numOfChannel;
 
 - (void)viewDidLoad {
-    
+
     self.navigationItem.title = self.ServerName;
     monitorChannels = [[NSMutableArray alloc] init];
     
     //??
     initialized = false;
     self.numOfChannel= 0;
-    NumberOfSettingCell = 0;
     //localtag???
     
     networkStreamer = [[NetworkStreamer alloc]initWithIpAddress:self.IpAddress portNumber:PortNumber];
@@ -97,7 +96,6 @@
 #pragma mark TableView DataSources Thing
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    //return [monitorChannels count] + NumberOfSettingCell;
     return [ViewIndex count];
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -107,6 +105,7 @@
 
 //    if ([ShowingSettingIndex containsObject:indexPath]) {
     if ([[ViewIndex objectAtIndex:indexPath.row] isKindOfClass:[NSIndexPath class]]) {
+
         InstrumentsSettingTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier_Setting];
         cell.delegate = self;
         if (cell == nil) {
@@ -140,30 +139,39 @@
 {
         return 120;
 }
-
+#pragma mark tableUIDelegate
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (instrumentsTableView.isEditing) {
+        return YES;
+    }
+    else
+    {
+        return NO;
+    }
     // Return YES - we will be able to delete all rows
-    return NO;
+    
 }
 
 -(BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return YES;
 }
+-(void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath
+{
+    NSObject *Object = [ViewIndex objectAtIndex:sourceIndexPath.row];
+    
+    [ViewIndex removeObjectAtIndex:sourceIndexPath.row];
+    [ViewIndex insertObject:Object atIndex:destinationIndexPath.row];
+    
+}
 -(BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return NO;
 }
-
--(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return UITableViewCellEditingStyleNone;
 }
-#pragma mark TableView Delegate Thing
-//not implement
-
-
 
 #pragma mark NetworkStreamer Delegate
 - (void)NetworkStreamerReceivedData:(NSData *)data
@@ -291,7 +299,6 @@
     if ([[instrumentsTableView cellForRowAtIndexPath:NewIndexPath] isKindOfClass:[InstrumentsSettingTableViewCell class]]) {
 //        [ShowingSettingIndex removeObject:NewIndexPath];
         [ViewIndex removeObject:NewIndexPath];
-//        NumberOfSettingCell--;
         [instrumentsTableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
     }
     else
@@ -299,8 +306,6 @@
         //do stuff
         [ViewIndex insertObject:NewIndexPath atIndex:NewIndexPath.row];
 //        [ShowingSettingIndex addObject:NewIndexPath];
-//        NumberOfSettingCell++;
-        
         [instrumentsTableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
     }
 
@@ -352,6 +357,35 @@
     NSIndexPath *indexPath = [instrumentsTableView indexPathForCell:sender];
     NSIndexPath *NewIndexPath = [NSIndexPath indexPathForRow:indexPath.row-1 inSection:indexPath.section];
     [((MonitorChannel*)[ViewIndex objectAtIndex:NewIndexPath.row]) changeReverb:value];
+}
+- (IBAction)EditBtnPressed:(UIBarButtonItem *)sender {
+    
+    if (instrumentsTableView.isEditing) {
+        sender.title = @"Edit";
+        [instrumentsTableView setEditing:NO animated:YES];
+    }
+    else
+    {
+        sender.title = @"Done";
+        
+        NSMutableArray *indexPathsNeedToRemove = [[NSMutableArray alloc] init];
+        NSMutableIndexSet *indexSet = [[NSMutableIndexSet alloc]init];
+        
+        for (int i =0 ; i< [ViewIndex count]; i++) {
+            if ([[ViewIndex objectAtIndex:i] isKindOfClass:[NSIndexPath class]]) {
+                NSIndexPath *Path = [NSIndexPath indexPathForRow:i inSection:0];
+                [indexPathsNeedToRemove addObject:Path];
+                [indexSet addIndex:i];
+            }
+        }
+        
+        [ViewIndex removeObjectsAtIndexes:indexSet];
+        
+        [instrumentsTableView deleteRowsAtIndexPaths:indexPathsNeedToRemove withRowAnimation:UITableViewRowAnimationFade];
+        [instrumentsTableView setEditing:YES animated:YES];
+    }
+    
+    
 }
 
 @end

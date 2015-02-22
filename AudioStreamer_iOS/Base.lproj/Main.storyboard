@@ -73,6 +73,7 @@
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
                     <connections>
                         <outlet property="tableview" destination="cn8-Dt-p5F" id="xSR-al-wqe"/>
+                        <segue destination="XLn-jQ-Z5p" kind="show" identifier="Show AudioStreamerVC" id="w3E-eT-YTB"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -289,14 +290,20 @@
                             <constraint firstItem="zIn-ER-WSs" firstAttribute="top" secondItem="r2y-kO-dhc" secondAttribute="bottom" id="gwL-my-GvI"/>
                         </constraints>
                     </view>
-                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
+                    <navigationItem key="navigationItem" id="5Qc-R2-JeM">
+                        <barButtonItem key="rightBarButtonItem" title="Edit" id="wKM-fq-bAR">
+                            <connections>
+                                <action selector="EditBtnPressed:" destination="XLn-jQ-Z5p" id="3DO-d6-b9b"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="instrumentsTableView" destination="r2y-kO-dhc" id="Y3j-2q-QTu"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eux-ho-VMV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="854" y="434"/>
+            <point key="canvasLocation" x="905" y="434"/>
         </scene>
     </scenes>
 </document>
