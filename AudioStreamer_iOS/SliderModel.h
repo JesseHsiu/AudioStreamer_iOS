@@ -7,13 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-
+IB_DESIGNABLE
 @interface SliderModel : UIControl
-
-@property (nonatomic) float maximumValue;
-@property (nonatomic) float minimumValue;
-@property (nonatomic) float centerValue;
-@property (nonatomic) float sliderValue;
+@property (nonatomic) IBInspectable float maximumValue;
+@property (nonatomic) IBInspectable float minimumValue;
+@property (nonatomic) IBInspectable float centerValue;
+@property (nonatomic) IBInspectable float sliderValue;
 
 @property (nonatomic) UIColor* trackColor;
 @property (nonatomic) UIColor* trackHighlightColor;

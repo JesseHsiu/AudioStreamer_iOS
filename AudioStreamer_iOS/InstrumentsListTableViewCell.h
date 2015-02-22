@@ -7,8 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-
-
 @protocol InstrumentsListCellDelegate
 - (void)MuteBtnPressed:(id)sender;
 - (void)VolumeSliderChanged:(float)value Sender:(id)sender;

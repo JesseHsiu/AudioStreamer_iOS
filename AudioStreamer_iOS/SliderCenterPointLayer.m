@@ -17,7 +17,7 @@
 //    CGContextSetStrokeColorWithColor(ctx, self.slider.centerPointColor.CGColor);
     CGContextSetFillColorWithColor(ctx, self.slider.centerPointColor.CGColor);
     CGContextFillRect(ctx, CGRectMake(0.0f, 0.0f, self.bounds.size.width, self.bounds.size.height));
-    NSLog(@"Center Point Width: %f", self.bounds.size.width);
+    //NSLog(@"Center Point Width: %f", self.bounds.size.width);
 }
 
 @end

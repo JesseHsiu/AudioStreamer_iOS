@@ -22,7 +22,6 @@
 
     // Configure the view for the selected state
 }
-
 -(void)MuteBtn
 {
     [self.delegate MuteBtnPressed:self];

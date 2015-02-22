@@ -63,7 +63,38 @@ GENERATE_SETTER(centerValue, float, setCenterValue, setLayerFrames)
     [centerPointLayer setNeedsDisplay];
     [trackLayer setNeedsDisplay];
 }
-
+- (instancetype)initWithCoder:(NSCoder *)coder
+{
+    self = [super initWithCoder:coder];
+    
+    if (self) {
+        self.maximumValue = 1.0f;
+        self.minimumValue = -1.0f;
+        self.centerValue = 0.0f;
+        self.sliderValue = 0.0f;
+        
+        self.trackHighlightColor = [UIColor colorWithRed:0.0 green:0.45 blue:0.94 alpha:1.0];
+        self.trackColor = [UIColor colorWithWhite:0.9 alpha:1.0];
+        self.knobColor = [UIColor whiteColor];
+        self.centerPointColor = [UIColor darkGrayColor];
+        _curvaceousness = 1.0;
+        
+        trackLayer = [SliderTrackLayer layer];
+        trackLayer.slider = self;
+        [self.layer addSublayer:trackLayer];
+        
+        centerPointLayer = [SliderCenterPointLayer layer];
+        centerPointLayer.slider = self;
+        [self.layer addSublayer:centerPointLayer];
+        
+        knobLayer = [SliderKnobLayer layer];
+        knobLayer.slider = self;
+        [self.layer addSublayer:knobLayer];
+        
+        [self setLayerFrames];
+    }
+    return self;
+}
 -(instancetype)initWithFrame:(CGRect)frame{
     self = [super initWithFrame:frame];
     
@@ -137,7 +168,7 @@ GENERATE_SETTER(centerValue, float, setCenterValue, setLayerFrames)
 }
 
 -(void)endTrackingWithTouch:(UITouch *)touch withEvent:(UIEvent *)event{
-    NSLog(@"Knob released");
+    //NSLog(@"Knob released");
     knobLayer.highlighted = NO;
     [knobLayer setNeedsDisplay];
 }
