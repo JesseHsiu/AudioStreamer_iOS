@@ -33,7 +33,29 @@
 }
 -(void)SettingBtn
 {
-    [self.delegate displaySettingBtnPressed:self];
+    if (!self.isEditing) {
+        [self.delegate displaySettingBtnPressed:self];
+    }
+}
+-(void)willTransitionToState:(UITableViewCellStateMask)state
+{
+    [super willTransitionToState:state];
+    if ((state & UITableViewCellStateShowingEditControlMask) == UITableViewCellStateShowingEditControlMask)
+    {
+        [UIView animateWithDuration:0.5 animations:^{
+            [self.displaySettingButton setAlpha:0.4];
+        }];
+
+        [self.displaySettingButton setEnabled:NO];
+    }
+    else if (state == UITableViewCellStateDefaultMask)
+    {
+        [UIView animateWithDuration:0.5 animations:^{
+            [self.displaySettingButton setAlpha:1];
+        }];
+        [self.displaySettingButton setEnabled:YES];
+    }
+    
 }
 
 
