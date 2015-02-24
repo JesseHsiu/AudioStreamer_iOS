@@ -323,7 +323,17 @@
     }
     
     [indexPaths addObject:NewIndexPath];
-    float tmp =((MonitorChannel*)[ViewIndex objectAtIndex:NewIndexPath.row]).volumeValue+0.01;
+    float tmp =((MonitorChannel*)[ViewIndex objectAtIndex:NewIndexPath.row]).volumeValue;
+    
+    if (tmp == 1.f) {
+        return;
+    }
+    
+    tmp += 0.01f;
+    
+    if (tmp > 1.f) {
+        tmp = 1.f;
+    }
     
     [((MonitorChannel*)[ViewIndex objectAtIndex:NewIndexPath.row]) setVolume:tmp];
     ((InstrumentsSettingTableViewCell*)[instrumentsTableView cellForRowAtIndexPath:indexPath]).volumLabel.text =[NSString stringWithFormat:@"%1.0f",tmp*100];
@@ -335,12 +345,18 @@
     NSIndexPath *indexPath = [instrumentsTableView indexPathForCell:sender];
     NSIndexPath *NewIndexPath = [NSIndexPath indexPathForRow:indexPath.row-1 inSection:indexPath.section];
     
-    if (((MonitorChannel*)[ViewIndex objectAtIndex:NewIndexPath.row]).volumeValue == 0) {
+    [indexPaths addObject:NewIndexPath];
+    float tmp =((MonitorChannel*)[ViewIndex objectAtIndex:NewIndexPath.row]).volumeValue;
+    
+    if (tmp == 0.f) {
         return;
     }
     
-    [indexPaths addObject:NewIndexPath];
-    float tmp =((MonitorChannel*)[ViewIndex objectAtIndex:NewIndexPath.row]).volumeValue-0.01;
+    tmp -= 0.01f;
+    
+    if (tmp < 0.f) {
+        tmp = 0.f;
+    }
     
     [((MonitorChannel*)[ViewIndex objectAtIndex:NewIndexPath.row]) setVolume:tmp];
     ((InstrumentsSettingTableViewCell*)[instrumentsTableView cellForRowAtIndexPath:indexPath]).volumLabel.text =[NSString stringWithFormat:@"%1.0f",tmp*100];
