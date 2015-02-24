@@ -88,19 +88,19 @@ withFilterContext:(id)filterContext{
 //            // //                [self initializeAll];
 //        }
 //        else
-        if ([array count] == numOfChannel || !initialized){
+        if ([[array objectAtIndex:0] isEqual:@"image"]){
+            //            ignore now
+            NSLog(@"New image");
+            
+            //            //Initialize standard image already on the phone
+            //            long index = [[array objectAtIndex:1] integerValue];
+            //            NSString *path = [[NSBundle mainBundle] pathForResource:[array objectAtIndex:2] ofType:[array objectAtIndex:3]];
+            //            ((MonitorChannel*)[monitorChannels objectAtIndex:index]).pathToImg = path;
+            //            [instrumentsTableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
+        } else if ([array count] == numOfChannel || !initialized){
             numOfChannel = [array count];
 //            [self.delegate NetworkStreamerUpdateNumberOfChannel:[array count]];
             [self.delegate NetworkStreamerUpdateName:array NumberOfChannel:[array count]];
-        } else if ([[array objectAtIndex:0] isEqual:@"image"]){
-//            ignore now
-            
-            
-//            //Initialize standard image already on the phone
-//            long index = [[array objectAtIndex:1] integerValue];
-//            NSString *path = [[NSBundle mainBundle] pathForResource:[array objectAtIndex:2] ofType:[array objectAtIndex:3]];
-//            ((MonitorChannel*)[monitorChannels objectAtIndex:index]).PathToImg = path;
-//            [instrumentsTableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
         }
     }
 }
@@ -147,7 +147,7 @@ withFilterContext:(id)filterContext{
 //                //Initialize standard image already on the phone
 //                long index = [[array objectAtIndex:1] integerValue];
 //                NSString *path = [[NSBundle mainBundle] pathForResource:[array objectAtIndex:2] ofType:[array objectAtIndex:3]];
-//                ((MonitorChannel*)[monitorChannels objectAtIndex:index]).PathToImg = path;
+//                ((MonitorChannel*)[monitorChannels objectAtIndex:index]).pathToImg = path;
 //            }
 //        }
     }
