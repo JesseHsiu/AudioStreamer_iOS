@@ -171,7 +171,7 @@
                                             <outlet property="volumeSlider" destination="lGs-Vr-BAU" id="21O-dD-oBP"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="InstrumentsSettings" rowHeight="120" id="z9w-Hz-uIK" customClass="InstrumentsSettingTableViewCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="InstrumentsSettings" rowHeight="125" id="z9w-Hz-uIK" customClass="InstrumentsSettingTableViewCell">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="z9w-Hz-uIK" id="qUe-cl-FAb">
@@ -218,8 +218,19 @@
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <slider hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="-1" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="Z3a-oV-kCz">
-                                                    <rect key="frame" x="124" y="90" width="419" height="31"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="|" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="30" translatesAutoresizingMaskIntoConstraints="NO" id="ICd-RW-QmA">
+                                                    <rect key="frame" x="320" y="77" width="30" height="52"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="30" id="15C-g9-Dng"/>
+                                                        <constraint firstAttribute="height" constant="52" id="DP1-Fk-Vam"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="35"/>
+                                                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <color key="highlightedColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                </label>
+                                                <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="-1" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="Z3a-oV-kCz">
+                                                    <rect key="frame" x="124" y="90" width="420" height="31"/>
+                                                    <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                 </slider>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="53J-Bu-WiV">
                                                     <rect key="frame" x="276" y="8" width="30" height="30"/>
@@ -242,56 +253,36 @@
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VzG-Ba-2U9" customClass="SliderModel">
-                                                    <rect key="frame" x="126" y="84" width="416" height="21"/>
-                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="number" keyPath="maximumValue">
-                                                            <real key="value" value="1"/>
-                                                        </userDefinedRuntimeAttribute>
-                                                        <userDefinedRuntimeAttribute type="number" keyPath="minimumValue">
-                                                            <real key="value" value="-1"/>
-                                                        </userDefinedRuntimeAttribute>
-                                                        <userDefinedRuntimeAttribute type="number" keyPath="centerValue">
-                                                            <real key="value" value="0.0"/>
-                                                        </userDefinedRuntimeAttribute>
-                                                        <userDefinedRuntimeAttribute type="number" keyPath="sliderValue">
-                                                            <real key="value" value="0.0"/>
-                                                        </userDefinedRuntimeAttribute>
-                                                    </userDefinedRuntimeAttributes>
-                                                </view>
                                                 <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="50" minValue="0.0" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="0fK-C2-HrU">
                                                     <rect key="frame" x="124" y="46" width="420" height="31"/>
                                                 </slider>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstAttribute="trailingMargin" secondItem="Z3a-oV-kCz" secondAttribute="trailing" constant="51" id="0rk-WB-pP2"/>
+                                                <constraint firstItem="Z3a-oV-kCz" firstAttribute="centerX" secondItem="ICd-RW-QmA" secondAttribute="centerX" constant="-1" id="5qH-sW-u3t"/>
+                                                <constraint firstItem="Z3a-oV-kCz" firstAttribute="leading" secondItem="0fK-C2-HrU" secondAttribute="leading" id="8zi-9r-shr"/>
                                                 <constraint firstItem="7Z8-jX-Z4s" firstAttribute="leading" secondItem="Dxf-5e-k0J" secondAttribute="trailing" constant="8" id="9GZ-4i-MSh"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="0fK-C2-HrU" secondAttribute="trailing" constant="50" id="EEy-bV-DsD"/>
-                                                <constraint firstAttribute="centerX" secondItem="VzG-Ba-2U9" secondAttribute="centerX" constant="-34" id="G7A-Ag-edO"/>
+                                                <constraint firstItem="Z3a-oV-kCz" firstAttribute="trailing" secondItem="0fK-C2-HrU" secondAttribute="trailing" id="Fcz-iE-YYi"/>
                                                 <constraint firstItem="nHp-QZ-bEn" firstAttribute="top" secondItem="qUe-cl-FAb" secondAttribute="topMargin" constant="7" id="Hf1-pH-3HW"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="Z3a-oV-kCz" secondAttribute="bottom" constant="-3" id="IB0-Bz-An4"/>
                                                 <constraint firstItem="7Z8-jX-Z4s" firstAttribute="top" secondItem="qUe-cl-FAb" secondAttribute="topMargin" id="Ld4-7m-hsX"/>
-                                                <constraint firstItem="5GF-wQ-WXc" firstAttribute="height" secondItem="VzG-Ba-2U9" secondAttribute="height" id="LyI-Rf-uLd"/>
                                                 <constraint firstItem="nHp-QZ-bEn" firstAttribute="leading" secondItem="qUe-cl-FAb" secondAttribute="leadingMargin" constant="53" id="Nge-Rm-Odz"/>
-                                                <constraint firstItem="Z3a-oV-kCz" firstAttribute="leading" secondItem="5GF-wQ-WXc" secondAttribute="trailing" constant="8" id="Oyr-nn-NEq"/>
                                                 <constraint firstItem="0fK-C2-HrU" firstAttribute="top" secondItem="7Z8-jX-Z4s" secondAttribute="bottom" constant="8" symbolic="YES" id="QCW-pL-KH8"/>
                                                 <constraint firstItem="Dxf-5e-k0J" firstAttribute="top" secondItem="qUe-cl-FAb" secondAttribute="topMargin" constant="7" id="R4m-ba-Xfb"/>
+                                                <constraint firstItem="Z3a-oV-kCz" firstAttribute="top" secondItem="0fK-C2-HrU" secondAttribute="bottom" constant="14" id="SZL-Ih-d9T"/>
                                                 <constraint firstAttribute="centerX" secondItem="Dxf-5e-k0J" secondAttribute="centerX" constant="-34" id="TT9-9W-Wvb"/>
                                                 <constraint firstItem="5kQ-uA-3et" firstAttribute="leading" secondItem="qUe-cl-FAb" secondAttribute="leadingMargin" constant="55" id="WQO-lA-Mtc"/>
+                                                <constraint firstItem="ICd-RW-QmA" firstAttribute="leading" secondItem="qUe-cl-FAb" secondAttribute="leading" constant="320" id="alK-bv-xl3"/>
+                                                <constraint firstItem="ICd-RW-QmA" firstAttribute="top" secondItem="0fK-C2-HrU" secondAttribute="bottom" constant="1" id="cuW-6N-RJm"/>
                                                 <constraint firstItem="0fK-C2-HrU" firstAttribute="leading" secondItem="5kQ-uA-3et" secondAttribute="trailing" constant="8" id="dFX-fX-sfK"/>
                                                 <constraint firstItem="Dxf-5e-k0J" firstAttribute="leading" secondItem="53J-Bu-WiV" secondAttribute="trailing" constant="8" id="dIX-yf-KD3"/>
                                                 <constraint firstItem="5GF-wQ-WXc" firstAttribute="leading" secondItem="qUe-cl-FAb" secondAttribute="leadingMargin" constant="53" id="fAN-kJ-QnX"/>
                                                 <constraint firstItem="5GF-wQ-WXc" firstAttribute="top" secondItem="5kQ-uA-3et" secondAttribute="bottom" constant="17" id="fGy-qo-mOL"/>
                                                 <constraint firstItem="5kQ-uA-3et" firstAttribute="top" secondItem="nHp-QZ-bEn" secondAttribute="bottom" constant="13" id="hNB-58-M8s"/>
-                                                <constraint firstItem="Z3a-oV-kCz" firstAttribute="top" secondItem="0fK-C2-HrU" secondAttribute="bottom" constant="14" id="iig-bd-Emx"/>
-                                                <constraint firstItem="VzG-Ba-2U9" firstAttribute="top" secondItem="0fK-C2-HrU" secondAttribute="bottom" constant="8" symbolic="YES" id="li9-L2-F6u"/>
                                                 <constraint firstItem="53J-Bu-WiV" firstAttribute="top" secondItem="qUe-cl-FAb" secondAttribute="topMargin" id="reo-uD-IrQ"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="VzG-Ba-2U9" secondAttribute="trailing" constant="50" id="u1Y-yw-9gm"/>
-                                                <constraint firstItem="VzG-Ba-2U9" firstAttribute="leading" secondItem="5GF-wQ-WXc" secondAttribute="trailing" constant="8" symbolic="YES" id="uqJ-Pd-C7d"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="CustomSlider" destination="VzG-Ba-2U9" id="FW4-Jm-dqF"/>
                                             <outlet property="panSlider" destination="Z3a-oV-kCz" id="ZVR-V0-VD5"/>
                                             <outlet property="reverbSlider" destination="0fK-C2-HrU" id="9oX-kU-92F"/>
                                             <outlet property="volumLabel" destination="Dxf-5e-k0J" id="WO1-lo-Yon"/>

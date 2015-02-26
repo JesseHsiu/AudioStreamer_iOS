@@ -17,6 +17,7 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    [UIApplication sharedApplication].idleTimerDisabled = YES;
 
     self.navController = (UINavigationController *)self.window.rootViewController;
     self.navController.navigationBar.topItem.title = @"AudioStreamer";

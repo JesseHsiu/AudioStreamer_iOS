@@ -16,7 +16,7 @@
 {
     
 }
-@property (nonatomic, copy) NSString *PathToImg;
+@property (nonatomic, copy) NSString *pathToImg;
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, assign) float reverbValue;
 @property (nonatomic, assign) float volumeValue;

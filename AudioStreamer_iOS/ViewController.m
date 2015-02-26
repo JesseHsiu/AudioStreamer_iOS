@@ -68,7 +68,7 @@
     AudioStreamerViewController * vc = (AudioStreamerViewController *)[sb instantiateViewControllerWithIdentifier:@"AudioStreamerVC"];
     NSDictionary *tmp = [ServerManager.DiscoveredServers objectAtIndex:indexPath.row];
     vc.IpAddress =[tmp objectForKey:@"ip"];
-    vc.ServerName = [tmp objectForKey:@"name"];
+    vc.serverName = [tmp objectForKey:@"name"];
     [self.navigationController pushViewController:vc animated:YES];
 }
 @end

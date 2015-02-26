@@ -17,10 +17,6 @@
     [self.volumeSubBtn addTarget:self action:@selector(volumeSub) forControlEvents:UIControlEventTouchUpInside];
     [self.reverbSlider addTarget:self action:@selector(reverbSliderChanged) forControlEvents:UIControlEventValueChanged];
     [self.panSlider addTarget:self action:@selector(panSliderChanged:) forControlEvents:UIControlEventValueChanged];
-    
-    [self.CustomSlider addTarget:self action:@selector(panSliderChanged:) forControlEvents:UIControlEventValueChanged];
-    [self.CustomSlider setLayerFrames];
-    [self layoutIfNeeded];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -38,17 +34,18 @@
 }
 -(void)reverbSliderChanged
 {
+    if( self.reverbSlider.value < 2.0f ){
+        self.reverbSlider.value = 0.0f;
+    }
     [self.delegate reverbSliderSliderChanged:self.reverbSlider.value Sender:self];
 }
 -(void)panSliderChanged:(id)sender
 {
-    if ([sender isKindOfClass:[SliderModel class]]) {
-        [self.delegate panSliderSliderChanged:self.CustomSlider.sliderValue Sender:self];
+    if( -0.04f < self.panSlider.value && self.panSlider.value < 0.04f ){
+        self.panSlider.value = 0.0f;
     }
-    else
-    {
-        [self.delegate panSliderSliderChanged:self.panSlider.value Sender:self];
-    }
+    [self.delegate panSliderSliderChanged:self.panSlider.value Sender:self];
+    
 }
 
 @end

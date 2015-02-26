@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SliderModel.h"
 @protocol InstrumentsSettingCellDelegate
 - (void)volumeAddBtnPressed:(id)sender;
 - (void)volumeSubBtnPressed:(id)sender;
@@ -25,6 +24,5 @@
 
 @property (nonatomic,assign)IBOutlet UIButton *volumeAddBtn;
 @property (nonatomic,assign)IBOutlet UIButton *volumeSubBtn;
-@property (weak, nonatomic) IBOutlet SliderModel *CustomSlider;
 
 @end

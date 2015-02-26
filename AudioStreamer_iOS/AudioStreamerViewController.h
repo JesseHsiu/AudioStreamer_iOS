@@ -32,13 +32,13 @@
     BOOL initialized;
     NetworkStreamer *networkStreamer;
     
-    int NumberOfSettingCell;
-    NSMutableArray *ViewIndex;
+    int numberOfSettingCell;
+    NSMutableArray *viewIndex;
     
 }
-@property (nonatomic,assign) NSInteger numOfChannel;
-@property (nonatomic,assign) NSString *IpAddress;
-@property (nonatomic,assign) NSString *ServerName;
+@property (nonatomic,assign) NSInteger numOfChannels;
+@property (nonatomic,assign) NSString *ipAddress;
+@property (nonatomic,assign) NSString *serverName;
 
 
 @property (nonatomic) Byte *byteDataArray;
