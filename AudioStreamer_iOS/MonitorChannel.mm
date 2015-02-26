@@ -22,6 +22,7 @@
         [self.audioController addChannels:[[NSArray alloc] initWithObjects:self.channelPlayer, nil] toChannelGroup:self.channelGroup];
         
         self.pathToImg =@"";
+        self.channelNumber = -1;
         self.reverbValue = 0;
         self.volumeValue = 0.5;
         self.panValue = 0;

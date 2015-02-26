@@ -18,6 +18,7 @@
 }
 @property (nonatomic, copy) NSString *pathToImg;
 @property (nonatomic, copy) NSString *name;
+@property (nonatomic, assign) int channelNumber;
 @property (nonatomic, assign) float reverbValue;
 @property (nonatomic, assign) float volumeValue;
 @property (nonatomic, assign) float panValue;

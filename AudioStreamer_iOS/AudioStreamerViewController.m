@@ -81,6 +81,7 @@
         AudioBufferManager *ablManager = [[AudioBufferManager alloc]init];
         ablManager.buffer = AEAllocateAndInitAudioBufferList([AEAudioController nonInterleavedFloatStereoAudioDescription], DATA_SIZE);
         channelToProcess.audioBufferManager =ablManager;
+        channelToProcess.channelNumber = i+1;
         
         [viewIndex addObject:channelToProcess];
         [monitorChannels addObject:channelToProcess];
@@ -131,14 +132,16 @@
             
         }
         
-        cell.nameLabel.text = ((MonitorChannel*)[viewIndex objectAtIndex:indexPath.row]).name;
-        cell.volumeSlider.value = ((MonitorChannel*)[viewIndex objectAtIndex:indexPath.row]).volumeValue;
+        MonitorChannel *monChan = ((MonitorChannel*)[viewIndex objectAtIndex:indexPath.row]);
+        
+        cell.nameLabel.text = [NSString stringWithFormat:@"%i - %@", monChan.channelNumber, monChan.name];
+        cell.volumeSlider.value = monChan.volumeValue;
         
         
-        NSLog(@"%@",((MonitorChannel*)[viewIndex objectAtIndex:indexPath.row]).pathToImg);
+        NSLog(@"%@",monChan.pathToImg);
         
-        if (![((MonitorChannel*)[viewIndex objectAtIndex:indexPath.row]).pathToImg isEqualToString:@""]) {
-            [cell.imageOfInstruments setImage:[UIImage imageNamed:((MonitorChannel*)[viewIndex objectAtIndex:indexPath.row]).pathToImg]];
+        if (![monChan.pathToImg isEqualToString:@""]) {
+            [cell.imageOfInstruments setImage:[UIImage imageNamed:monChan.pathToImg]];
         }
         else
         {
