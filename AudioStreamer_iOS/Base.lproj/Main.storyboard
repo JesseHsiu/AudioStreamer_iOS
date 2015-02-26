@@ -281,6 +281,12 @@
                                                 <constraint firstItem="5kQ-uA-3et" firstAttribute="top" secondItem="nHp-QZ-bEn" secondAttribute="bottom" constant="13" id="hNB-58-M8s"/>
                                                 <constraint firstItem="53J-Bu-WiV" firstAttribute="top" secondItem="qUe-cl-FAb" secondAttribute="topMargin" id="reo-uD-IrQ"/>
                                             </constraints>
+                                            <variation key="default">
+                                                <mask key="constraints">
+                                                    <exclude reference="IB0-Bz-An4"/>
+                                                    <exclude reference="alK-bv-xl3"/>
+                                                </mask>
+                                            </variation>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="panSlider" destination="Z3a-oV-kCz" id="ZVR-V0-VD5"/>

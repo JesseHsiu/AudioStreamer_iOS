@@ -91,6 +91,11 @@ withFilterContext:(id)filterContext{
         if ([[array objectAtIndex:0] isEqual:@"image"]){
             //            ignore now
             NSLog(@"New image");
+
+            [self.delegate NetworkStreamerReceivedImageForChannelNumber:
+                        [[array objectAtIndex:1] integerValue]
+                        fileName: [array objectAtIndex:2]
+                        fileExtension:[array objectAtIndex:3]];
             
             //            //Initialize standard image already on the phone
             //            long index = [[array objectAtIndex:1] integerValue];

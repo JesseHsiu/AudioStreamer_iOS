@@ -104,6 +104,7 @@
     static NSString *CellIdentifier_Setting = @"InstrumentsSettings";
 
 //    if ([ShowingSettingIndex containsObject:indexPath]) {
+//    if ([[viewIndex objectAtIndex:indexPath.row] isMemberOfClass:[NSIndexPath class]]) {
     if ([[viewIndex objectAtIndex:indexPath.row] isKindOfClass:[NSIndexPath class]]) {
 
         InstrumentsSettingTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier_Setting];
@@ -132,6 +133,18 @@
         
         cell.nameLabel.text = ((MonitorChannel*)[viewIndex objectAtIndex:indexPath.row]).name;
         cell.volumeSlider.value = ((MonitorChannel*)[viewIndex objectAtIndex:indexPath.row]).volumeValue;
+        
+        
+        NSLog(@"%@",((MonitorChannel*)[viewIndex objectAtIndex:indexPath.row]).pathToImg);
+        
+        if (![((MonitorChannel*)[viewIndex objectAtIndex:indexPath.row]).pathToImg isEqualToString:@""]) {
+            [cell.imageOfInstruments setImage:[UIImage imageNamed:((MonitorChannel*)[viewIndex objectAtIndex:indexPath.row]).pathToImg]];
+        }
+        else
+        {
+            [cell.imageOfInstruments setImage:[UIImage imageNamed:@"music-note.png"]];
+        }
+        
         return cell;
 
     }
@@ -252,6 +265,26 @@
         [instrumentsTableView reloadData];
     });
 }
+
+-(void)NetworkStreamerReceivedImageForChannelNumber:(int)num fileName:(NSString *)fileName fileExtension:(NSString *)fileExtension{
+    //Change the image for the channel at index "num" to the image with name "fileName"
+    NSString *path = [NSString stringWithFormat:@"%@.%@",fileName,fileExtension];//[[NSBundle mainBundle] pathForResource:fileName ofType:fileExtension];
+    
+    MonitorChannel* mc = (MonitorChannel*)[monitorChannels objectAtIndex:num];
+    mc.pathToImg = path;
+    
+    //UIImage *image = [[UIImage alloc] initWithContentsOfFile:path];
+    //[instrumentsTableView cellForRowAtIndexPath:<#(NSIndexPath *)#>]
+    
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [instrumentsTableView reloadData];
+    });
+    
+
+//    [instrumentsTableView ind]
+}
+
 -(void)NetworkStreamerUpdateNumberOfChannel:(NSUInteger)num
 {
     self.numOfChannels = num;
