@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "DiscoverServerManager.h"
-@interface ViewController : UIViewController<UITableViewDataSource,UITableViewDataSource>
+@interface ViewController : UIViewController<UITableViewDataSource,UITableViewDelegate>
 {
     DiscoverServerManager *ServerManager;
     IBOutlet UITableView *tableview;
