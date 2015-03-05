@@ -699,7 +699,7 @@ static OSStatus topRenderNotifyCallback(void *inRefCon, AudioUnitRenderActionFla
     audioDescription.mFramesPerPacket   = 1;
     audioDescription.mBytesPerFrame     = sizeof(float);
     audioDescription.mBitsPerChannel    = 8 * sizeof(float);
-    audioDescription.mSampleRate        = 44100.0;
+    audioDescription.mSampleRate        = 44100.0;//44100.0;
     return audioDescription;
 }
 
@@ -2213,6 +2213,8 @@ static void interAppConnectedChangeCallback(void *inRefCon, AudioUnit inUnit, Au
     // Fetch sample rate, in case we didn't get quite what we requested
     Float64 achievedSampleRate = audioSession.sampleRate;
     if ( achievedSampleRate != sampleRate ) {
+        NSLog(@"TAAE: Hardware sample rate is %f instead of %f", achievedSampleRate, sampleRate);
+    } else {
         NSLog(@"TAAE: Hardware sample rate is %f", achievedSampleRate);
     }
 

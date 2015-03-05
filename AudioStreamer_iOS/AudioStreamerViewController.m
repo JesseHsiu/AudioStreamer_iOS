@@ -69,6 +69,7 @@
     aeAudioController.preferredBufferDuration = 0.0029;
 //        aeAudioController.preferredBufferDuration = 0.00145;
     
+    
     NSError *error = [NSError alloc];
     if(![aeAudioController start:&error]){
         NSLog(@"Error starting AudioController: %@", error.localizedDescription);
@@ -89,6 +90,8 @@
 
 //    [[UIDevice currentDevice] setProximityMonitoringEnabled:YES];
 //    NSLog(@"Proximity Monitoring Enabled? %@ ",    [UIDevice currentDevice].proximityMonitoringEnabled ? @"YES" : @"NO");
+    
+    AudioStreamBasicDescription asbd = aeAudioController.audioDescription;
     
     initialized = true;
 }
