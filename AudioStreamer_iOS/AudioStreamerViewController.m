@@ -256,15 +256,27 @@
     }
     
 }
--(void)NetworkStreamerUpdateName:(NSArray *)nameArray NumberOfChannel:(NSUInteger)num
+
+-(void)NetworkStreamerChannelInfoUpdate:(NSArray *)info NumberOfChannel:(NSUInteger)num
 {
     self.numOfChannels = num;
     if (!initialized) {
         [self initializeAll];
     }
     for (int i = 0; i < [monitorChannels count]; i++) {
-            ((MonitorChannel*)[monitorChannels objectAtIndex:i]).name = [nameArray objectAtIndex:i];
-            NSLog(@"%@",[nameArray objectAtIndex:i]);
+        ((MonitorChannel*)[monitorChannels objectAtIndex:i]).name = [[info objectAtIndex:i] objectForKey:@"name"];
+        
+        NSDictionary *ImageDict = [[info objectAtIndex:i] objectForKey:@"image"];
+        
+        NSString *path = [NSString stringWithFormat:@"%@.%@",[ImageDict objectForKey:@"fileName"],[ImageDict objectForKey:@"fileExtension"]];
+        MonitorChannel* mc = (MonitorChannel*)[monitorChannels objectAtIndex:num];
+        mc.pathToImg = path;
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [instrumentsTableView reloadData];
+        });
+        
+        NSLog(@"%@",[info objectAtIndex:i]);
     }
     
     dispatch_async(dispatch_get_main_queue(), ^{

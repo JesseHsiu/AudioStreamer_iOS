@@ -73,12 +73,14 @@
 }
 -(void)udpSocket:(GCDAsyncUdpSocket *)sock didReceiveData:(NSData *)data fromAddress:(NSData *)address
 withFilterContext:(id)filterContext{
-    NSString *msg = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    if (msg)
+    
+    NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+    
+    if (jsonDict)
     {
-        NSLog(@"RECV: %@", msg);
+        NSLog(@"RECV: %@", jsonDict);
 
-        NSArray *array = [msg componentsSeparatedByString:@":"];
+        NSArray *array = [jsonDict objectForKey:@"channels"];
         
 //        if(!initialized){
 //            // //                numChannels = (int)array.count;
@@ -88,28 +90,29 @@ withFilterContext:(id)filterContext{
 //            // //                [self initializeAll];
 //        }
 //        else
-        if ([[array objectAtIndex:0] isEqual:@"image"]){
-            //            ignore now
-            NSLog(@"New image");
-
-            [self.delegate NetworkStreamerReceivedImageForChannelNumber:
-                        [[array objectAtIndex:1] integerValue]
-                        fileName: [array objectAtIndex:2]
-                        fileExtension:[array objectAtIndex:3]];
-            
-            //            //Initialize standard image already on the phone
-            //            long index = [[array objectAtIndex:1] integerValue];
-            //            NSString *path = [[NSBundle mainBundle] pathForResource:[array objectAtIndex:2] ofType:[array objectAtIndex:3]];
-            //            ((MonitorChannel*)[monitorChannels objectAtIndex:index]).pathToImg = path;
-            //            [instrumentsTableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
-        } else if ([array count] == numOfChannel || !initialized){
+//        if ([[array objectAtIndex:0] isEqual:@"image"]){
+//            //            ignore now
+//            NSLog(@"New image");
+//
+//            [self.delegate NetworkStreamerReceivedImageForChannelNumber:
+//                        [[array objectAtIndex:1] integerValue]
+//                        fileName: [array objectAtIndex:2]
+//                        fileExtension:[array objectAtIndex:3]];
+//            
+//            //            //Initialize standard image already on the phone
+//            //            long index = [[array objectAtIndex:1] integerValue];
+//            //            NSString *path = [[NSBundle mainBundle] pathForResource:[array objectAtIndex:2] ofType:[array objectAtIndex:3]];
+//            //            ((MonitorChannel*)[monitorChannels objectAtIndex:index]).pathToImg = path;
+//            //            [instrumentsTableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
+//        } else
+        
+        if ([array count] == numOfChannel || !initialized){
             numOfChannel = [array count];
 //            [self.delegate NetworkStreamerUpdateNumberOfChannel:[array count]];
-            [self.delegate NetworkStreamerUpdateName:array NumberOfChannel:[array count]];
+            [self.delegate NetworkStreamerChannelInfoUpdate:array NumberOfChannel:[array count]];
         }
     }
 }
-
 
 #pragma mark TCP_delegate
 - (void)socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(uint16_t)port{

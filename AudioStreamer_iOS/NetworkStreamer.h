@@ -15,7 +15,7 @@
 
 @protocol NetworkStreamerDelegate
 - (void)NetworkStreamerUpdateNumberOfChannel:(NSUInteger)num;
-- (void)NetworkStreamerUpdateName:(NSArray*)nameArray NumberOfChannel:(NSUInteger)num;
+- (void)NetworkStreamerChannelInfoUpdate:(NSArray*)info NumberOfChannel:(NSUInteger)num;
 - (void)NetworkStreamerReceivedData:(NSData *)data;
 - (void)NetworkStreamerReceivedImageForChannelNumber:(int)num fileName:(NSString*) fileName fileExtension:(NSString*) fileExtension;
 @end
