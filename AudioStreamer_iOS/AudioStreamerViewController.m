@@ -91,7 +91,7 @@
 //    [[UIDevice currentDevice] setProximityMonitoringEnabled:YES];
 //    NSLog(@"Proximity Monitoring Enabled? %@ ",    [UIDevice currentDevice].proximityMonitoringEnabled ? @"YES" : @"NO");
     
-    AudioStreamBasicDescription asbd = aeAudioController.audioDescription;
+    //AudioStreamBasicDescription asbd = aeAudioController.audioDescription;
     
     initialized = true;
 }
@@ -290,17 +290,9 @@
     
     MonitorChannel* mc = (MonitorChannel*)[monitorChannels objectAtIndex:num];
     mc.pathToImg = path;
-    
-    //UIImage *image = [[UIImage alloc] initWithContentsOfFile:path];
-    //[instrumentsTableView cellForRowAtIndexPath:<#(NSIndexPath *)#>]
-    
-    
     dispatch_async(dispatch_get_main_queue(), ^{
         [instrumentsTableView reloadData];
     });
-    
-
-//    [instrumentsTableView ind]
 }
 
 -(void)NetworkStreamerUpdateNumberOfChannel:(NSUInteger)num

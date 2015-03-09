@@ -7,8 +7,16 @@
 //
 
 
-
+@import UIKit;
 #import "NetworkStreamer.h"
+//true means that using tcp
+struct StreamType
+{
+    BOOL Audio;
+    BOOL Updates;
+};
+struct StreamType ConnectionType;
+//initSocket, Audio, Update
 
 @implementation NetworkStreamer
 
@@ -17,102 +25,193 @@
     self = [super init];
     
     if (self) {
+        SocketList = [[NSDictionary alloc]init];
         ipAddress = ipaddress;
         portNumber = port;
-        [self setupTCPSocket];
-        [self setupUDPSocket];
+//        [self setupTCPSocket];
+        [SocketList setValue:[self setupInitUDPSocket] forKey:@"initSocket"];
         
         self.bufferQueue = dispatch_queue_create("com.mydomain.app.newimagesinbackground", NULL); // create my serial queue
         
         numOfChannel = 0;
         initialized =false;
         
-        NSData *data = [@"hey" dataUsingEncoding:NSUTF8StringEncoding];
-        [udpSocket sendData:data toHost:ipAddress port:portNumber withTimeout:-1 tag:0];
+        NSDictionary *dict = [[NSDictionary alloc]init];
+        [dict setValue:[[UIDevice currentDevice] name] forKey:@"name"];
+        
+        
+        NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
+        [[SocketList objectForKey:@"initSocket"] sendData:data toHost:ipAddress port:portNumber withTimeout:-1 tag:0];
     }
     return self;
 
 }
 
-
-#pragma mark TCP_Socket
--(void)setupTCPSocket{
-    tcpSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
-    
-    NSString *host = ipAddress;
-    
-    //fixed port number
-    uint16_t port = portNumber;
-    
-    NSError *error = nil;
-    if (![tcpSocket connectToHost:host onPort:port error:&error])
-    {
-        NSLog(@"Error connecting: %@", error);
-    }
+-(void)initSocketAtLocal
+{
+    [self setUpAudioStreamingSocket];
+    [self setUpUpdateSocket];
 }
 
-#pragma mark UDP_Socket
--(void)setupUDPSocket{
-    //    localTag = 0;
-    udpSocket = [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
+
+-(void)setUpAudioStreamingSocket{
     
+    if (ConnectionType.Audio) {//tcp
+        
+        GCDAsyncSocket *AudioStreamSocket =[[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
+        
+        [SocketList setValue:AudioStreamSocket forKey:@"Audio"];
+        [AudioStreamSocket connectToHost:ipAddress onPort:portNumber error:nil];
+    }
+    else
+    {
+        GCDAsyncUdpSocket *AudioStreamSocket =[[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
+        [SocketList setValue:AudioStreamSocket forKey:@"Audio"];
+        [AudioStreamSocket connectToHost:ipAddress onPort:portNumber error:nil];
+    }
+    
+}
+
+-(void)setUpUpdateSocket{
+    if (ConnectionType.Updates) {//tcp
+        GCDAsyncSocket *UpdateSocket =[[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
+        [SocketList setValue:UpdateSocket forKey:@"Update"];
+        if (![UpdateSocket acceptOnPort:portNumber+1 error:nil]) {
+            NSLog(@"error to accept on the port");
+        }
+    }
+    else
+    {
+        GCDAsyncUdpSocket *UpdateSocket =[[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
+        [SocketList setValue:UpdateSocket forKey:@"Update"];
+        if (![UpdateSocket bindToPort:portNumber+1 error:nil]) {
+            NSLog(@"error to open the port %d", portNumber+1);
+        }
+        if (![UpdateSocket beginReceiving:nil]) {
+            NSLog(@"error to beginingReceiving");
+        }
+    }
+    
+}
+
+#pragma mark TCP_Socket
+//-(void)setupTCPSocket{
+//    tcpSocket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
+//    
+//    NSString *host = ipAddress;
+//    
+//    //fixed port number
+//    uint16_t port = portNumber;
+//    
+//    NSError *error = nil;
+//    if (![tcpSocket connectToHost:host onPort:port error:&error])
+//    {
+//        NSLog(@"Error connecting: %@", error);
+//    }
+//}
+
+#pragma mark UDP_Socket
+-(GCDAsyncUdpSocket*)setupInitUDPSocket{
+    //    localTag = 0;
+    GCDAsyncUdpSocket *initSocket =  [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
     NSError *error = nil;
     
-    if (![udpSocket bindToPort:0 error:&error])
+    if (![initSocket bindToPort:0 error:&error])
     {
         NSLog(@"Error binding: %@", error);
-        return;
+        return nil;
     }
-    if (![udpSocket beginReceiving:&error])
+    if (![initSocket beginReceiving:&error])
     {
         NSLog(@"Error receiving: %@", error);
-        return;
+        return nil;
     }
     
     NSLog(@"Socket Ready");
+    return initSocket;
 }
 -(void)udpSocket:(GCDAsyncUdpSocket *)sock didReceiveData:(NSData *)data fromAddress:(NSData *)address
 withFilterContext:(id)filterContext{
     
+    if ([[SocketList objectForKey:sock] isEqualToString:@"initSocket"]) {
+        [self InitSocketProcess:data];
+        
+        NSDictionary *dict = [[NSDictionary alloc]init];
+        [dict setValue:[[SocketList objectForKey:@"Update"] localHost] forKey:@"ipaddress"];
+        [dict setValue:[NSString stringWithFormat:@"%d",[[SocketList objectForKey:@"Update"] localPort]] forKey:@"port"];
+        NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
+        
+        [sock sendData:data toHost:ipAddress port:portNumber withTimeout:-1 tag:0];
+        [sock closeAfterSending];
+    }
+    else if([[SocketList objectForKey:sock] isEqualToString:@"Audio"])
+    {
+        if(data.length == DATA_SIZE * numOfChannel){
+            [self.delegate NetworkStreamerReceivedData:[data copy]];
+        }
+//        NSUInteger datalength = DATA_SIZE * numOfChannel;
+//        [sock readDataToLength:datalength withTimeout:-1 tag:0];
+    }
+    else if ([[SocketList objectForKey:sock] isEqualToString:@"Update"])
+    {
+        [self UpdateProcess:data];
+    }
+    
+    
+    
+}
+
+
+-(void)InitSocketProcess:(NSData*)data
+{
     NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
     
     if (jsonDict)
     {
         NSLog(@"RECV: %@", jsonDict);
-
+        
         NSArray *array = [jsonDict objectForKey:@"channels"];
-        
-//        if(!initialized){
-//            // //                numChannels = (int)array.count;
-//            // //                channelNames = [[NSMutableArray alloc]init];
-//            // //                [channelNames addObjectsFromArray:array];
-//            // //
-//            // //                [self initializeAll];
-//        }
-//        else
-//        if ([[array objectAtIndex:0] isEqual:@"image"]){
-//            //            ignore now
-//            NSLog(@"New image");
-//
-//            [self.delegate NetworkStreamerReceivedImageForChannelNumber:
-//                        [[array objectAtIndex:1] integerValue]
-//                        fileName: [array objectAtIndex:2]
-//                        fileExtension:[array objectAtIndex:3]];
-//            
-//            //            //Initialize standard image already on the phone
-//            //            long index = [[array objectAtIndex:1] integerValue];
-//            //            NSString *path = [[NSBundle mainBundle] pathForResource:[array objectAtIndex:2] ofType:[array objectAtIndex:3]];
-//            //            ((MonitorChannel*)[monitorChannels objectAtIndex:index]).pathToImg = path;
-//            //            [instrumentsTableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
-//        } else
-        
         if ([array count] == numOfChannel || !initialized){
             numOfChannel = [array count];
-//            [self.delegate NetworkStreamerUpdateNumberOfChannel:[array count]];
             [self.delegate NetworkStreamerChannelInfoUpdate:array NumberOfChannel:[array count]];
+            
+            
+            if([[jsonDict objectForKey:@"audio"] isEqualToString:@"udp"])
+            {
+                ConnectionType.Audio = false;
+            }
+            else
+            {
+                ConnectionType.Audio = true;
+            }
+            
+            if ([[jsonDict objectForKey:@"update"] isEqualToString:@"udp"]) {
+                ConnectionType.Updates = false;
+            }
+            else
+            {
+                ConnectionType.Updates = true;
+            }
+            [self initSocketAtLocal];
         }
     }
+
 }
+
+-(void)UpdateProcess:(NSData*)data
+{
+    NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+    NSArray *array = [jsonDict objectForKey:@"channels"];
+    if ([array count] == numOfChannel || !initialized){
+        numOfChannel = [array count];
+        [self.delegate NetworkStreamerChannelInfoUpdate:array NumberOfChannel:[array count]];
+    }
+    else
+    {
+        NSLog(@"update channel number, it hasn't implememt");
+    }
+}
+
 
 #pragma mark TCP_delegate
 - (void)socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(uint16_t)port{
@@ -121,47 +220,28 @@ withFilterContext:(id)filterContext{
 }
 
 -(void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag{
-    //    NSLog(@"socket:%p didReadData:withTag:%ld", sock, tag);
     
-    //    NSString *ack = [[NSString alloc] initWithFormat:@"received %li",tag];
-    //    NSData *d = [ack dataUsingEncoding:NSUTF8StringEncoding];
-    //    [sock writeData:d withTimeout:-1 tag:0];
-    
-    if(data.length == DATA_SIZE * numOfChannel){
-        [self.delegate NetworkStreamerReceivedData:[data copy]];
-        //        dispatch_async(dispatch_get_main_queue(), ^{
-        //            [instrumentsTableView reloadData];
-        //        });
-    } else {
-//        NSString *msg = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-//        NSArray *array = [msg componentsSeparatedByString:@":"];
-//        numOfChannel = [array count];
-////        [self.delegate NetworkStreamerUpdateNumberOfChannel:[array count]];
-////        [self.delegate NetworkStreamerUpdateName:array];
-//        [self.delegate NetworkStreamerUpdateName:array NumberOfChannel:[array count]];
-//        NSLog(@"NetworkStreamer: error dataSize");
-//        NSString *msg = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-//        if (msg)
-//        {
-//            NSLog(@"RECV: %@", msg);
-//            
-//            NSArray *array = [msg componentsSeparatedByString:@":"];
-//            if(!initialized){
-//                numOfChannel = [array count];
-//                [self initializeAll];
-//            } else if ([array count] == numOfChannel){
-//                [self updateChannelNames:array];
-//            } else if ([[array objectAtIndex:0] isEqual:@"image"]){
-//                //Initialize standard image already on the phone
-//                long index = [[array objectAtIndex:1] integerValue];
-//                NSString *path = [[NSBundle mainBundle] pathForResource:[array objectAtIndex:2] ofType:[array objectAtIndex:3]];
-//                ((MonitorChannel*)[monitorChannels objectAtIndex:index]).pathToImg = path;
-//            }
-//        }
+    if ([[SocketList objectForKey:sock] isEqualToString:@"initSocket"]) {
+        [self InitSocketProcess:data];
+        NSDictionary *dict = [[NSDictionary alloc]init];
+        [dict setValue:[[SocketList objectForKey:@"Update"] localHost] forKey:@"ipaddress"];
+        [dict setValue:[NSString stringWithFormat:@"%d",[[SocketList objectForKey:@"Update"] localPort]] forKey:@"port"];
+        NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
+        [sock writeData:data withTimeout:-1 tag:0];
+        [sock disconnectAfterWriting];
     }
-    
-    NSUInteger datalength = DATA_SIZE * numOfChannel;
-    [sock readDataToLength:datalength withTimeout:-1 tag:0];
+    else if([[SocketList objectForKey:sock] isEqualToString:@"Audio"])
+    {
+        if(data.length == DATA_SIZE * numOfChannel){
+            [self.delegate NetworkStreamerReceivedData:[data copy]];
+        }
+        NSUInteger datalength = DATA_SIZE * numOfChannel;
+        [sock readDataToLength:datalength withTimeout:-1 tag:0];
+    }
+    else if([[SocketList objectForKey:sock] isEqualToString:@"Update"])
+    {
+        [self UpdateProcess:data];
+    }
 }
 
 -(void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(NSError *)err{

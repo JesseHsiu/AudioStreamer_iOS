@@ -23,9 +23,9 @@
 
 @interface NetworkStreamer : NSObject<GCDAsyncUdpSocketDelegate,GCDAsyncSocketDelegate>
 {
-    GCDAsyncUdpSocket *udpSocket;
-    GCDAsyncSocket *tcpSocket;
-    
+//    GCDAsyncUdpSocket *udpSocket;
+//    GCDAsyncSocket *tcpSocket;
+    NSDictionary *SocketList;
     
     NSString *ipAddress;
     uint16_t portNumber;
