@@ -25,7 +25,7 @@
 {
 //    GCDAsyncUdpSocket *udpSocket;
 //    GCDAsyncSocket *tcpSocket;
-    NSDictionary *SocketList;
+    NSMutableDictionary *SocketList;
     
     NSString *ipAddress;
     uint16_t portNumber;

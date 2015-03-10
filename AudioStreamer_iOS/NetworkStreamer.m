@@ -25,11 +25,11 @@ struct StreamType ConnectionType;
     self = [super init];
     
     if (self) {
-        SocketList = [[NSDictionary alloc]init];
+        SocketList = [[NSMutableDictionary alloc]init];
         ipAddress = ipaddress;
         portNumber = port;
 //        [self setupTCPSocket];
-        [SocketList setValue:[self setupInitUDPSocket] forKey:@"initSocket"];
+        [SocketList setObject:[self setupInitUDPSocket] forKey:@"initSocket"];
         
         self.bufferQueue = dispatch_queue_create("com.mydomain.app.newimagesinbackground", NULL); // create my serial queue
         
@@ -40,7 +40,7 @@ struct StreamType ConnectionType;
         NSUUID  *UUID = [NSUUID UUID];
         NSString* stringUUID = [UUID UUIDString];
         
-        NSDictionary *dict = [[NSDictionary alloc]init];
+        NSMutableDictionary *dict = [[NSMutableDictionary alloc]init];
         [dict setValue:[[UIDevice currentDevice] name] forKey:@"name"];
         [dict setValue:stringUUID forKey:@"uuid"];
     
@@ -118,16 +118,16 @@ struct StreamType ConnectionType;
 -(GCDAsyncUdpSocket*)setupInitUDPSocket{
     //    localTag = 0;
     GCDAsyncUdpSocket *initSocket =  [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
-    NSError *error = nil;
+    NSError *err = nil;
     
-    if (![initSocket bindToPort:0 error:&error])
+    if (![initSocket bindToPort:0 error:&err])
     {
-        NSLog(@"Error binding: %@", error);
+        NSLog(@"Error binding: %@", err);
         return nil;
     }
-    if (![initSocket beginReceiving:&error])
+    if (![initSocket beginReceiving:&err])
     {
-        NSLog(@"Error receiving: %@", error);
+        NSLog(@"Error receiving: %@", err);
         return nil;
     }
     
@@ -140,7 +140,7 @@ withFilterContext:(id)filterContext{
     if ([[SocketList objectForKey:sock] isEqualToString:@"initSocket"]) {
         [self InitSocketProcess:data];
         
-        NSDictionary *dict = [[NSDictionary alloc]init];
+        NSMutableDictionary *dict = [[NSMutableDictionary alloc]init];
         [dict setValue:[[SocketList objectForKey:@"Update"] localHost] forKey:@"ipaddress"];
         [dict setValue:[NSString stringWithFormat:@"%d",[[SocketList objectForKey:@"Update"] localPort]] forKey:@"port"];
         NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
@@ -212,7 +212,7 @@ withFilterContext:(id)filterContext{
     }
     else
     {
-        NSLog(@"update channel number, it hasn't implememt");
+        NSLog(@"update channel number, hasn't been implememted yet");
     }
 }
 
@@ -227,7 +227,7 @@ withFilterContext:(id)filterContext{
     
     if ([[SocketList objectForKey:sock] isEqualToString:@"initSocket"]) {
         [self InitSocketProcess:data];
-        NSDictionary *dict = [[NSDictionary alloc]init];
+        NSMutableDictionary *dict = [[NSMutableDictionary alloc]init];
         [dict setValue:[[SocketList objectForKey:@"Update"] localHost] forKey:@"ipaddress"];
         [dict setValue:[NSString stringWithFormat:@"%d",[[SocketList objectForKey:@"Update"] localPort]] forKey:@"port"];
         NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
