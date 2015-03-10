@@ -36,10 +36,14 @@ struct StreamType ConnectionType;
         numOfChannel = 0;
         initialized =false;
         
+        
+        NSUUID  *UUID = [NSUUID UUID];
+        NSString* stringUUID = [UUID UUIDString];
+        
         NSDictionary *dict = [[NSDictionary alloc]init];
         [dict setValue:[[UIDevice currentDevice] name] forKey:@"name"];
-        
-        
+        [dict setValue:stringUUID forKey:@"uuid"];
+    
         NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
         [[SocketList objectForKey:@"initSocket"] sendData:data toHost:ipAddress port:portNumber withTimeout:-1 tag:0];
     }
