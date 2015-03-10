@@ -137,7 +137,8 @@ struct StreamType ConnectionType;
 -(void)udpSocket:(GCDAsyncUdpSocket *)sock didReceiveData:(NSData *)data fromAddress:(NSData *)address
 withFilterContext:(id)filterContext{
     
-    if ([[SocketList objectForKey:sock] isEqualToString:@"initSocket"]) {
+//    if ([[SocketList objectForKey:sock] isEqualToString:@"initSocket"]) {
+    if (sock == [SocketList objectForKey:@"initSocket"]) {
         [self InitSocketProcess:data];
         
         NSMutableDictionary *dict = [[NSMutableDictionary alloc]init];
@@ -148,7 +149,7 @@ withFilterContext:(id)filterContext{
         [sock sendData:data toHost:ipAddress port:portNumber withTimeout:-1 tag:0];
         [sock closeAfterSending];
     }
-    else if([[SocketList objectForKey:sock] isEqualToString:@"Audio"])
+    else if(sock == [SocketList objectForKey:@"Audio"])
     {
         if(data.length == DATA_SIZE * numOfChannel){
             [self.delegate NetworkStreamerReceivedData:[data copy]];
@@ -156,7 +157,7 @@ withFilterContext:(id)filterContext{
 //        NSUInteger datalength = DATA_SIZE * numOfChannel;
 //        [sock readDataToLength:datalength withTimeout:-1 tag:0];
     }
-    else if ([[SocketList objectForKey:sock] isEqualToString:@"Update"])
+    else if (sock == [SocketList objectForKey:@"Update"])
     {
         [self UpdateProcess:data];
     }
@@ -225,7 +226,7 @@ withFilterContext:(id)filterContext{
 
 -(void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag{
     
-    if ([[SocketList objectForKey:sock] isEqualToString:@"initSocket"]) {
+    if (sock == [SocketList objectForKey:@"initSocket"]) {
         [self InitSocketProcess:data];
         NSMutableDictionary *dict = [[NSMutableDictionary alloc]init];
         [dict setValue:[[SocketList objectForKey:@"Update"] localHost] forKey:@"ipaddress"];
@@ -234,7 +235,7 @@ withFilterContext:(id)filterContext{
         [sock writeData:data withTimeout:-1 tag:0];
         [sock disconnectAfterWriting];
     }
-    else if([[SocketList objectForKey:sock] isEqualToString:@"Audio"])
+    else if(sock == [SocketList objectForKey:@"Audio"])
     {
         if(data.length == DATA_SIZE * numOfChannel){
             [self.delegate NetworkStreamerReceivedData:[data copy]];
@@ -242,7 +243,7 @@ withFilterContext:(id)filterContext{
         NSUInteger datalength = DATA_SIZE * numOfChannel;
         [sock readDataToLength:datalength withTimeout:-1 tag:0];
     }
-    else if([[SocketList objectForKey:sock] isEqualToString:@"Update"])
+    else if(sock == [SocketList objectForKey:@"Update"])
     {
         [self UpdateProcess:data];
     }
