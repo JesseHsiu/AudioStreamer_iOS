@@ -66,8 +66,8 @@
     self.byteDataArray = (Byte *) malloc(DATA_SIZE*self.numOfChannels);
     aeAudioController = [[AEAudioController alloc] initWithAudioDescription:[AEAudioController nonInterleavedFloatStereoAudioDescription] inputEnabled:NO];
     //    _audioController.preferredBufferDuration = 0.005;
-    aeAudioController.preferredBufferDuration = 0.0029;
-//        aeAudioController.preferredBufferDuration = 0.00145;
+//    aeAudioController.preferredBufferDuration = 0.0029;
+        aeAudioController.preferredBufferDuration = 0.00145;
     
     
     NSError *error = [NSError alloc];
@@ -269,7 +269,7 @@
         NSDictionary *ImageDict = [[info objectAtIndex:i] objectForKey:@"image"];
         
         NSString *path = [NSString stringWithFormat:@"%@.%@",[ImageDict objectForKey:@"fileName"],[ImageDict objectForKey:@"fileExtension"]];
-        MonitorChannel* mc = (MonitorChannel*)[monitorChannels objectAtIndex:num];
+        MonitorChannel* mc = (MonitorChannel*)[monitorChannels objectAtIndex:i];
         mc.pathToImg = path;
 
         dispatch_async(dispatch_get_main_queue(), ^{

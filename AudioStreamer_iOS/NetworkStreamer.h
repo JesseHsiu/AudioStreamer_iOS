@@ -33,6 +33,8 @@
     
     NSInteger numOfChannel;
     
+    NSUUID  *UUID;
+    NSString* stringUUID;
 
     BOOL initialized;
 }

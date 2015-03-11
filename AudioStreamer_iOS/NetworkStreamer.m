@@ -37,12 +37,12 @@ struct StreamType ConnectionType;
         initialized =false;
         
         
-        NSUUID  *UUID = [NSUUID UUID];
-        NSString* stringUUID = [UUID UUIDString];
+        UUID = [NSUUID UUID];
+        stringUUID = [UUID UUIDString];
         
         NSMutableDictionary *dict = [[NSMutableDictionary alloc]init];
-        [dict setValue:[[UIDevice currentDevice] name] forKey:@"name"];
-        [dict setValue:stringUUID forKey:@"uuid"];
+        [dict setObject:[[UIDevice currentDevice] name] forKey:@"name"];
+        [dict setObject:stringUUID forKey:@"uuid"];
     
         NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
         [[SocketList objectForKey:@"initSocket"] sendData:data toHost:ipAddress port:portNumber withTimeout:-1 tag:0];
@@ -64,14 +64,22 @@ struct StreamType ConnectionType;
         
         GCDAsyncSocket *AudioStreamSocket =[[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
         
-        [SocketList setValue:AudioStreamSocket forKey:@"Audio"];
+        [SocketList setObject:AudioStreamSocket forKey:@"audioSocket"];
         [AudioStreamSocket connectToHost:ipAddress onPort:portNumber error:nil];
     }
     else
     {
         GCDAsyncUdpSocket *AudioStreamSocket =[[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
-        [SocketList setValue:AudioStreamSocket forKey:@"Audio"];
-        [AudioStreamSocket connectToHost:ipAddress onPort:portNumber error:nil];
+        [SocketList setObject:AudioStreamSocket forKey:@"audioSocket"];
+        
+        if (![AudioStreamSocket bindToPort:0 error:nil]) {
+            NSLog(@"error to open the port");
+        }
+        if (![AudioStreamSocket beginReceiving:nil]) {
+            NSLog(@"error to beginingReceiving");
+        }
+        NSLog(@"Audio Socket Address: %@",[AudioStreamSocket localAddress]);
+        NSLog(@"Audio Socket Port: %@",[NSString stringWithFormat:@"%d",[AudioStreamSocket localPort]]);
     }
     
 }
@@ -79,21 +87,23 @@ struct StreamType ConnectionType;
 -(void)setUpUpdateSocket{
     if (ConnectionType.Updates) {//tcp
         GCDAsyncSocket *UpdateSocket =[[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
-        [SocketList setValue:UpdateSocket forKey:@"Update"];
-        if (![UpdateSocket acceptOnPort:portNumber+1 error:nil]) {
-            NSLog(@"error to accept on the port");
+        [SocketList setObject:UpdateSocket forKey:@"updateSocket"];
+        if (![UpdateSocket acceptOnPort:0 error:nil]) {
+            NSLog(@"error to accept on port");
         }
     }
     else
     {
         GCDAsyncUdpSocket *UpdateSocket =[[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
-        [SocketList setValue:UpdateSocket forKey:@"Update"];
-        if (![UpdateSocket bindToPort:portNumber+1 error:nil]) {
-            NSLog(@"error to open the port %d", portNumber+1);
+        [SocketList setObject:UpdateSocket forKey:@"updateSocket"];
+        if (![UpdateSocket bindToPort:0 error:nil]) {
+            NSLog(@"error to open the port");
         }
         if (![UpdateSocket beginReceiving:nil]) {
             NSLog(@"error to beginingReceiving");
         }
+        NSLog(@"Update Socket Address: %@",[UpdateSocket localAddress]);
+        NSLog(@"Update Socket Port: %@",[NSString stringWithFormat:@"%d",[UpdateSocket localPort]]);
     }
     
 }
@@ -137,27 +147,34 @@ struct StreamType ConnectionType;
 -(void)udpSocket:(GCDAsyncUdpSocket *)sock didReceiveData:(NSData *)data fromAddress:(NSData *)address
 withFilterContext:(id)filterContext{
     
-//    if ([[SocketList objectForKey:sock] isEqualToString:@"initSocket"]) {
-    if (sock == [SocketList objectForKey:@"initSocket"]) {
-        [self InitSocketProcess:data];
-        
-        NSMutableDictionary *dict = [[NSMutableDictionary alloc]init];
-        [dict setValue:[[SocketList objectForKey:@"Update"] localHost] forKey:@"ipaddress"];
-        [dict setValue:[NSString stringWithFormat:@"%d",[[SocketList objectForKey:@"Update"] localPort]] forKey:@"port"];
-        NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
-        
-        [sock sendData:data toHost:ipAddress port:portNumber withTimeout:-1 tag:0];
-        [sock closeAfterSending];
-    }
-    else if(sock == [SocketList objectForKey:@"Audio"])
+    
+    if(sock == [SocketList objectForKey:@"audioSocket"])
     {
         if(data.length == DATA_SIZE * numOfChannel){
             [self.delegate NetworkStreamerReceivedData:[data copy]];
         }
-//        NSUInteger datalength = DATA_SIZE * numOfChannel;
-//        [sock readDataToLength:datalength withTimeout:-1 tag:0];
+        //        NSUInteger datalength = DATA_SIZE * numOfChannel;
+        //        [sock readDataToLength:datalength withTimeout:-1 tag:0];
     }
-    else if (sock == [SocketList objectForKey:@"Update"])
+    else if (sock == [SocketList objectForKey:@"initSocket"]) {
+        //Initialize the Update socket and the Audio socket and send their port numbers to the server
+        [self InitSocketProcess:data];
+        
+        NSMutableDictionary *dict = [[NSMutableDictionary alloc]init];
+        
+        [dict setObject:stringUUID forKey:@"uuid"];
+        [dict setObject:@"updateSocket" forKey:@"socket"];
+        NSData *dictData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
+        [[SocketList objectForKey:@"updateSocket"] sendData:dictData toAddress:address withTimeout:-1 tag:0];
+        
+        [dict removeObjectForKey:@"socket"];
+        [dict setObject:@"audioSocket" forKey:@"socket"];
+        dictData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
+        [[SocketList objectForKey:@"audioSocket"] sendData:dictData toAddress:address withTimeout:-1 tag:0];
+        
+        [sock close];
+    }
+    else if (sock == [SocketList objectForKey:@"updateSocket"])
     {
         [self UpdateProcess:data];
     }
@@ -180,7 +197,7 @@ withFilterContext:(id)filterContext{
             numOfChannel = [array count];
             [self.delegate NetworkStreamerChannelInfoUpdate:array NumberOfChannel:[array count]];
             
-            
+            NSLog(@"InitSocketProcess - %@",[jsonDict objectForKey:@"audio"]);
             if([[jsonDict objectForKey:@"audio"] isEqualToString:@"udp"])
             {
                 ConnectionType.Audio = false;
@@ -228,14 +245,16 @@ withFilterContext:(id)filterContext{
     
     if (sock == [SocketList objectForKey:@"initSocket"]) {
         [self InitSocketProcess:data];
+        
         NSMutableDictionary *dict = [[NSMutableDictionary alloc]init];
-        [dict setValue:[[SocketList objectForKey:@"Update"] localHost] forKey:@"ipaddress"];
-        [dict setValue:[NSString stringWithFormat:@"%d",[[SocketList objectForKey:@"Update"] localPort]] forKey:@"port"];
+        [dict setObject:stringUUID forKey:@"uuid"];
+        [dict setObject:[[SocketList objectForKey:@"updateSocket"] localHost] forKey:@"ipaddress"];
+        [dict setObject:[NSString stringWithFormat:@"%d",[[SocketList objectForKey:@"updateSocket"] localPort]] forKey:@"port"];
         NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
         [sock writeData:data withTimeout:-1 tag:0];
         [sock disconnectAfterWriting];
     }
-    else if(sock == [SocketList objectForKey:@"Audio"])
+    else if(sock == [SocketList objectForKey:@"audioSocket"])
     {
         if(data.length == DATA_SIZE * numOfChannel){
             [self.delegate NetworkStreamerReceivedData:[data copy]];
@@ -243,7 +262,7 @@ withFilterContext:(id)filterContext{
         NSUInteger datalength = DATA_SIZE * numOfChannel;
         [sock readDataToLength:datalength withTimeout:-1 tag:0];
     }
-    else if(sock == [SocketList objectForKey:@"Update"])
+    else if(sock == [SocketList objectForKey:@"updateSocket"])
     {
         [self UpdateProcess:data];
     }
