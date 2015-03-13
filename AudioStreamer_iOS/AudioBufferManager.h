@@ -11,4 +11,6 @@
 @interface AudioBufferManager : NSObject
 
 @property (nonatomic,assign) AudioBufferList *buffer;
+
+-(instancetype)initWithAnAudioBufferListWithSize: (int) dataSize;
 @end

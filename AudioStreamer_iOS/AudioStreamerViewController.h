@@ -35,6 +35,10 @@
     int numberOfSettingCell;
     NSMutableArray *viewIndex;
     
+    //Try to fix random crashes
+    NSMutableArray *ablNSArray;
+    bool flag;
+    
 }
 @property (nonatomic,assign) NSInteger numOfChannels;
 @property (nonatomic,assign) NSString *ipAddress;

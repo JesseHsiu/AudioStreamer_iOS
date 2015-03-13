@@ -30,6 +30,8 @@
 #include "TPCircularBuffer+AudioBufferList.h"
 #import <mach/mach_time.h>
 
+//#include "TheAmazingAudioEngine.h"
+
 static double __secondsToHostTicks = 0.0;
 
 static inline long align16byte(long val) {
@@ -132,6 +134,9 @@ bool TPCircularBufferCopyAudioBufferList(TPCircularBuffer *buffer, const AudioBu
     for ( int i=0; i<bufferList->mNumberBuffers; i++ ) {
         memcpy(bufferList->mBuffers[i].mData, inBufferList->mBuffers[i].mData, byteCount);
     }
+    
+    //Prevent memory leak
+   // AEFreeAudioBufferList(inBufferList);
     
     TPCircularBufferProduceAudioBufferList(buffer, NULL);
     

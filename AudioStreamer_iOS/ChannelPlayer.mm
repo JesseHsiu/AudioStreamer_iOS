@@ -60,9 +60,16 @@ static OSStatus renderCallback(__unsafe_unretained ChannelPlayer *THIS,
     TPCircularBufferCopyAudioBufferList(&_cbuffer, abl, time, kTPCircularBufferCopyAll, NULL);
 }
 
--(void)addToBufferWithoutTimeStampAudioBufferList:(AudioBufferList *)abl{
-    TPCircularBufferCopyAudioBufferList(&_cbuffer, abl, NULL, kTPCircularBufferCopyAll, NULL);
+-(void)addToBufferWithoutTimeStampAudioBufferList:(AudioBufferList *)abl {
+    
+        if(TPCircularBufferCopyAudioBufferList(&_cbuffer, abl, NULL, kTPCircularBufferCopyAll, NULL)){
+            //AEFreeAudioBufferList(abl);
+            if(abl){
+                //AEFreeAudioBufferList(abl);
+            }
+        }
 }
+
 
 
 @end

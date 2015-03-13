@@ -99,4 +99,8 @@
     [self.channelPlayer addToBufferWithoutTimeStampAudioBufferList:self.audioBufferManager.buffer];
 }
 
+-(void)addToCircularBufferAudioBufferList:(AudioBufferList *)abl{
+    [self.channelPlayer addToBufferWithoutTimeStampAudioBufferList:abl];
+}
+
 @end

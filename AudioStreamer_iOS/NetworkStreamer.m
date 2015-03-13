@@ -29,9 +29,12 @@ struct StreamType ConnectionType;
         ipAddress = ipaddress;
         portNumber = port;
 //        [self setupTCPSocket];
-        [SocketList setObject:[self setupInitUDPSocket] forKey:@"initSocket"];
         
         self.bufferQueue = dispatch_queue_create("com.mydomain.app.newimagesinbackground", NULL); // create my serial queue
+        
+        [SocketList setObject:[self setupInitUDPSocket] forKey:@"initSocket"];
+        
+        
         
         numOfChannel = 0;
         initialized =false;
@@ -53,6 +56,9 @@ struct StreamType ConnectionType;
 
 -(void)initSocketAtLocal
 {
+    if (self.bufferQueue) {
+        self.bufferQueue = dispatch_queue_create("com.mydomain.app.newimagesinbackground", NULL); // create my serial queue
+    }
     [self setUpAudioStreamingSocket];
     [self setUpUpdateSocket];
 }
@@ -62,14 +68,14 @@ struct StreamType ConnectionType;
     
     if (ConnectionType.Audio) {//tcp
         
-        GCDAsyncSocket *AudioStreamSocket =[[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
+        GCDAsyncSocket *AudioStreamSocket =[[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:self.bufferQueue];
         
         [SocketList setObject:AudioStreamSocket forKey:@"audioSocket"];
         [AudioStreamSocket connectToHost:ipAddress onPort:portNumber error:nil];
     }
     else
     {
-        GCDAsyncUdpSocket *AudioStreamSocket =[[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
+        GCDAsyncUdpSocket *AudioStreamSocket =[[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:self.bufferQueue];
         [SocketList setObject:AudioStreamSocket forKey:@"audioSocket"];
         
         if (![AudioStreamSocket bindToPort:0 error:nil]) {
@@ -86,7 +92,7 @@ struct StreamType ConnectionType;
 
 -(void)setUpUpdateSocket{
     if (ConnectionType.Updates) {//tcp
-        GCDAsyncSocket *UpdateSocket =[[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
+        GCDAsyncSocket *UpdateSocket =[[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:self.bufferQueue];
         [SocketList setObject:UpdateSocket forKey:@"updateSocket"];
         if (![UpdateSocket acceptOnPort:0 error:nil]) {
             NSLog(@"error to accept on port");
@@ -94,7 +100,7 @@ struct StreamType ConnectionType;
     }
     else
     {
-        GCDAsyncUdpSocket *UpdateSocket =[[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
+        GCDAsyncUdpSocket *UpdateSocket =[[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:self.bufferQueue];
         [SocketList setObject:UpdateSocket forKey:@"updateSocket"];
         if (![UpdateSocket bindToPort:0 error:nil]) {
             NSLog(@"error to open the port");
@@ -127,7 +133,8 @@ struct StreamType ConnectionType;
 #pragma mark UDP_Socket
 -(GCDAsyncUdpSocket*)setupInitUDPSocket{
     //    localTag = 0;
-    GCDAsyncUdpSocket *initSocket =  [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
+    
+    GCDAsyncUdpSocket *initSocket =  [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:self.bufferQueue];
     NSError *err = nil;
     
     if (![initSocket bindToPort:0 error:&err])

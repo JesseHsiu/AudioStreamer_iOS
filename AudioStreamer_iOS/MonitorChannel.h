@@ -40,4 +40,5 @@
 -(void)setPan:(float)pan;
 -(void)setMuted:(BOOL)muted;
 -(void)addToBufferToList;
+-(void)addToCircularBufferAudioBufferList:(AudioBufferList *)abl;
 @end

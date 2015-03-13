@@ -73,7 +73,12 @@ AudioBufferList *AECopyAudioBufferList(AudioBufferList *original) {
 }
 
 void AEFreeAudioBufferList(AudioBufferList *bufferList ) {
+        printf("first call ");
     for ( int i=0; i<bufferList->mNumberBuffers; i++ ) {
+            printf("freeeeeee\n");
+        if (bufferList->mBuffers[i].mData == nil) {
+            printf("Buffer is nil\n");
+        }
         if ( bufferList->mBuffers[i].mData ) free(bufferList->mBuffers[i].mData);
     }
     free(bufferList);
