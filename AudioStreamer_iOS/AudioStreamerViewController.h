@@ -25,7 +25,8 @@
     
     IBOutlet InstrumentsListTableView *instrumentsTableView;
     NSMutableArray *monitorChannels;
-    
+    ChannelPlayer *channelPlayer;
+    AEChannelGroupRef channelGroup;
     AEAudioController *aeAudioController;
     
     
@@ -36,7 +37,9 @@
     NSMutableArray *viewIndex;
     
     //Try to fix random crashes
-    NSMutableArray *ablNSArray;
+//    NSMutableArray *ablNSArray;
+    AudioBufferList *abl1;
+    AudioBufferList *abl2;
     bool flag;
     
 }

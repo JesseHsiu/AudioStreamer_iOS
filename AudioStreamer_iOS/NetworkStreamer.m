@@ -19,6 +19,7 @@ struct StreamType ConnectionType;
 //initSocket, Audio, Update
 
 @implementation NetworkStreamer
+@synthesize SocketList;
 
 -(NetworkStreamer*)initWithIpAddress:(NSString*)ipaddress portNumber:(uint16_t)port
 {
@@ -28,9 +29,10 @@ struct StreamType ConnectionType;
         SocketList = [[NSMutableDictionary alloc]init];
         ipAddress = ipaddress;
         portNumber = port;
+//f        updateAddress = [[NSData alloc] init];
 //        [self setupTCPSocket];
         
-        self.bufferQueue = dispatch_queue_create("com.mydomain.app.newimagesinbackground", NULL); // create my serial queue
+        self.bufferQueue = dispatch_queue_create("com.mydomain.app.newimagesinbackground", NULL); // create my serial queuew
         
         [SocketList setObject:[self setupInitUDPSocket] forKey:@"initSocket"];
         
@@ -48,7 +50,7 @@ struct StreamType ConnectionType;
         [dict setObject:stringUUID forKey:@"uuid"];
     
         NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
-        [[SocketList objectForKey:@"initSocket"] sendData:data toHost:ipAddress port:portNumber withTimeout:-1 tag:0];
+        [[SocketList objectForKey:@"initSocket"] sendData:data toHost:ipAddress port:portNumber withTimeout:15 tag:0];
     }
     return self;
 
@@ -157,9 +159,9 @@ withFilterContext:(id)filterContext{
     
     if(sock == [SocketList objectForKey:@"audioSocket"])
     {
-        if(data.length == DATA_SIZE * numOfChannel){
+//        if(data.length == DATA_SIZE * numOfChannel){
             [self.delegate NetworkStreamerReceivedData:[data copy]];
-        }
+//        }
         //        NSUInteger datalength = DATA_SIZE * numOfChannel;
         //        [sock readDataToLength:datalength withTimeout:-1 tag:0];
     }
@@ -179,15 +181,21 @@ withFilterContext:(id)filterContext{
         dictData = [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
         [[SocketList objectForKey:@"audioSocket"] sendData:dictData toAddress:address withTimeout:-1 tag:0];
         
+        if(!initAddress) initAddress = address;
         [sock close];
     }
     else if (sock == [SocketList objectForKey:@"updateSocket"])
     {
+        if(!updateAddress) updateAddress = address;
         [self UpdateProcess:data];
     }
     
     
     
+}
+
+-(void)udpSocket:(GCDAsyncUdpSocket *)sock didNotSendDataWithTag:(long)tag dueToError:(NSError *)error{
+    NSLog(@"Did not send tag: %li, Error: %@", tag, error.localizedDescription);
 }
 
 
@@ -282,6 +290,19 @@ withFilterContext:(id)filterContext{
 -(void)socket:(GCDAsyncSocket *)sock didWriteDataWithTag:(long)tag{
     NSLog(@"Did write data with tag: %li",tag);
     // [sock readDataWithTimeout:-1 tag:0];
+}
+
+-(void)sendChannelInfoToServer:(NSMutableDictionary*)channelInfo{
+    //Add identifier for server
+    [channelInfo setObject:stringUUID forKey:@"uuid"];
+    //Convert to NSData and send
+    NSData *data = [NSJSONSerialization dataWithJSONObject:channelInfo options:0 error:nil];
+    if (!updateAddress) {
+        NSLog(@"update address is nil");
+    }
+    [[SocketList objectForKey:@"updateSocket"] sendData:data toAddress:updateAddress withTimeout:15 tag:9999];
+//    [[SocketList objectForKey:@"initSocket"] sendData:data toHost:ipAddress port:portNumber withTimeout:15 tag:0];
+
 }
 
 @end

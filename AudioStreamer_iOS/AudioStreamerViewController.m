@@ -63,16 +63,20 @@
     
     [viewIndex removeAllObjects];
     [monitorChannels removeAllObjects];
+    channelPlayer = [[ChannelPlayer alloc]init];
     aeAudioController = nil;
     
     //self.byteDataArray = (Byte *) malloc(DATA_SIZE*self.numOfChannels);
-    self.byteDataArray = (Byte *) malloc(DATA_SIZE*self.numOfChannels*2);
+    self.byteDataArray = (Byte *) malloc(DATA_SIZE*4);
     
     aeAudioController = [[AEAudioController alloc] initWithAudioDescription:[AEAudioController nonInterleavedFloatStereoAudioDescription] inputEnabled:NO];
     //    _audioController.preferredBufferDuration = 0.005;
 //    aeAudioController.preferredBufferDuration = 0.0029;
         aeAudioController.preferredBufferDuration = 0.00145;
     
+    channelGroup = [aeAudioController createChannelGroup];
+    [aeAudioController addChannels:[NSArray arrayWithObject:channelPlayer] toChannelGroup:channelGroup];
+
     
     NSError *error = [NSError alloc];
     if(![aeAudioController start:&error]){
@@ -82,26 +86,31 @@
     
     for(int i = 0; i < self.numOfChannels; i++){
         
-        MonitorChannel* channelToProcess = [[MonitorChannel alloc]initWithAudioController:aeAudioController];
-        AudioBufferManager *ablManager = [[AudioBufferManager alloc]init];
-        ablManager.buffer = AEAllocateAndInitAudioBufferList([AEAudioController nonInterleavedFloatStereoAudioDescription], DATA_SIZE);
-        channelToProcess.audioBufferManager =ablManager;
-        channelToProcess.channelNumber = i+1;
+//        MonitorChannel* channelToProcess = [[MonitorChannel alloc]initWithAudioController:aeAudioController];
         
+        MonitorChannel* channelToProcess = [[MonitorChannel alloc]init];
+        
+//        AudioBufferManager *ablManager = [[AudioBufferManager alloc]init];
+//        ablManager.buffer = AEAllocateAndInitAudioBufferList([AEAudioController nonInterleavedFloatStereoAudioDescription], DATA_SIZE);
+//        channelToProcess.audioBufferManager =ablManager;
+        channelToProcess.channelNumber = i+1;
+        channelToProcess.networkStreamer = networkStreamer;
         [viewIndex addObject:channelToProcess];
         [monitorChannels addObject:channelToProcess];
     }
     
-    ablNSArray = [[NSMutableArray alloc]init];
+//    ablNSArray = [[NSMutableArray alloc]init];
+//    
+//    for (int i = 0; i< self.numOfChannels * 2; i++) {
+//        AudioBufferManager *ablManager = [[AudioBufferManager alloc]init];
+//        ablManager.buffer =AEAllocateAndInitAudioBufferList([AEAudioController nonInterleavedFloatStereoAudioDescription], DATA_SIZE);
+//        
+//        //AudioBufferList *tmp = AEAllocateAndInitAudioBufferList([AEAudioController nonInterleavedFloatStereoAudioDescription], dataSize);//(AudioBufferList *) malloc(ablSize*2);
+//        [ablNSArray addObject:ablManager];
+//    }
     
-    for (int i = 0; i< self.numOfChannels * 2; i++) {
-        AudioBufferManager *ablManager = [[AudioBufferManager alloc]init];
-        ablManager.buffer =AEAllocateAndInitAudioBufferList([AEAudioController nonInterleavedFloatStereoAudioDescription], DATA_SIZE);
-        
-        //AudioBufferList *tmp = AEAllocateAndInitAudioBufferList([AEAudioController nonInterleavedFloatStereoAudioDescription], dataSize);//(AudioBufferList *) malloc(ablSize*2);
-        [ablNSArray addObject:ablManager];
-    }
-    
+    abl1 = AEAllocateAndInitAudioBufferList([aeAudioController audioDescription], DATA_SIZE);
+    abl2 = AEAllocateAndInitAudioBufferList([aeAudioController audioDescription], DATA_SIZE);
 
 
 //    [[UIDevice currentDevice] setProximityMonitoringEnabled:YES];
@@ -213,6 +222,7 @@
 #pragma mark NetworkStreamer Delegate
 - (void)NetworkStreamerReceivedData:(NSData *)data
 {
+    
 //    @autoreleasepool {
         
 //        int countChannels = 0;
@@ -223,7 +233,8 @@
 //        }
 //        NSLog(@"countChannels: %d",countChannels);
         flag = !flag;
-    
+//        NSMutableData *mdata = [data copy];
+//        [mdata appendData:data];
         NSData *copiedData = [data copy];
         NSUInteger dataLen = [copiedData length];
         if(dataLen > 0){
@@ -232,58 +243,77 @@
             //Take the start position of the first subrange
             NSUInteger startPos = 0;
             //Calculate the length of the subranges
-            NSUInteger rangeLen = dataLen / [monitorChannels count];
+            NSUInteger rangeLen = dataLen / 2;//[monitorChannels count];
             //        NSLog(@"%lu,%d ->rangelen :  %lu %lu",(unsigned long)dataLen,numChannels,(unsigned long)rangeLen, sizeof(_ablArray));
             //Create a uint32 version of the rangelength
             UInt32 rLen = (UInt32) rangeLen;
 //            int32_t rLen = (int32_t) rangeLen;
             
-            for(int i = 0; i < [monitorChannels count]; i++){
-                
+//            for(int i = 0; i < 1/*[monitorChannels count]*/; i++){
+            
                 NSRange range = NSMakeRange(startPos, rangeLen);
                 NSData *subdata = [[copiedData subdataWithRange:range] copy];
-                
+
+                startPos += rangeLen;
+                NSRange range2 = NSMakeRange(startPos, rangeLen);
+                NSData *subdata2 = [[copiedData subdataWithRange:range] copy];
+            
                 //Get the i'th audio buffer list and fill it with data
                 
                 //            self.abl->mBuffers[i].mDataByteSize = rLen;
                 //            self.abl->mBuffers[i].mNumberChannels = 1;
-                if (flag) {
-                    memcpy(&self.byteDataArray[DATA_SIZE*i], [subdata bytes], rLen);
-                } else {
-                    memcpy(&self.byteDataArray[DATA_SIZE*i*2], [subdata bytes], rLen);
-                }
+//                if (flag) {
+//                    memcpy(&self.byteDataArray[0], [subdata bytes], rLen);
+//                } else {
+//                    memcpy(&self.byteDataArray[DATA_SIZE], [subdata bytes], rLen);
+//                }
                 //            self.abl->mBuffers[i].mData = &self.byteDataArray[dataSize*i];
                 
                 //AudioBufferManager *ablManager = [[AudioBufferManager alloc] initWithAnAudioBufferListWithSize:DATA_SIZE];
 //                AudioBufferManager *ablManager = [[monitorChannels objectAtIndex:i] audioBufferManager];
-                AudioBufferManager *ablManager;
-                if (flag) {
-                    ablManager = [ablNSArray objectAtIndex:i*2];
-                } else {
-                    ablManager = [ablNSArray objectAtIndex:i*2+1];
-                }
+//                AudioBufferManager *ablManager;
+//                if (flag) {
+//                    ablManager = [ablNSArray objectAtIndex:i*2];
+//                } else {
+//                    ablManager = [ablNSArray objectAtIndex:i*2+1];
+//                }
                 
                 //AudioBufferList *buffer = AEAllocateAndInitAudioBufferList([AEAudioController nonInterleavedFloatStereoAudioDescription], DATA_SIZE);
-                
-                ablManager.buffer->mNumberBuffers = 2;
-                ablManager.buffer->mBuffers[0].mDataByteSize = rLen;
-                ablManager.buffer->mBuffers[0].mNumberChannels = 1;
                 if (flag) {
-                    ablManager.buffer->mBuffers[0].mData = &self.byteDataArray[DATA_SIZE*i];
+                    memcpy(&self.byteDataArray[0], [subdata bytes], rLen);
+                    memcpy(&self.byteDataArray[DATA_SIZE], [subdata2 bytes], rLen);
+                    abl1->mNumberBuffers = 2;
+                    abl1->mBuffers[0].mDataByteSize = rLen;
+                    abl1->mBuffers[0].mNumberChannels = 1;
+                    abl1->mBuffers[0].mData = &self.byteDataArray[0];
+                    
+                    abl1->mBuffers[1].mDataByteSize = rLen;
+                    abl1->mBuffers[1].mNumberChannels = 1;
+                    abl1->mBuffers[1].mData = &self.byteDataArray[DATA_SIZE];
+                    [channelPlayer addToBufferWithoutTimeStampAudioBufferList:abl1];
                 } else {
-                    ablManager.buffer->mBuffers[0].mData = &self.byteDataArray[DATA_SIZE*i*2];
+                    memcpy(&self.byteDataArray[DATA_SIZE*2], [subdata bytes], rLen);
+                    memcpy(&self.byteDataArray[DATA_SIZE*3], [subdata2 bytes], rLen);
+                    abl2->mNumberBuffers = 2;
+                    abl2->mBuffers[0].mDataByteSize = rLen;
+                    abl2->mBuffers[0].mNumberChannels = 1;
+                    abl2->mBuffers[0].mData = &self.byteDataArray[DATA_SIZE*2];
+                    abl2->mBuffers[1].mDataByteSize = rLen;
+                    abl2->mBuffers[1].mNumberChannels = 1;
+                    abl2->mBuffers[1].mData = &self.byteDataArray[DATA_SIZE*3];
+                    [channelPlayer addToBufferWithoutTimeStampAudioBufferList:abl2];
                 }
                 //            self.ablArray[16*i].mBuffers[1].mDataByteSize = rLen;
                 //            self.ablArray[16*i].mBuffers[1].mNumberChannels = 1;
                 //            self.ablArray[16*i].mBuffers[1].mData = &self.byteDataArray[dataSize*i];
-                ablManager.buffer->mBuffers[1] = ablManager.buffer->mBuffers[0];
                 
-                [[monitorChannels objectAtIndex:i] addToCircularBufferAudioBufferList:ablManager.buffer];
                 
+//                [[monitorChannels objectAtIndex:i] addToCircularBufferAudioBufferList:ablManager.buffer];
+
 //                AEFreeAudioBufferList(buffer);
                 
-                startPos += rangeLen;
-            }
+//                startPos += rangeLen;
+//            }
             //return self.abl;
             //        return self.ablArray;
         }

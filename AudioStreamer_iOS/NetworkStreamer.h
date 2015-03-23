@@ -37,10 +37,14 @@
     NSString* stringUUID;
 
     BOOL initialized;
-}
+    NSData *updateAddress;
+    NSData *initAddress;
 
+}
+@property (nonatomic, strong) NSMutableDictionary *SocketList;
 @property (retain,nonatomic) dispatch_queue_t bufferQueue;
 @property (retain) id delegate;
 -(NetworkStreamer*)initWithIpAddress:(NSString*)ipaddress portNumber:(uint16_t)port;
+-(void)sendChannelInfoToServer:(NSMutableDictionary*)channelInfo;
 @end
 

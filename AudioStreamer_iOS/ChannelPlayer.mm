@@ -12,6 +12,7 @@
 @implementation ChannelPlayer
 
 -(instancetype)init{
+    self = [super init];
     TPCircularBufferInit(&_cbuffer, 16384);
     
     return self;
@@ -70,6 +71,10 @@ static OSStatus renderCallback(__unsafe_unretained ChannelPlayer *THIS,
         }
 }
 
+
+-(void)produceBytesInCircularBuffer:(NSData*)data{
+    TPCircularBufferProduceBytes(&_cbuffer, [data bytes], [data length]);
+}
 
 
 @end

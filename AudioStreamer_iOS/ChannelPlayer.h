@@ -19,5 +19,5 @@
 
 -(void) addToBufferAudioBufferList: (AudioBufferList *) abl frames: (UInt32)frames timestamp:(const AudioTimeStamp *) time;
 -(void) addToBufferWithoutTimeStampAudioBufferList: (AudioBufferList *) abl;
-
+-(void)produceBytesInCircularBuffer:(NSData*)bytes;
 @end
