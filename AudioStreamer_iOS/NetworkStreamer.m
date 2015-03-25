@@ -32,8 +32,8 @@ struct StreamType ConnectionType;
 //f        updateAddress = [[NSData alloc] init];
 //        [self setupTCPSocket];
         
-        self.updateQueue = dispatch_queue_create("com.NetworkStreamer.updateQueue", NULL); // create my serial queuew
-        self.audioQueue = dispatch_queue_create("com.NetworkStreamer.audioQueue", NULL); // create my serial queuew
+        self.updateQueue = dispatch_queue_create("com.NetworkStreamer.updateQueue", DISPATCH_QUEUE_SERIAL); // create my serial queuew
+        self.audioQueue = dispatch_queue_create("com.NetworkStreamer.audioQueue", DISPATCH_QUEUE_SERIAL); // create my serial queuew
         
         [SocketList setObject:[self setupInitUDPSocket] forKey:@"initSocket"];
         
@@ -60,8 +60,8 @@ struct StreamType ConnectionType;
 -(void)initSocketAtLocal
 {
     if (!self.updateQueue) {
-        self.updateQueue = dispatch_queue_create("com.NetworkStreamer.updateQueue", NULL); // create my serial queuew
-        self.audioQueue = dispatch_queue_create("com.NetworkStreamer.audioQueue", NULL); // create my serial
+        self.updateQueue = dispatch_queue_create("com.NetworkStreamer.updateQueue", DISPATCH_QUEUE_SERIAL); // create my serial queuew
+        self.audioQueue = dispatch_queue_create("com.NetworkStreamer.audioQueue", DISPATCH_QUEUE_SERIAL); // create my serial
     }
     [self setUpAudioStreamingSocket];
     [self setUpUpdateSocket];

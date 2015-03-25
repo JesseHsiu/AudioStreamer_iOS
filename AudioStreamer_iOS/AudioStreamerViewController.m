@@ -37,7 +37,7 @@
     networkStreamer.delegate = self;
     
     
-    parseDataThread = dispatch_queue_create("com.AudioStreamerViewController.ParseData", NULL);
+    parseDataThread = dispatch_queue_create("com.AudioStreamerViewController.ParseData", DISPATCH_QUEUE_SERIAL);
     
     
     viewIndex = [[NSMutableArray alloc]init];
