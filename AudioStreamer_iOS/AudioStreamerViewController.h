@@ -41,6 +41,7 @@
     AudioBufferList *abl1;
     AudioBufferList *abl2;
     bool flag;
+    dispatch_queue_t parseDataThread;
     
 }
 @property (nonatomic,assign) NSInteger numOfChannels;

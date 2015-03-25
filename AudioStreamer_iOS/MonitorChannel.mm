@@ -46,7 +46,11 @@
 }
 
 -(void)setPan:(float)pan{
-    self.panValue = pan;
+    float dif = pan-self.panValue;
+    if(0.05 < dif || dif < -0.05){
+        self.panValue = pan;
+        [self prepareAndSendChannelInfoToServer];
+    }
 }
 
 -(void)prepareAndSendChannelInfoToServer{

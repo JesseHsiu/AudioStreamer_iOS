@@ -39,10 +39,13 @@
     BOOL initialized;
     NSData *updateAddress;
     NSData *initAddress;
+    
+    dispatch_queue_t parseDataThread;
 
 }
 @property (nonatomic, strong) NSMutableDictionary *SocketList;
-@property (retain,nonatomic) dispatch_queue_t bufferQueue;
+@property (retain,nonatomic) dispatch_queue_t updateQueue;
+@property (retain,nonatomic) dispatch_queue_t audioQueue;
 @property (retain) id delegate;
 -(NetworkStreamer*)initWithIpAddress:(NSString*)ipaddress portNumber:(uint16_t)port;
 -(void)sendChannelInfoToServer:(NSMutableDictionary*)channelInfo;
