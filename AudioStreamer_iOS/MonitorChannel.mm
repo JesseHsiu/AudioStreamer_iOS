@@ -38,8 +38,8 @@
 {
     assert(0.f <= volume && volume <= 1.f);
     float dif = volume-self.volumeValue;
-    
-    if(0.01 < dif || dif < -0.01){
+    //Don't send updates too soon, but also don't block the + and - buttons from editing the volume
+    if(0.0098 <= dif || dif <= -0.0098){
         self.volumeValue = volume;
         [self prepareAndSendChannelInfoToServer];
     }

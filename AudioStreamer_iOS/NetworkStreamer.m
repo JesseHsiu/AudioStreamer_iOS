@@ -169,8 +169,12 @@ withFilterContext:(id)filterContext{
     if(sock == [SocketList objectForKey:@"audioSocket"])
     {
 //        if(data.length == DATA_SIZE * numOfChannel){
-        NSLog(@"Audio Received");
-            [self.delegate NetworkStreamerReceivedData:[data copy]];
+        [self.delegate NetworkStreamerReceivedData:[data copy]];
+       
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            NSLog(@"Audio Received with data size: %i", (int)data.length);
+//        });
+
 //        }
         //        NSUInteger datalength = DATA_SIZE * numOfChannel;
         //        [sock readDataToLength:datalength withTimeout:-1 tag:0];
