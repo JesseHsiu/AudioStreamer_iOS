@@ -6,7 +6,6 @@
 //  Copyright (c) 2015 MobileHCILab. All rights reserved.
 //
 
-//#define DATA_SIZE 512
 #define PortNumber 21369
 
 #import "AudioStreamerViewController.h"
@@ -75,8 +74,9 @@
     aeAudioController = [[AEAudioController alloc] initWithAudioDescription:[AEAudioController nonInterleavedFloatStereoAudioDescription] inputEnabled:NO];
     //    _audioController.preferredBufferDuration = 0.005;
 //    aeAudioController.preferredBufferDuration = 0.0029;
-//        aeAudioController.preferredBufferDuration = 0.00145;
-        aeAudioController.preferredBufferDuration = 0.000725;
+//    aeAudioController.preferredBufferDuration = 0.00145;
+    aeAudioController.preferredBufferDuration = 0.000725;
+//    aeAudioController.preferredBufferDuration = 0.0003625;
     
     channelGroup = [aeAudioController createChannelGroup];
     [aeAudioController addChannels:[NSArray arrayWithObject:channelPlayer] toChannelGroup:channelGroup];
