@@ -27,6 +27,7 @@
 -(void)changeReverb:(float)reverbValue{
     assert(0.f <= reverbValue && reverbValue <= 100.f);
     self.reverbValue = reverbValue;
+    [self prepareAndSendChannelInfoToServer];
 }
 
 -(void)setMuted:(BOOL)muted{
