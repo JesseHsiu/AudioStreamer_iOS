@@ -75,7 +75,8 @@
     aeAudioController = [[AEAudioController alloc] initWithAudioDescription:[AEAudioController nonInterleavedFloatStereoAudioDescription] inputEnabled:NO];
     //    _audioController.preferredBufferDuration = 0.005;
 //    aeAudioController.preferredBufferDuration = 0.0029;
-        aeAudioController.preferredBufferDuration = 0.00145;
+//        aeAudioController.preferredBufferDuration = 0.00145;
+        aeAudioController.preferredBufferDuration = 0.000725;
     
     channelGroup = [aeAudioController createChannelGroup];
     [aeAudioController addChannels:[NSArray arrayWithObject:channelPlayer] toChannelGroup:channelGroup];
@@ -169,7 +170,7 @@
         cell.volumeSlider.value = monChan.volumeValue;
         
         
-        NSLog(@"%@",monChan.pathToImg);
+//        NSLog(@"%@",monChan.pathToImg);
         
         if (![monChan.pathToImg isEqualToString:@""]) {
             [cell.imageOfInstruments setImage:[UIImage imageNamed:monChan.pathToImg]];
@@ -346,9 +347,8 @@
 
         dispatch_async(dispatch_get_main_queue(), ^{
             [instrumentsTableView reloadData];
+//            NSLog(@"%@",[info objectAtIndex:i]);
         });
-        
-        NSLog(@"%@",[info objectAtIndex:i]);
     }
     
     dispatch_async(dispatch_get_main_queue(), ^{

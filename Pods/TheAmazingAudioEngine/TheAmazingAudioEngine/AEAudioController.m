@@ -699,7 +699,7 @@ static OSStatus topRenderNotifyCallback(void *inRefCon, AudioUnitRenderActionFla
     audioDescription.mFramesPerPacket   = 1;
     audioDescription.mBytesPerFrame     = sizeof(float);
     audioDescription.mBitsPerChannel    = 8 * sizeof(float);
-    audioDescription.mSampleRate        = 96000.0;//44100.0;
+    audioDescription.mSampleRate        = 48000.0;//44100.0;
     return audioDescription;
 }
 

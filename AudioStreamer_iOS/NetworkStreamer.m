@@ -169,6 +169,7 @@ withFilterContext:(id)filterContext{
     if(sock == [SocketList objectForKey:@"audioSocket"])
     {
 //        if(data.length == DATA_SIZE * numOfChannel){
+//        if (data.length > 0)
         [self.delegate NetworkStreamerReceivedData:[data copy]];
        
 //        dispatch_async(dispatch_get_main_queue(), ^{
