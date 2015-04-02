@@ -72,11 +72,27 @@
     self.byteDataArray = (Byte *) malloc(DATA_SIZE*4);
     
     aeAudioController = [[AEAudioController alloc] initWithAudioDescription:[AEAudioController nonInterleavedFloatStereoAudioDescription] inputEnabled:NO];
-    //    _audioController.preferredBufferDuration = 0.005;
-//    aeAudioController.preferredBufferDuration = 0.0029;
-//    aeAudioController.preferredBufferDuration = 0.00145;
-    aeAudioController.preferredBufferDuration = 0.000725;
-//    aeAudioController.preferredBufferDuration = 0.0003625;
+    int samplerate = [aeAudioController audioDescription].mSampleRate;
+    
+    if ((DATA_SIZE == 512 && samplerate == 48000)) {
+        aeAudioController.preferredBufferDuration = 0.0029;
+    }
+    else if((DATA_SIZE == 256 && samplerate == 48000 )|| (DATA_SIZE == 512 && samplerate == 96000))
+    {
+        aeAudioController.preferredBufferDuration = 0.00145;
+    }
+    else if((DATA_SIZE == 128 && samplerate == 48000) || (DATA_SIZE == 256 && samplerate == 96000))
+    {
+        aeAudioController.preferredBufferDuration = 0.000725;
+    }
+    else if((DATA_SIZE == 64 && samplerate == 48000) || (DATA_SIZE == 128 && samplerate == 96000))
+    {
+        aeAudioController.preferredBufferDuration = 0.0003625;
+    }
+    else if((DATA_SIZE == 32 && samplerate == 48000) || (DATA_SIZE == 64 && samplerate == 96000))
+    {
+        aeAudioController.preferredBufferDuration = 0.00018;
+    }
     
     channelGroup = [aeAudioController createChannelGroup];
     [aeAudioController addChannels:[NSArray arrayWithObject:channelPlayer] toChannelGroup:channelGroup];

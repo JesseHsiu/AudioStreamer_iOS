@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 MobileHCILab. All rights reserved.
 //
 
-#define DATA_SIZE 256
+#define DATA_SIZE 512
 
 #import <Foundation/Foundation.h>
 //socket
