@@ -47,7 +47,7 @@
 		E732FEDE1A8F186300FA4C94 /* NetworkStreamer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkStreamer.h; sourceTree = "<group>"; };
 		E732FEDF1A8F186300FA4C94 /* NetworkStreamer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkStreamer.m; sourceTree = "<group>"; };
 		E76D0CAE1A884FB200F8FDAB /* AudioStreamer_iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AudioStreamer_iOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		E76D0CB21A884FB200F8FDAB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E76D0CB21A884FB200F8FDAB /* Gigglernfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Gigglernfo.plist; sourceTree = "<group>"; };
 		E76D0CB31A884FB200F8FDAB /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		E76D0CB51A884FB200F8FDAB /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		E76D0CB61A884FB200F8FDAB /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -57,7 +57,7 @@
 		E76D0CBE1A884FB200F8FDAB /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		E76D0CC11A884FB200F8FDAB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		E76D0CC71A884FB200F8FDAB /* AudioStreamer_iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AudioStreamer_iOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		E76D0CCC1A884FB200F8FDAB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E76D0CCC1A884FB200F8FDAB /* Gigglernfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Gigglernfo.plist; sourceTree = "<group>"; };
 		E76D0CCD1A884FB200F8FDAB /* AudioStreamer_iOSTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioStreamer_iOSTests.m; sourceTree = "<group>"; };
 		E76D0CDA1A88595E00F8FDAB /* DiscoverServerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DiscoverServerManager.h; sourceTree = "<group>"; };
 		E76D0CDB1A88595E00F8FDAB /* DiscoverServerManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DiscoverServerManager.m; sourceTree = "<group>"; };
@@ -155,7 +155,7 @@
 		E76D0CB11A884FB200F8FDAB /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				E76D0CB21A884FB200F8FDAB /* Info.plist */,
+				E76D0CB21A884FB200F8FDAB /* Gigglernfo.plist */,
 				E76D0CB31A884FB200F8FDAB /* main.m */,
 			);
 			name = "Supporting Files";
@@ -173,7 +173,7 @@
 		E76D0CCB1A884FB200F8FDAB /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				E76D0CCC1A884FB200F8FDAB /* Info.plist */,
+				E76D0CCC1A884FB200F8FDAB /* Gigglernfo.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -289,7 +289,7 @@
 					};
 				};
 			};
-			buildConfigurationList = E76D0CA91A884FB200F8FDAB /* Build configuration list for PBXProject "AudioStreamer_iOS" */;
+			buildConfigurationList = E76D0CA91A884FB200F8FDAB /* Build configuration list for PBXProject "Giggler" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -507,7 +507,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				INFOPLIST_FILE = AudioStreamer_iOS/Info.plist;
+				INFOPLIST_FILE = AudioStreamer_iOS/Gigglernfo.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -519,7 +519,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				INFOPLIST_FILE = AudioStreamer_iOS/Info.plist;
+				INFOPLIST_FILE = AudioStreamer_iOS/Gigglernfo.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -537,7 +537,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = AudioStreamer_iOSTests/Info.plist;
+				INFOPLIST_FILE = AudioStreamer_iOSTests/Gigglernfo.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AudioStreamer_iOS.app/AudioStreamer_iOS";
@@ -552,7 +552,7 @@
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = AudioStreamer_iOSTests/Info.plist;
+				INFOPLIST_FILE = AudioStreamer_iOSTests/Gigglernfo.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AudioStreamer_iOS.app/AudioStreamer_iOS";
@@ -562,7 +562,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		E76D0CA91A884FB200F8FDAB /* Build configuration list for PBXProject "AudioStreamer_iOS" */ = {
+		E76D0CA91A884FB200F8FDAB /* Build configuration list for PBXProject "Giggler" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E76D0CCF1A884FB200F8FDAB /* Debug */,

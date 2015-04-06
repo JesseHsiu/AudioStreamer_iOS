@@ -20,7 +20,7 @@
     [UIApplication sharedApplication].idleTimerDisabled = YES;
 
     self.navController = (UINavigationController *)self.window.rootViewController;
-    self.navController.navigationBar.topItem.title = @"AudioStreamer";
+    self.navController.navigationBar.topItem.title = @"Server List";
     // Override point for customization after application launch.
     return YES;
 }
