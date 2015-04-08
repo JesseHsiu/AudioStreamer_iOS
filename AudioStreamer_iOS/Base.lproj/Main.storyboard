@@ -175,7 +175,7 @@
                                             <outlet property="volumeSlider" destination="lGs-Vr-BAU" id="21O-dD-oBP"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="InstrumentsSettings" rowHeight="125" id="z9w-Hz-uIK" customClass="InstrumentsSettingTableViewCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="InstrumentsSettings" rowHeight="238" id="z9w-Hz-uIK" customClass="InstrumentsSettingTableViewCell">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="z9w-Hz-uIK" id="qUe-cl-FAb">
@@ -260,6 +260,15 @@
                                                 <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="50" minValue="0.0" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="0fK-C2-HrU">
                                                     <rect key="frame" x="124" y="46" width="420" height="31"/>
                                                 </slider>
+                                                <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.0" maxValue="2" translatesAutoresizingMaskIntoConstraints="NO" id="DoJ-co-8VG">
+                                                    <rect key="frame" x="124" y="128" width="118" height="31"/>
+                                                </slider>
+                                                <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.0" maxValue="2" translatesAutoresizingMaskIntoConstraints="NO" id="fNF-s4-Iym">
+                                                    <rect key="frame" x="276" y="128" width="118" height="31"/>
+                                                </slider>
+                                                <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.0" maxValue="2" translatesAutoresizingMaskIntoConstraints="NO" id="7gM-sR-NAD">
+                                                    <rect key="frame" x="426" y="128" width="118" height="31"/>
+                                                </slider>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="Z3a-oV-kCz" firstAttribute="centerX" secondItem="ICd-RW-QmA" secondAttribute="centerX" constant="-1" id="5qH-sW-u3t"/>
@@ -293,8 +302,11 @@
                                             </variation>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="bassSlider" destination="DoJ-co-8VG" id="Xip-H8-XAV"/>
+                                            <outlet property="midSlider" destination="fNF-s4-Iym" id="IWD-VO-KTQ"/>
                                             <outlet property="panSlider" destination="Z3a-oV-kCz" id="ZVR-V0-VD5"/>
                                             <outlet property="reverbSlider" destination="0fK-C2-HrU" id="9oX-kU-92F"/>
+                                            <outlet property="trebleSlider" destination="7gM-sR-NAD" id="rsA-7a-ode"/>
                                             <outlet property="volumLabel" destination="Dxf-5e-k0J" id="WO1-lo-Yon"/>
                                             <outlet property="volumeAddBtn" destination="7Z8-jX-Z4s" id="PVP-Zh-zsy"/>
                                             <outlet property="volumeSubBtn" destination="53J-Bu-WiV" id="Y1t-KH-1Ie"/>

@@ -19,6 +19,9 @@
         self.reverbValue = 0;
         self.volumeValue = 0.5;
         self.panValue = 0;
+        self.bassValue = 1.0f;
+        self.midValue = 1.0f;
+        self.trebleValue = 1.0f;
         self.mutedValue = false;
     }
     return self;
@@ -57,6 +60,31 @@
     }
 }
 
+-(void)setBass:(float)bass{
+    float dif = bass-self.bassValue;
+    if(0.05 < dif || dif < -0.05){
+        self.bassValue = bass;
+        [self prepareAndSendChannelInfoToServer];
+    }
+}
+
+-(void)setMid:(float)mid{
+    float dif = mid-self.midValue;
+    if(0.05 < dif || dif < -0.05){
+        self.midValue = mid;
+        [self prepareAndSendChannelInfoToServer];
+    }
+}
+
+-(void)setTreble:(float)treble{
+    float dif = treble-self.trebleValue;
+    if(0.05 < dif || dif < -0.05){
+        self.trebleValue = treble;
+        [self prepareAndSendChannelInfoToServer];
+    }
+}
+
+
 -(void)prepareAndSendChannelInfoToServer{
     NSMutableDictionary *dict = [[NSMutableDictionary alloc]init];
     NSNumber *channel = [NSNumber numberWithInt:self.channelNumber];
@@ -69,6 +97,12 @@
     [dict setObject:pan forKey:@"pan"];
     NSNumber *reverb = [NSNumber numberWithFloat:self.reverbValue];
     [dict setObject:reverb forKey:@"reverb"];
+    NSNumber *bass = [NSNumber numberWithFloat:self.bassValue];
+    [dict setObject:bass forKey:@"bass"];
+    NSNumber *mid = [NSNumber numberWithFloat:self.midValue];
+    [dict setObject:mid forKey:@"mid"];
+    NSNumber *treble = [NSNumber numberWithFloat:self.trebleValue];
+    [dict setObject:treble forKey:@"treble"];
     [self.networkStreamer sendChannelInfoToServer:dict];
 }
 

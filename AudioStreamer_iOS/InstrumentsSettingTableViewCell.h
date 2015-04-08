@@ -12,6 +12,9 @@
 - (void)volumeSubBtnPressed:(id)sender;
 - (void)panSliderSliderChanged:(float)value Sender:(id)sender;
 - (void)reverbSliderSliderChanged:(float)value Sender:(id)sender;
+- (void)bassSliderSliderChanged:(float)value Sender:(id)sender;
+- (void)midSliderSliderChanged:(float)value Sender:(id)sender;
+- (void)trebleSliderSliderChanged:(float)value Sender:(id)sender;
 @end
 
 
@@ -24,5 +27,9 @@
 
 @property (nonatomic,assign)IBOutlet UIButton *volumeAddBtn;
 @property (nonatomic,assign)IBOutlet UIButton *volumeSubBtn;
+
+@property (nonatomic, assign) IBOutlet UISlider *bassSlider;
+@property (nonatomic, assign) IBOutlet UISlider *midSlider;
+@property (nonatomic, assign) IBOutlet UISlider *trebleSlider;
 
 @end

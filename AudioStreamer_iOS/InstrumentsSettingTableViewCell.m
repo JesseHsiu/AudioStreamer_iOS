@@ -17,6 +17,9 @@
     [self.volumeSubBtn addTarget:self action:@selector(volumeSub) forControlEvents:UIControlEventTouchUpInside];
     [self.reverbSlider addTarget:self action:@selector(reverbSliderChanged) forControlEvents:UIControlEventValueChanged];
     [self.panSlider addTarget:self action:@selector(panSliderChanged:) forControlEvents:UIControlEventValueChanged];
+    [self.bassSlider addTarget:self action:@selector(bassSliderChanged:) forControlEvents:UIControlEventValueChanged];
+    [self.midSlider addTarget:self action:@selector(midSliderChanged:) forControlEvents:UIControlEventValueChanged];
+    [self.trebleSlider addTarget:self action:@selector(trebleSliderChanged:) forControlEvents:UIControlEventValueChanged];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -47,5 +50,26 @@
     [self.delegate panSliderSliderChanged:self.panSlider.value Sender:self];
     
 }
+-(void)bassSliderChanged:(id)sender{
+    if( 0.96f < self.bassSlider.value && self.bassSlider.value < 1.04f ){
+        self.bassSlider.value = 1.0f;
+    }
+    [self.delegate bassSliderSliderChanged:self.bassSlider.value Sender:self];
+}
+
+-(void)midSliderChanged:(id)sender{
+    if( 0.96f < self.midSlider.value && self.midSlider.value < 1.04f ){
+        self.midSlider.value = 1.0f;
+    }
+    [self.delegate midSliderSliderChanged: self.midSlider.value Sender:self];
+}
+
+-(void)trebleSliderChanged:(id)sender{
+    if( 0.96f < self.trebleSlider.value && self.trebleSlider.value < 1.04f ){
+        self.trebleSlider.value = 1.0f;
+    }
+    [self.delegate trebleSliderSliderChanged:self.trebleSlider.value Sender:self];
+}
+
 
 @end

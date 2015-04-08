@@ -23,6 +23,9 @@
 @property (nonatomic, assign) float reverbValue;
 @property (nonatomic, assign) float volumeValue;
 @property (nonatomic, assign) float panValue;
+@property (nonatomic, assign) float bassValue;
+@property (nonatomic, assign) float midValue;
+@property (nonatomic, assign) float trebleValue;
 @property (nonatomic, assign) BOOL mutedValue;
 @property (nonatomic, assign) NetworkStreamer *networkStreamer;
 
@@ -40,6 +43,9 @@
 -(void)changeReverb:(float)reverbValue;
 -(void)setVolume:(float)volume;
 -(void)setPan:(float)pan;
+-(void)setBass:(float)bass;
+-(void)setMid:(float)mid;
+-(void)setTreble:(float)treble;
 -(void)setMuted:(BOOL)muted;
 //-(void)addToBufferToList;
 //-(void)addToCircularBufferAudioBufferList:(AudioBufferList *)abl;

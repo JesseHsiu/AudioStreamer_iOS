@@ -203,7 +203,7 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-        return 120;
+        return 200;
 }
 #pragma mark tableUIDelegate
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
@@ -504,6 +504,26 @@
     NSIndexPath *NewIndexPath = [NSIndexPath indexPathForRow:indexPath.row-1 inSection:indexPath.section];
     [((MonitorChannel*)[viewIndex objectAtIndex:NewIndexPath.row]) changeReverb:value];
 }
+
+-(void)bassSliderSliderChanged:(float)value Sender:(id)sender{
+    NSIndexPath *indexPath = [instrumentsTableView indexPathForCell:sender];
+    NSIndexPath *NewIndexPath = [NSIndexPath indexPathForRow:indexPath.row-1 inSection:indexPath.section];
+    [((MonitorChannel*)[viewIndex objectAtIndex:NewIndexPath.row]) setBass:value];
+}
+
+-(void)midSliderSliderChanged:(float)value Sender:(id)sender{
+    NSIndexPath *indexPath = [instrumentsTableView indexPathForCell:sender];
+    NSIndexPath *NewIndexPath = [NSIndexPath indexPathForRow:indexPath.row-1 inSection:indexPath.section];
+    [((MonitorChannel*)[viewIndex objectAtIndex:NewIndexPath.row]) setMid:value];
+}
+
+-(void)trebleSliderSliderChanged:(float)value Sender:(id)sender{
+    NSIndexPath *indexPath = [instrumentsTableView indexPathForCell:sender];
+    NSIndexPath *NewIndexPath = [NSIndexPath indexPathForRow:indexPath.row-1 inSection:indexPath.section];
+    [((MonitorChannel*)[viewIndex objectAtIndex:NewIndexPath.row]) setTreble:value];
+}
+
+
 - (IBAction)EditBtnPressed:(UIBarButtonItem *)sender {
     
     if (instrumentsTableView.isEditing) {
