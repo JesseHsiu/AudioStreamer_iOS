@@ -203,7 +203,15 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-        return 200;
+    
+    if([[viewIndex objectAtIndex:indexPath.row] isKindOfClass:[MonitorChannel class]])
+    {
+        return 120;
+    }
+    else
+    {
+        return 230;
+    }
 }
 #pragma mark tableUIDelegate
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
