@@ -165,6 +165,9 @@
         
         cell.reverbSlider.value =((MonitorChannel*)[viewIndex objectAtIndex:indexPath.row-1]).reverbValue;
         cell.panSlider.value = ((MonitorChannel*)[viewIndex objectAtIndex:indexPath.row-1]).panValue;
+        cell.bassSlider.value =((MonitorChannel*)[viewIndex objectAtIndex:indexPath.row-1]).bassValue;
+        cell.midSlider.value =((MonitorChannel*)[viewIndex objectAtIndex:indexPath.row-1]).midValue;
+        cell.trebleSlider.value =((MonitorChannel*)[viewIndex objectAtIndex:indexPath.row-1]).trebleValue;
         
 //        cell.CustomSlider.sliderValue =((MonitorChannel*)[viewIndex objectAtIndex:indexPath.row-1]).panValue;
 
