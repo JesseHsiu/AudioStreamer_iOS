@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		52658D1945E95E449926D897 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3EF2DE4DD3D878A64542B532 /* libPods.a */; };
+		56C7FF501AD63ADA000996D5 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56C7FF4F1AD63ADA000996D5 /* QuartzCore.framework */; };
+		56C7FF521AD63AE4000996D5 /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 56C7FF511AD63AE4000996D5 /* CoreImage.framework */; };
+		56FC69D91AD55D8400D0F3F8 /* EFCircularSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 56FC69D81AD55D8400D0F3F8 /* EFCircularSlider.m */; };
 		E717C5AB1A8C8F67000C7C87 /* InstrumentsListTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = E717C5AA1A8C8F67000C7C87 /* InstrumentsListTableViewCell.m */; };
 		E732FEE01A8F186300FA4C94 /* NetworkStreamer.m in Sources */ = {isa = PBXBuildFile; fileRef = E732FEDF1A8F186300FA4C94 /* NetworkStreamer.m */; };
 		E76D0CB41A884FB200F8FDAB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E76D0CB31A884FB200F8FDAB /* main.m */; };
@@ -42,6 +45,10 @@
 		0F1577D97CDCD2A5AF8DD293 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		2CA142981D123835CD1B7DBC /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		3EF2DE4DD3D878A64542B532 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		56C7FF4F1AD63ADA000996D5 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		56C7FF511AD63AE4000996D5 /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
+		56FC69D71AD55D8400D0F3F8 /* EFCircularSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EFCircularSlider.h; sourceTree = "<group>"; };
+		56FC69D81AD55D8400D0F3F8 /* EFCircularSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EFCircularSlider.m; sourceTree = "<group>"; };
 		E717C5A91A8C8F67000C7C87 /* InstrumentsListTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InstrumentsListTableViewCell.h; sourceTree = "<group>"; };
 		E717C5AA1A8C8F67000C7C87 /* InstrumentsListTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InstrumentsListTableViewCell.m; sourceTree = "<group>"; };
 		E732FEDE1A8F186300FA4C94 /* NetworkStreamer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkStreamer.h; sourceTree = "<group>"; };
@@ -84,6 +91,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				56C7FF521AD63AE4000996D5 /* CoreImage.framework in Frameworks */,
+				56C7FF501AD63ADA000996D5 /* QuartzCore.framework in Frameworks */,
 				52658D1945E95E449926D897 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -101,6 +110,10 @@
 		755534FA0900F4658AA84FB4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				56C7FF511AD63AE4000996D5 /* CoreImage.framework */,
+				56C7FF4F1AD63ADA000996D5 /* QuartzCore.framework */,
+				56FC69D71AD55D8400D0F3F8 /* EFCircularSlider.h */,
+				56FC69D81AD55D8400D0F3F8 /* EFCircularSlider.m */,
 				3EF2DE4DD3D878A64542B532 /* libPods.a */,
 			);
 			name = Frameworks;
@@ -374,6 +387,7 @@
 				E7AB4E661A8DABEF00456A0A /* InstrumentsSettingTableViewCell.m in Sources */,
 				E76D0CB41A884FB200F8FDAB /* main.m in Sources */,
 				E7AB4E731A8DC4A300456A0A /* MonitorChannel.mm in Sources */,
+				56FC69D91AD55D8400D0F3F8 /* EFCircularSlider.m in Sources */,
 				E7AB4E761A8DC75F00456A0A /* AudioBufferManager.m in Sources */,
 				E76D0CE21A8887CF00F8FDAB /* AudioStreamerViewController.m in Sources */,
 				E7AB4E6D1A8DC45F00456A0A /* GCDAsyncUdpSocket.m in Sources */,

@@ -20,6 +20,11 @@
     [self.bassSlider addTarget:self action:@selector(bassSliderChanged:) forControlEvents:UIControlEventValueChanged];
     [self.midSlider addTarget:self action:@selector(midSliderChanged:) forControlEvents:UIControlEventValueChanged];
     [self.trebleSlider addTarget:self action:@selector(trebleSliderChanged:) forControlEvents:UIControlEventValueChanged];
+    
+    
+    [self.circleBassSlider addTarget:self action:@selector(circlebassSliderChanged:) forControlEvents:UIControlEventValueChanged];
+    [self.circleMidSlider addTarget:self action:@selector(circlemidSliderChanged:) forControlEvents:UIControlEventValueChanged];
+    [self.circleTrebleSlider addTarget:self action:@selector(circletrebleSliderChanged:) forControlEvents:UIControlEventValueChanged];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -69,6 +74,27 @@
         self.trebleSlider.value = 1.0f;
     }
     [self.delegate trebleSliderSliderChanged:self.trebleSlider.value Sender:self];
+}
+
+-(void)circlebassSliderChanged:(id)sender{
+    if( 0.96f < self.circleBassSlider.currentValue && self.circleBassSlider.currentValue < 1.04f ){
+        self.circleBassSlider.currentValue = 1.0f;
+    }
+    [self.delegate bassSliderSliderChanged:self.circleBassSlider.currentValue Sender:self];
+}
+
+-(void)circlemidSliderChanged:(id)sender{
+    if( 0.96f < self.circleMidSlider.currentValue && self.circleMidSlider.currentValue < 1.04f ){
+        self.circleMidSlider.currentValue = 1.0f;
+    }
+    [self.delegate midSliderSliderChanged: self.circleMidSlider.currentValue Sender:self];
+}
+
+-(void)circletrebleSliderChanged:(id)sender{
+    if( 0.96f < self.circleTrebleSlider.currentValue && self.circleTrebleSlider.currentValue < 1.04f ){
+        self.circleTrebleSlider.currentValue = 1.0f;
+    }
+    [self.delegate trebleSliderSliderChanged:self.circleTrebleSlider.currentValue Sender:self];
 }
 
 
