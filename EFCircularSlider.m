@@ -92,9 +92,9 @@
     self.currentValueLabel.text = [NSString stringWithFormat:@"%.2f", currentValue];
     [self setNeedsLayout];
     [self setNeedsDisplay];
-    if (currentValue != 1.0f) {
-        [self sendActionsForControlEvents:UIControlEventValueChanged];
-    }
+    //if (currentValue != 1.0f) {
+        //[self sendActionsForControlEvents:UIControlEventValueChanged];
+    //}
     
 }
 

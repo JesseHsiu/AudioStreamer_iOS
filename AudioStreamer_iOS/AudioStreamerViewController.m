@@ -468,6 +468,8 @@
     [indexPaths addObject:NewIndexPath];
     
 
+    
+
     if ([[instrumentsTableView cellForRowAtIndexPath:NewIndexPath] isKindOfClass:[InstrumentsSettingTableViewCell class]]) {
 //        [ShowingSettingIndex removeObject:NewIndexPath];
         [viewIndex removeObjectAtIndex:NewIndexPath.row];
@@ -479,6 +481,14 @@
         [viewIndex insertObject:NewIndexPath atIndex:NewIndexPath.row];
 //        [ShowingSettingIndex addObject:NewIndexPath];
         [instrumentsTableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
+    }
+    
+    //update
+    for (int i = 0; i < viewIndex.count; i++) {
+        if (![[viewIndex objectAtIndex:i] isKindOfClass:[MonitorChannel class]]) {
+            NSIndexPath *index = [viewIndex objectAtIndex:i];
+            index = [NSIndexPath indexPathForRow:i inSection:index.section];
+        }
     }
 
 }
