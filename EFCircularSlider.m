@@ -34,7 +34,7 @@
     _maximumValue = 2;
     _minimumValue = 0.0f;
     _currentValue = 1.0f;
-    _lineWidth = 4;
+    _lineWidth = 6;
     _lineRadiusDisplacement = 5;
     _unfilledColor = [UIColor colorWithRed:(float)182/255 green:(float)182/255 blue:(float)182/255 alpha:1.0f];
     _filledColor = [UIColor colorWithRed:(float)55/255 green:(float)152/255 blue:(float)255/255 alpha:1.0f];
@@ -89,7 +89,7 @@
     else if(_currentValue<_minimumValue) _currentValue=_minimumValue;
     
     angle = [self angleFromValue];
-    self.currentValueLabel.text = [NSString stringWithFormat:@"%.2f", currentValue];
+    self.currentValueLabel.text = [NSString stringWithFormat:@"%i", (int)currentValue*50];
     [self setNeedsLayout];
     [self setNeedsDisplay];
     //if (currentValue != 1.0f) {
@@ -233,7 +233,7 @@
     
     CGPoint lastPoint = [touch locationInView:self];
     [self moveHandle:lastPoint];
-    self.currentValueLabel.text = [NSString stringWithFormat:@"%.2f", self.currentValue];
+    self.currentValueLabel.text = [NSString stringWithFormat:@"%i", (int)(self.currentValue*50)];
     [self sendActionsForControlEvents:UIControlEventValueChanged];
     
     return YES;

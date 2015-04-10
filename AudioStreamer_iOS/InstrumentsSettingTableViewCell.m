@@ -25,6 +25,7 @@
     [self.circleBassSlider addTarget:self action:@selector(circlebassSliderChanged:) forControlEvents:UIControlEventValueChanged];
     [self.circleMidSlider addTarget:self action:@selector(circlemidSliderChanged:) forControlEvents:UIControlEventValueChanged];
     [self.circleTrebleSlider addTarget:self action:@selector(circletrebleSliderChanged:) forControlEvents:UIControlEventValueChanged];
+    
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
