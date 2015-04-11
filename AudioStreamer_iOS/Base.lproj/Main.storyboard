@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14C1514" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="sjW-oh-IkA">
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
@@ -116,10 +117,10 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="lGs-Vr-BAU">
-                                                    <rect key="frame" x="113" y="45" width="481" height="31"/>
+                                                    <rect key="frame" x="113" y="46" width="481" height="31"/>
                                                 </slider>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RVG-2U-9iC">
-                                                    <rect key="frame" x="531" y="80" width="61" height="30"/>
+                                                    <rect key="frame" x="531" y="81" width="61" height="30"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="30" id="57y-Ne-upN"/>
                                                         <constraint firstAttribute="width" constant="61" id="wvj-wh-xNA"/>
@@ -133,7 +134,7 @@
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </view>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fYZ-iM-L7M">
-                                                    <rect key="frame" x="115" y="80" width="61" height="30"/>
+                                                    <rect key="frame" x="115" y="81" width="61" height="30"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="61" id="QO4-Ai-MNp"/>
                                                         <constraint firstAttribute="height" constant="30" id="hTq-GJ-DOm"/>
@@ -178,6 +179,7 @@
                                                     <exclude reference="gxK-BY-gFx"/>
                                                     <exclude reference="ZOG-yM-31f"/>
                                                     <exclude reference="Dcs-Bb-vC9"/>
+                                                    <exclude reference="uSI-gy-1B7"/>
                                                 </mask>
                                             </variation>
                                         </tableViewCellContentView>
