@@ -45,6 +45,7 @@
     {
         [UIView animateWithDuration:0.5 animations:^{
             [self.displaySettingButton setAlpha:0.4];
+            [self.volumeLabel setAlpha:0];
         }];
 
         [self.displaySettingButton setEnabled:NO];
@@ -53,6 +54,7 @@
     {
         [UIView animateWithDuration:0.5 animations:^{
             [self.displaySettingButton setAlpha:1];
+            [self.volumeLabel setAlpha:1];
         }];
         [self.displaySettingButton setEnabled:YES];
     }
