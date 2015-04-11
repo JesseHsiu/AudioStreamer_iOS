@@ -13,8 +13,8 @@
 - (void)awakeFromNib {
     // Initialization code
     
-    [self.volumeAddBtn addTarget:self action:@selector(volumeAdd) forControlEvents:UIControlEventTouchUpInside];
-    [self.volumeSubBtn addTarget:self action:@selector(volumeSub) forControlEvents:UIControlEventTouchUpInside];
+//    [self.volumeAddBtn addTarget:self action:@selector(volumeAdd) forControlEvents:UIControlEventTouchUpInside];
+//    [self.volumeSubBtn addTarget:self action:@selector(volumeSub) forControlEvents:UIControlEventTouchUpInside];
     [self.reverbSlider addTarget:self action:@selector(reverbSliderChanged) forControlEvents:UIControlEventValueChanged];
     [self.panSlider addTarget:self action:@selector(panSliderChanged:) forControlEvents:UIControlEventValueChanged];
     [self.bassSlider addTarget:self action:@selector(bassSliderChanged:) forControlEvents:UIControlEventValueChanged];

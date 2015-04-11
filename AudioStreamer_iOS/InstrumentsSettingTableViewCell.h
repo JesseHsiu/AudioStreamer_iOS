@@ -25,12 +25,12 @@
 IB_DESIGNABLE
 @interface InstrumentsSettingTableViewCell : UITableViewCell
 @property (retain) id delegate;
-@property (nonatomic,assign)IBOutlet UILabel *volumLabel;
+//@property (nonatomic,assign)IBOutlet UILabel *volumLabel;
 @property (nonatomic,assign)IBOutlet UISlider *reverbSlider;
 @property (nonatomic,assign)IBOutlet UISlider *panSlider;
 
-@property (nonatomic,assign)IBOutlet UIButton *volumeAddBtn;
-@property (nonatomic,assign)IBOutlet UIButton *volumeSubBtn;
+//@property (nonatomic,assign)IBOutlet UIButton *volumeAddBtn;
+//@property (nonatomic,assign)IBOutlet UIButton *volumeSubBtn;
 
 @property (nonatomic, assign) IBOutlet UISlider *bassSlider;
 @property (nonatomic, assign) IBOutlet UISlider *midSlider;

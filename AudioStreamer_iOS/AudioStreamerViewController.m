@@ -175,13 +175,22 @@
 //    if ([ShowingSettingIndex containsObject:indexPath]) {
 //    if ([[viewIndex objectAtIndex:indexPath.row] isMemberOfClass:[NSIndexPath class]]) {
     if ([[viewIndex objectAtIndex:indexPath.row] isKindOfClass:[NSIndexPath class]]) {
+        MonitorChannel* mc =((MonitorChannel*)[viewIndex objectAtIndex:indexPath.row-1]);
+//        NSLog(@"Indexpath: %li",(long)indexPath.row);;
+//        if (mc.name == nil) {
+//            NSLog(@"Cell was NIL");
+//        }
 
         InstrumentsSettingTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier_Setting];
         cell.delegate = self;
         if (cell == nil) {
             cell = [[InstrumentsSettingTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         }
-        cell.volumLabel.text = [NSString stringWithFormat:@"%1.0f",((MonitorChannel*)[viewIndex objectAtIndex:indexPath.row-1]).volumeValue * 100];
+        
+        if (indexPath.row == 9) {
+            NSLog(@"viewindex size: %lu",(unsigned long)viewIndex.count);
+        }
+//        cell.volumLabel.text = [NSString stringWithFormat:@"%1.0f",((MonitorChannel*)[viewIndex objectAtIndex:indexPath.row-1]).volumeValue * 100];
         
         cell.reverbSlider.value =((MonitorChannel*)[viewIndex objectAtIndex:indexPath.row-1]).reverbValue;
         cell.panSlider.value = ((MonitorChannel*)[viewIndex objectAtIndex:indexPath.row-1]).panValue;
@@ -212,7 +221,7 @@
         MonitorChannel *monChan = ((MonitorChannel*)[viewIndex objectAtIndex:indexPath.row]);
         
         cell.nameLabel.text = [NSString stringWithFormat:@"%i - %@", monChan.channelNumber, monChan.name];
-        cell.volumeSlider.value = monChan.volumeValue;
+//        cell.volumeSlider.value = monChan.volumeValue;
         
         
 //        NSLog(@"%@",monChan.pathToImg);
@@ -466,17 +475,17 @@
 }
 - (void)VolumeSliderChanged:(float)value Sender:(id)sender
 {
-    NSIndexPath *indexPath = [instrumentsTableView indexPathForCell:sender];
-    [((MonitorChannel*)[viewIndex objectAtIndex:indexPath.row]) setVolume:value];
-    
-    
-    NSIndexPath *NewIndexPath = [NSIndexPath indexPathForRow:indexPath.row+1 inSection:indexPath.section];
-    
-    if ([instrumentsTableView cellForRowAtIndexPath:NewIndexPath] != nil) {
-        if ([[instrumentsTableView cellForRowAtIndexPath:NewIndexPath] isKindOfClass:[InstrumentsSettingTableViewCell class]]) {
-            ((InstrumentsSettingTableViewCell*)[instrumentsTableView cellForRowAtIndexPath:NewIndexPath]).volumLabel.text = [NSString stringWithFormat:@"%1.0f",value * 100];
-        }
-    }
+//    NSIndexPath *indexPath = [instrumentsTableView indexPathForCell:sender];
+//    [((MonitorChannel*)[viewIndex objectAtIndex:indexPath.row]) setVolume:value];
+//    
+//    
+//    NSIndexPath *NewIndexPath = [NSIndexPath indexPathForRow:indexPath.row+1 inSection:indexPath.section];
+//    
+//    if ([instrumentsTableView cellForRowAtIndexPath:NewIndexPath] != nil) {
+//        if ([[instrumentsTableView cellForRowAtIndexPath:NewIndexPath] isKindOfClass:[InstrumentsSettingTableViewCell class]]) {
+//            ((InstrumentsSettingTableViewCell*)[instrumentsTableView cellForRowAtIndexPath:NewIndexPath]).volumLabel.text = [NSString stringWithFormat:@"%1.0f",value * 100];
+//        }
+//    }
 }
 
 - (void)displaySettingBtnPressed:(id)sender
@@ -489,18 +498,34 @@
     
 
     
-
-    if ([[instrumentsTableView cellForRowAtIndexPath:NewIndexPath] isKindOfClass:[InstrumentsSettingTableViewCell class]]) {
-//        [ShowingSettingIndex removeObject:NewIndexPath];
-        [viewIndex removeObjectAtIndex:NewIndexPath.row];
-        [instrumentsTableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
+    if (viewIndex.count > NewIndexPath.row) {
+        if (![[viewIndex objectAtIndex:NewIndexPath.row] isKindOfClass:[MonitorChannel class]]) {
+            [viewIndex removeObjectAtIndex:NewIndexPath.row];
+            [instrumentsTableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
+        } else {
+            //Insert row
+            [viewIndex insertObject:NewIndexPath atIndex:NewIndexPath.row];
+            [instrumentsTableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
+        }
     }
     else
     {
-        //do stuff
+        //Add new row at the end
         [viewIndex insertObject:NewIndexPath atIndex:NewIndexPath.row];
-//        [ShowingSettingIndex addObject:NewIndexPath];
+        [CATransaction begin];
+        
+        [instrumentsTableView beginUpdates];
+        
+        //...
+        
+        [CATransaction setCompletionBlock: ^{
+            // Code to be executed upon completion
+            [instrumentsTableView scrollToRowAtIndexPath:NewIndexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+        }];
         [instrumentsTableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
+        [instrumentsTableView endUpdates];
+        
+        [CATransaction commit];
     }
     
     //update
@@ -516,49 +541,49 @@
 - (void)volumeAddBtnPressed:(id)sender
 {
     
-    NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
-    NSIndexPath *indexPath = [instrumentsTableView indexPathForCell:sender];
-    NSIndexPath *NewIndexPath = [NSIndexPath indexPathForRow:indexPath.row-1 inSection:indexPath.section];
-    
-    [indexPaths addObject:NewIndexPath];
-    float tmp =((MonitorChannel*)[viewIndex objectAtIndex:NewIndexPath.row]).volumeValue;
-    
-    if (tmp == 1.f) {
-        return;
-    }
-    
-    tmp += 0.01f;
-    
-    if (tmp > 1.f) {
-        tmp = 1.f;
-    }
-    
-    [((MonitorChannel*)[viewIndex objectAtIndex:NewIndexPath.row]) setVolume:tmp];
-    ((InstrumentsSettingTableViewCell*)[instrumentsTableView cellForRowAtIndexPath:indexPath]).volumLabel.text =[NSString stringWithFormat:@"%1.0f",tmp*100];
-    [instrumentsTableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
+//    NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
+//    NSIndexPath *indexPath = [instrumentsTableView indexPathForCell:sender];
+//    NSIndexPath *NewIndexPath = [NSIndexPath indexPathForRow:indexPath.row-1 inSection:indexPath.section];
+//    
+//    [indexPaths addObject:NewIndexPath];
+//    float tmp =((MonitorChannel*)[viewIndex objectAtIndex:NewIndexPath.row]).volumeValue;
+//    
+//    if (tmp == 1.f) {
+//        return;
+//    }
+//    
+//    tmp += 0.01f;
+//    
+//    if (tmp > 1.f) {
+//        tmp = 1.f;
+//    }
+//    
+//    [((MonitorChannel*)[viewIndex objectAtIndex:NewIndexPath.row]) setVolume:tmp];
+//    ((InstrumentsSettingTableViewCell*)[instrumentsTableView cellForRowAtIndexPath:indexPath]).volumLabel.text =[NSString stringWithFormat:@"%1.0f",tmp*100];
+//    [instrumentsTableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
 }
 - (void)volumeSubBtnPressed:(id)sender
 {
-    NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
-    NSIndexPath *indexPath = [instrumentsTableView indexPathForCell:sender];
-    NSIndexPath *NewIndexPath = [NSIndexPath indexPathForRow:indexPath.row-1 inSection:indexPath.section];
-    
-    [indexPaths addObject:NewIndexPath];
-    float tmp =((MonitorChannel*)[viewIndex objectAtIndex:NewIndexPath.row]).volumeValue;
-    
-    if (tmp == 0.f) {
-        return;
-    }
-    
-    tmp -= 0.01f;
-    
-    if (tmp < 0.f) {
-        tmp = 0.f;
-    }
-    
-    [((MonitorChannel*)[viewIndex objectAtIndex:NewIndexPath.row]) setVolume:tmp];
-    ((InstrumentsSettingTableViewCell*)[instrumentsTableView cellForRowAtIndexPath:indexPath]).volumLabel.text =[NSString stringWithFormat:@"%1.0f",tmp*100];
-    [instrumentsTableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
+//    NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
+//    NSIndexPath *indexPath = [instrumentsTableView indexPathForCell:sender];
+//    NSIndexPath *NewIndexPath = [NSIndexPath indexPathForRow:indexPath.row-1 inSection:indexPath.section];
+//    
+//    [indexPaths addObject:NewIndexPath];
+//    float tmp =((MonitorChannel*)[viewIndex objectAtIndex:NewIndexPath.row]).volumeValue;
+//    
+//    if (tmp == 0.f) {
+//        return;
+//    }
+//    
+//    tmp -= 0.01f;
+//    
+//    if (tmp < 0.f) {
+//        tmp = 0.f;
+//    }
+//    
+//    [((MonitorChannel*)[viewIndex objectAtIndex:NewIndexPath.row]) setVolume:tmp];
+//    ((InstrumentsSettingTableViewCell*)[instrumentsTableView cellForRowAtIndexPath:indexPath]).volumLabel.text =[NSString stringWithFormat:@"%1.0f",tmp*100];
+//    [instrumentsTableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
 }
 - (void)panSliderSliderChanged:(float)value Sender:(id)sender
 {
