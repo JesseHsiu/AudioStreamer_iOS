@@ -19,6 +19,7 @@
 @property (retain) id delegate;
 @property (nonatomic,assign)IBOutlet UIImageView *imageOfInstruments;
 @property (nonatomic,assign)IBOutlet UILabel *nameLabel;
+@property (nonatomic,assign)IBOutlet UILabel *volumeLabel;
 @property (nonatomic,assign)IBOutlet UISlider *volumeSlider;
 @property (nonatomic,assign)IBOutlet UIButton *muteButton;
 @property (nonatomic,assign)IBOutlet UIButton *displaySettingButton;

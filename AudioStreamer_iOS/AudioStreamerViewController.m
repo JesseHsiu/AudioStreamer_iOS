@@ -41,9 +41,28 @@
     
     viewIndex = [[NSMutableArray alloc]init];
     
+    if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
+        self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+    }
+    
+    UIBarButtonItem *barBtnItem = [[UIBarButtonItem alloc]initWithTitle:@"< Server List" style:UIBarButtonItemStyleDone target:self action:@selector(BackToMainServerList)];
+    self.navigationItem.leftBarButtonItem = barBtnItem;
     
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+}
+
+-(void)BackToMainServerList
+{
+    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Are you sure you want to go back to the server list? \n\r Only say yes if you connected unsuccessfully!!" message:@"" delegate:self cancelButtonTitle:@"NO" otherButtonTitles:@"yes", nil];
+    [alert show];
+    //Perform task in delegate
+}
+
+-(void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex{
+    if (buttonIndex == 1) {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -166,12 +185,12 @@
         
         cell.reverbSlider.value =((MonitorChannel*)[viewIndex objectAtIndex:indexPath.row-1]).reverbValue;
         cell.panSlider.value = ((MonitorChannel*)[viewIndex objectAtIndex:indexPath.row-1]).panValue;
-//        cell.bassSlider.value =((MonitorChannel*)[viewIndex objectAtIndex:indexPath.row-1]).bassValue;
-//        cell.midSlider.value =((MonitorChannel*)[viewIndex objectAtIndex:indexPath.row-1]).midValue;
-//        cell.trebleSlider.value =((MonitorChannel*)[viewIndex objectAtIndex:indexPath.row-1]).trebleValue;
-        [cell.circleBassSlider setCurrentValue:((MonitorChannel*)[viewIndex objectAtIndex:indexPath.row-1]).bassValue];
-        [cell.circleMidSlider setCurrentValue:((MonitorChannel*)[viewIndex objectAtIndex:indexPath.row-1]).midValue];
-        [cell.circleTrebleSlider setCurrentValue:((MonitorChannel*)[viewIndex objectAtIndex:indexPath.row-1]).trebleValue];
+        cell.bassSlider.value =((MonitorChannel*)[viewIndex objectAtIndex:indexPath.row-1]).bassValue;
+        cell.midSlider.value =((MonitorChannel*)[viewIndex objectAtIndex:indexPath.row-1]).midValue;
+        cell.trebleSlider.value =((MonitorChannel*)[viewIndex objectAtIndex:indexPath.row-1]).trebleValue;
+//        [cell.circleBassSlider setCurrentValue:((MonitorChannel*)[viewIndex objectAtIndex:indexPath.row-1]).bassValue];
+//        [cell.circleMidSlider setCurrentValue:((MonitorChannel*)[viewIndex objectAtIndex:indexPath.row-1]).midValue];
+//        [cell.circleTrebleSlider setCurrentValue:((MonitorChannel*)[viewIndex objectAtIndex:indexPath.row-1]).trebleValue];
         
         
 //        cell.circleMidSlider.currentValue =((MonitorChannel*)[viewIndex objectAtIndex:indexPath.row-1]).midValue;
@@ -220,27 +239,28 @@
     }
     else
     {
-        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-        {
-            if ([[UIDevice currentDevice] orientation] == UIDeviceOrientationPortrait || [[UIDevice currentDevice] orientation] == UIDeviceOrientationPortraitUpsideDown ) {
-                return 400;
-            }
-            else
-            {
-                return 500;
-            }
-        }
-        else
-        {
-            if ([[UIDevice currentDevice] orientation] == UIDeviceOrientationPortrait || [[UIDevice currentDevice] orientation] == UIDeviceOrientationPortraitUpsideDown )
-            {
-                return 270;
-            }
-            else
-            {
-                return 380;
-            }
-        }
+//        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+//        {
+//            if ([[UIDevice currentDevice] orientation] == UIDeviceOrientationPortrait || [[UIDevice currentDevice] orientation] == UIDeviceOrientationPortraitUpsideDown ) {
+//                return 400;
+//            }
+//            else
+//            {
+//                return 500;
+//            }
+//        }
+//        else
+//        {
+//            if ([[UIDevice currentDevice] orientation] == UIDeviceOrientationPortrait || [[UIDevice currentDevice] orientation] == UIDeviceOrientationPortraitUpsideDown )
+//            {
+//                return 270;
+//            }
+//            else
+//            {
+//                return 380;
+//            }
+//        }
+        return 270;
         
     }
 }

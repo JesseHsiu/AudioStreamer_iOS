@@ -36,8 +36,8 @@ IB_DESIGNABLE
 @property (nonatomic, assign) IBOutlet UISlider *midSlider;
 @property (nonatomic, assign) IBOutlet UISlider *trebleSlider;
 
-@property (nonatomic, assign) IBOutlet EFCircularSlider *circleBassSlider;
-@property (nonatomic, assign) IBOutlet EFCircularSlider *circleMidSlider;
-@property (nonatomic, assign) IBOutlet EFCircularSlider *circleTrebleSlider;
+//@property (nonatomic, assign) IBOutlet EFCircularSlider *circleBassSlider;
+//@property (nonatomic, assign) IBOutlet EFCircularSlider *circleMidSlider;
+//@property (nonatomic, assign) IBOutlet EFCircularSlider *circleTrebleSlider;
 
 @end

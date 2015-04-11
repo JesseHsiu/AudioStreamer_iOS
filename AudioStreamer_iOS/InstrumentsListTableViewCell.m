@@ -14,6 +14,7 @@
     // Initialization code
     [self.muteButton addTarget:self action:@selector(MuteBtn) forControlEvents:UIControlEventTouchUpInside];
     [self.volumeSlider addTarget:self action:@selector(VolumeChanged) forControlEvents:UIControlEventValueChanged];
+    [self.volumeLabel setText:[NSString stringWithFormat:@"%i", (int)(self.volumeSlider.value * 100)]];
     [self.displaySettingButton addTarget:self action:@selector(SettingBtn) forControlEvents:UIControlEventTouchUpInside];
 }
 
@@ -29,6 +30,7 @@
 -(void)VolumeChanged
 {
     [self.delegate VolumeSliderChanged:self.volumeSlider.value Sender:self];
+    [self.volumeLabel setText:[NSString stringWithFormat:@"%i", (int)(self.volumeSlider.value * 100)]];
 }
 -(void)SettingBtn
 {
