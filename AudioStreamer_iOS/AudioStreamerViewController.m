@@ -465,11 +465,14 @@
     if (((MonitorChannel*)[viewIndex objectAtIndex:indexPath.row]).mutedValue) {
         [((MonitorChannel*)[viewIndex objectAtIndex:indexPath.row]) setMuted:NO];
         [((InstrumentsListTableViewCell*)sender).muteButton setTitle:@"Mute" forState:UIControlStateNormal];
+        [((InstrumentsListTableViewCell*)sender).muteButton.layer setBorderWidth:0];
     }
     else
     {
         [((MonitorChannel*)[viewIndex objectAtIndex:indexPath.row]) setMuted:YES];
         [((InstrumentsListTableViewCell*)sender).muteButton setTitle:@"Unmute" forState:UIControlStateNormal];
+        [((InstrumentsListTableViewCell*)sender).muteButton.layer setBorderColor:[UIColor redColor].CGColor];
+        [((InstrumentsListTableViewCell*)sender).muteButton.layer setBorderWidth:1];
     }
     
 }
@@ -621,7 +624,7 @@
 - (IBAction)EditBtnPressed:(UIBarButtonItem *)sender {
     
     if (instrumentsTableView.isEditing) {
-        sender.title = @"Edit";
+        sender.title = @"Move↕";
         [instrumentsTableView setEditing:NO animated:YES];
     }
     else
