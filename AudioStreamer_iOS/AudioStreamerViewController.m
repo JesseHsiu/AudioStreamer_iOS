@@ -478,12 +478,12 @@
 }
 - (void)VolumeSliderChanged:(float)value Sender:(id)sender
 {
-//    NSIndexPath *indexPath = [instrumentsTableView indexPathForCell:sender];
-//    [((MonitorChannel*)[viewIndex objectAtIndex:indexPath.row]) setVolume:value];
+    NSIndexPath *indexPath = [instrumentsTableView indexPathForCell:sender];
+    [((MonitorChannel*)[viewIndex objectAtIndex:indexPath.row]) setVolume:value];
 //    
 //    
 //    NSIndexPath *NewIndexPath = [NSIndexPath indexPathForRow:indexPath.row+1 inSection:indexPath.section];
-//    
+    
 //    if ([instrumentsTableView cellForRowAtIndexPath:NewIndexPath] != nil) {
 //        if ([[instrumentsTableView cellForRowAtIndexPath:NewIndexPath] isKindOfClass:[InstrumentsSettingTableViewCell class]]) {
 //            ((InstrumentsSettingTableViewCell*)[instrumentsTableView cellForRowAtIndexPath:NewIndexPath]).volumLabel.text = [NSString stringWithFormat:@"%1.0f",value * 100];
